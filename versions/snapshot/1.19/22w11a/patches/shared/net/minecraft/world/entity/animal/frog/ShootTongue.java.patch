@@ -1,0 +1,31 @@
+--- a/net/minecraft/world/entity/animal/frog/ShootTongue.java
++++ b/net/minecraft/world/entity/animal/frog/ShootTongue.java
+@@ -76,23 +76,12 @@
+ 
+    private static ItemStack m_214864_(Frog p_214865_, Entity p_214866_) {
+       if (p_214866_ instanceof MagmaCube) {
+-         ItemStack itemstack = new ItemStack;
+-         Item item;
++         ItemStack itemstack = new ItemStack(
+          switch(p_214865_.m_214729_()) {
+-         case TEMPERATE:
+-            item = Items.f_215034_;
+-            break;
+-         case WARM:
+-            item = Items.f_215036_;
+-            break;
+-         case COLD:
+-            item = Items.f_215035_;
+-            break;
+-         default:
+-            throw new IncompatibleClassChangeError();
+-         }
+-
+-         itemstack.<init>(item);
++         case TEMPERATE -> Items.f_215034_;
++         case WARM -> Items.f_215036_;
++         case COLD -> Items.f_215035_;
++         });
+          return itemstack;
+       } else {
+          return new ItemStack(Items.f_42518_);
