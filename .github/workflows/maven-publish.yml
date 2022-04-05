@@ -24,5 +24,9 @@ jobs:
     - uses: gradle/gradle-build-action@v2
       with:
         arguments: ':22w13oneblockatatime:publishToMavenLocal -Ptype=snapshot'
-    - run: find ~/.m2/repository/de/oceanlabs/mcp/mcp_config
+    - uses: JamesIves/github-pages-deploy-action@v4.3.0
+      with:
+        branch: maven
+        folder: ~/.m2/repository/de/oceanlabs/mcp/mcp_config
+        target-folder: de/oceanlabs/mcp/mcp_config
      
