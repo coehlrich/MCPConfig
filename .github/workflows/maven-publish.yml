@@ -16,7 +16,7 @@ jobs:
         ref: 'maven'
       id: checkout-maven
       continue-on-error: true
-    - run: cp -r de/oceanlabs/mcp/mcp_config ~/.m2/repository/de/oceanlabs/mcp/mcp_config
+    - run: cp -r . ~/.m2/repository/
       if: steps.checkout-maven.outcome == 'success'
 
     - uses: actions/checkout@v3
