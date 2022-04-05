@@ -25,6 +25,7 @@ jobs:
     - uses: dorny/paths-filter@v2
       id: changed
       with:
+        base: 'maven-publish'
         filters: |
           snapshot22w13oneblockatatime:
           - 'versions/snapshot/april/22w13oneblockatatime/**'
