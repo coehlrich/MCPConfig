@@ -18,12 +18,22 @@ jobs:
       continue-on-error: true
     - run: cp -r de/oceanlabs/mcp/mcp_config ~/.m2/repository/de/oceanlabs/mcp/mcp_config
       if: steps.checkout-maven.outcome == 'success'
+
     - uses: actions/checkout@v3
       with:
         fetch-depth: '0'
+    - uses: dorny/paths-filter@v2
+      id: changed
+      with:
+        filters: |
+          22w13oneblockatatime:
+          - 'versions/snapshot/april/22w13oneblockatatime/**'
+
     - uses: gradle/gradle-build-action@v2
+      if: steps.changed.outputs.22w13oneblockatatime == 'true'
       with:
         arguments: ':22w13oneblockatatime:publishToMavenLocal -Ptype=snapshot'
+
     - uses: JamesIves/github-pages-deploy-action@v4.3.0
       with:
         branch: maven
