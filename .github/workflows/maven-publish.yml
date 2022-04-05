@@ -26,11 +26,11 @@ jobs:
       id: changed
       with:
         filters: |
-          22w13oneblockatatime:
+          snapshot22w13oneblockatatime:
           - 'versions/snapshot/april/22w13oneblockatatime/**'
 
     - uses: gradle/gradle-build-action@v2
-      if: steps.changed.outputs.22w13oneblockatatime == 'true'
+      if: steps.changed.outputs.snapshot22w13oneblockatatime == 'true'
       with:
         arguments: ':22w13oneblockatatime:publishToMavenLocal -Ptype=snapshot'
 
