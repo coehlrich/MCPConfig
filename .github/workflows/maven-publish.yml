@@ -13,10 +13,16 @@ jobs:
         java-version: '17'
     - uses: actions/checkout@v3
       with:
-        fetch-depth: '0'
         ref: 'maven'
+      id: checkout-maven
+      continue-on-error: true
     - run: cp -r de/oceanlabs/mcp/mcp_config ~/.m2/repository/de/oceanlabs/mcp/mcp_config
+      if: steps.checkout-maven.outcome == 'success'
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: '0'
     - uses: gradle/gradle-build-action@v2
       with:
         arguments: ':22w13oneblockatatime:publishToMavenLocal -Ptype=snapshot'
+    - run: find ~/.m2/repository/de/oceanlabs/mcp/mcp_config
      
