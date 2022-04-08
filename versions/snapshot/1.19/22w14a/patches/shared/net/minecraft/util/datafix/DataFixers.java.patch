@@ -1,0 +1,20 @@
+--- a/net/minecraft/util/datafix/DataFixers.java
++++ b/net/minecraft/util/datafix/DataFixers.java
+@@ -661,7 +661,7 @@
+       Schema schema163 = p_14514_.addSchema(3085, f_14509_);
+       p_14514_.addFixer(new BlendingDataFix(schema163, "Blending Data Fix v3085"));
+       Schema schema164 = p_14514_.addSchema(3086, f_14509_);
+-      p_14514_.addFixer(new EntityVariantFix(schema164, "Change cat variant type", References.f_16786_, "minecraft:cat", "CatType", Util.m_137469_(new Int2ObjectOpenHashMap(), (p_230649_) -> {
++      p_14514_.addFixer(new EntityVariantFix(schema164, "Change cat variant type", References.f_16786_, "minecraft:cat", "CatType", Util.m_137469_(new Int2ObjectOpenHashMap<String>(), (p_230649_) -> {
+          p_230649_.defaultReturnValue("minecraft:tabby");
+          p_230649_.put(0, "minecraft:tabby");
+          p_230649_.put(1, "minecraft:black");
+@@ -680,7 +680,7 @@
+          return immutablemap3.getOrDefault(p_230638_, p_230638_);
+       }));
+       Schema schema165 = p_14514_.addSchema(3087, f_14509_);
+-      p_14514_.addFixer(new EntityVariantFix(schema165, "Change frog variant type", References.f_16786_, "minecraft:frog", "Variant", Util.m_137469_(new Int2ObjectOpenHashMap(), (p_230640_) -> {
++      p_14514_.addFixer(new EntityVariantFix(schema165, "Change frog variant type", References.f_16786_, "minecraft:frog", "Variant", Util.m_137469_(new Int2ObjectOpenHashMap<String>(), (p_230640_) -> {
+          p_230640_.put(0, "minecraft:temperate");
+          p_230640_.put(1, "minecraft:warm");
+          p_230640_.put(2, "minecraft:cold");
