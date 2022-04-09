@@ -5,7 +5,7 @@
           }
  
 -         return object2intopenhashmap.object2IntEntrySet().stream().sorted(Comparator.comparing(Entry::getIntValue).reversed()).limit(5L).map((p_224929_) -> {
-+         return object2intopenhashmap.object2IntEntrySet().stream().sorted(Comparator.<Entry<String>, Integer>comparing(Entry::getIntValue).reversed()).limit(5L).map((p_224929_) -> {
++         return object2intopenhashmap.object2IntEntrySet().stream().sorted(Comparator.<Entry<String>,Integer>comparing(Entry::getIntValue).reversed()).limit(5L).map((p_224929_) -> {
              return (String)p_224929_.getKey() + ":" + p_224929_.getIntValue();
           }).collect(Collectors.joining(","));
        } catch (Exception exception) {
