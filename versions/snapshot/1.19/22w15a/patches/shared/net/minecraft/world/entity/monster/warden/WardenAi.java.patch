@@ -1,0 +1,16 @@
+--- a/net/minecraft/world/entity/monster/warden/WardenAi.java
++++ b/net/minecraft/world/entity/monster/warden/WardenAi.java
+@@ -98,11 +98,11 @@
+    }
+ 
+    private static void m_225760_(Brain<Warden> p_225761_) {
+-      p_225761_.m_21895_(Activity.f_225870_, 5, ImmutableList.of(new SetRoarTarget<>(Warden::m_225677_), new GoToTargetLocation(MemoryModuleType.f_225328_, 2, 0.7F), new DoNothing(10, 20)), MemoryModuleType.f_225328_);
++      p_225761_.m_21895_(Activity.f_225870_, 5, ImmutableList.of(new SetRoarTarget<>(Warden::m_225677_), new GoToTargetLocation<>(MemoryModuleType.f_225328_, 2, 0.7F), new DoNothing(10, 20)), MemoryModuleType.f_225328_);
+    }
+ 
+    private static void m_225765_(Brain<Warden> p_225766_) {
+-      p_225766_.m_21895_(Activity.f_225869_, 5, ImmutableList.of(new SetRoarTarget<>(Warden::m_225677_), new Sniffing(f_225711_)), MemoryModuleType.f_225330_);
++      p_225766_.m_21895_(Activity.f_225869_, 5, ImmutableList.of(new SetRoarTarget<>(Warden::m_225677_), new Sniffing<>(f_225711_)), MemoryModuleType.f_225330_);
+    }
+ 
+    private static void m_225767_(Brain<Warden> p_225768_) {
