@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/entity/animal/frog/Frog.java
 +++ b/net/minecraft/world/entity/animal/frog/Frog.java
-@@ -98,7 +98,7 @@
+@@ -100,7 +100,7 @@
     }
  
     public Brain<Frog> m_6274_() {

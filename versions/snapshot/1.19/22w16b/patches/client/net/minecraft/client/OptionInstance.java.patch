@@ -1,6 +1,6 @@
 --- a/net/minecraft/client/OptionInstance.java
 +++ b/net/minecraft/client/OptionInstance.java
-@@ -108,7 +108,7 @@
+@@ -107,7 +107,7 @@
     }
  
     public AbstractWidget m_221816_(Options p_221817_, int p_221818_, int p_221819_, int p_221820_) {
@@ -9,7 +9,7 @@
        return this.f_221804_.m_224648_(tooltipsupplier, p_221817_, p_221818_, p_221819_, p_221820_).apply(this);
     }
  
-@@ -265,7 +265,7 @@
+@@ -264,7 +264,7 @@
        default <R> OptionInstance.SliderableValueSet<R> m_227120_(final IntFunction<? extends R> p_227121_, final ToIntFunction<? super R> p_227122_) {
           return new OptionInstance.SliderableValueSet<R>() {
              public Optional<R> m_224639_(R p_227150_) {

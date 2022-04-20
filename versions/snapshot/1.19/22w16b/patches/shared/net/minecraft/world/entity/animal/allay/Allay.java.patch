@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/entity/animal/allay/Allay.java
 +++ b/net/minecraft/world/entity/animal/allay/Allay.java
-@@ -75,7 +75,7 @@
+@@ -79,7 +79,7 @@
     }
  
     public Brain<Allay> m_6274_() {
