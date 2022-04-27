@@ -18,3 +18,10 @@ on:
         description: 'New version'
         # Input has to be provided for the workflow to run
         required: true
+jobs:
+  update:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
