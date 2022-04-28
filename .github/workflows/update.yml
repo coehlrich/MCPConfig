@@ -36,8 +36,6 @@ jobs:
       run: |
         mkdir -p ~/.minecraft/versions/
         wget https://launchermeta.mojang.com/mc/game/version_manifest_v2.json -O ~/.minecraft/version_manifest_v2.json
-        manifest=$( cat ~/.minecraft/version_manifest_v2.json )
-        echo "::set-output name=manifest::$manifest"
     - uses: actions/github-script@v6
       env:
         OLD_VERSION: ${{ github.event.inputs.old_version }}
@@ -45,7 +43,7 @@ jobs:
       with:
         script: |
           const fs = require('fs')
-          const versions = JSON.parse(core.getInput('manifest')).versions
+          const versions = JSON.parse(fs.readFileSync('~/.minecraft/version_manifest_v2.json', 'utf8')).versions
           for (var i = 0; i < versions.length; i++) {
             var version = versions[i]
             if (version.id == process.env.OLD_VERSION || version.id == process.env.NEW_VERSION) {
@@ -55,7 +53,6 @@ jobs:
                 exec.exec('wget ' + versionJson.downloads.client.url + ' -o ' + file + '.jar')
             }
           }
-        manifest: ${{ steps.get_versions.outputs.manifest }}
     - name: Build with Gradle
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
