@@ -59,4 +59,7 @@ jobs:
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
         arguments: update -Pold_version=snapshot/1.19/${{ github.event.inputs.old_version }} -Pnew_version=snapshot/1.19/${{ github.event.inputs.new_version }}
-
+    - run: |
+        git add .
+        git commit -m "Start ${{ github event.inputs.new_version }}"
+        git push 
