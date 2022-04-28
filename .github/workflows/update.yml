@@ -47,7 +47,7 @@ jobs:
         script: |
           const fs = require('fs')
           const versions = JSON.parse(process.env.MANIFEST).versions
-          for (int i = 0; i < versions.length; i++) {
+          for (var i = 0; i < versions.length; i++) {
             var version = versions[i]
             if (version.id == process.env.OLD_VERSION || version.id == process.env.NEW_VERSION) {
                 var file = '~/.minecraft/versions/' + version.id + '/' + version.id
@@ -60,4 +60,3 @@ jobs:
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
         arguments: update -Pold_version=snapshot/1.19/${{ github.event.inputs.old_version }} -Pnew_version=snapshot/1.19/${{ github.event.inputs.new_version }}
-
