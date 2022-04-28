@@ -34,7 +34,7 @@ jobs:
         distribution: 'temurin'
     - id: get_versions
       run: |
-        mkdirs ~/.minecraft/versions/
+        mkdir -p ~/.minecraft/versions/
         wget https://launchermeta.mojang.com/mc/game/version_manifest_v2.json -o ~/.minecraft/version_manifest_v2.json
         manifest=$( cat ~/.minecraft/version_manifest_v2.json )
         echo "::set-output name=manifest::$manifest"
@@ -60,3 +60,4 @@ jobs:
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
         arguments: update -Pold_version=snapshot/1.19/${{ github.event.inputs.old_version }} -Pnew_version=snapshot/1.19/${{ github.event.inputs.new_version }}
+
