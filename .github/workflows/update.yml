@@ -60,7 +60,7 @@ jobs:
       with:
         arguments: update -Pold_version=snapshot/1.19/${{ github.event.inputs.old_version }} -Pnew_version=snapshot/1.19/${{ github.event.inputs.new_version }}
     - run: |
-        cp versions/snapshots/1.19/${{ github.event.inputs.old_version }}/patches versions/snapshots/1.19/${{ github.event.inputs.new_version}}/patches
+        cp versions/snapshot/1.19/${{ github.event.inputs.old_version }}/patches versions/snapshot/1.19/${{ github.event.inputs.new_version}}/patches
         git config --global user.name github-actions
         git config --global user.email 41898282+github-actions[bot]@users.noreply.github.com
         git add .
