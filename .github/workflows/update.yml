@@ -34,6 +34,7 @@ jobs:
         distribution: 'temurin'
     - id: get_versions
       run: |
+        mkdirs ~/.minecraft/versions/
         wget https://launchermeta.mojang.com/mc/game/version_manifest_v2.json -o ~/.minecraft/version_manifest_v2.json
         manifest=$( cat ~/.minecraft/version_manifest_v2.json )
         echo "::set-output name=manifest::$manifest"
