@@ -49,11 +49,10 @@ jobs:
             var version = versions[i]
             if (version.id == process.env.OLD_VERSION || version.id == process.env.NEW_VERSION) {
                 var file = os.homedir() + '/.minecraft/versions/' + version.id + '/' + version.id
-                core.notice('creating directories')
                 io.mkdirP(os.homedir() + '/.minecraft/versions/' + version.id + '/')
-                exec.exec('wget ' + version.url + ' -O '  + file + '.json')
+                await exec.exec('wget ' + version.url + ' -O '  + file + '.json')
                 var versionJson = JSON.parse(fs.readFileSync(file + '.json', 'utf8'))
-                exec.exec('wget ' + versionJson.downloads.client.url + ' -O ' + file + '.jar')
+                await exec.exec('wget ' + versionJson.downloads.client.url + ' -O ' + file + '.jar')
             }
           }
     - name: Build with Gradle
