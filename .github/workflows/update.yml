@@ -32,8 +32,22 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+    - id: get_versions
+      run: |
+        wget https://launchermeta.mojang.com/mc/game/version_manifest_v2.json -o ~/.minecraft/version_manifest_v2.json
+        manifest=$( cat ~/.minecraft/version_manifest_v2.json )
+        echo "::set-output name=manifest::$manifest"
+    - uses: actions/github-script@v6
+      env:
+        MANIFEST: ${{ steps.get_versions.outputs.manifest }}
+      with:
+        script: |
+          const versions = JSON.parse(process.env.MANIFEST).versions
+          for (int i = 0; i < versions.length; i++) {
+            var version = versions[i]
+          }
     - name: Build with Gradle
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
-        arguments: update -Pold_version=${{ github.event.inputs.old_version }} -Pnew_version=${{ github.event.inputs.new_version }}
+        arguments: update -Pold_version=snapshot/1.19/${{ github.event.inputs.old_version }} -Pnew_version=snapshot/1.19/${{ github.event.inputs.new_version }}
 
