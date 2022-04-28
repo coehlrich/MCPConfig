@@ -4,8 +4,8 @@
  
  public final class JigsawStructure extends Structure {
     public static final int f_229202_ = 128;
--   public static final Codec<JigsawStructure> f_218286_ = RecordCodecBuilder.mapCodec((p_226848_) -> {
-+   public static final Codec<JigsawStructure> f_218286_ = RecordCodecBuilder.<JigsawStructure>mapCodec((p_226848_) -> {
-       return p_226848_.group(m_229135_(p_226848_), StructureTemplatePool.f_210555_.fieldOf("start_pool").forGetter((p_229238_) -> {
+-   public static final Codec<JigsawStructure> f_218286_ = RecordCodecBuilder.mapCodec((p_241097_) -> {
++   public static final Codec<JigsawStructure> f_218286_ = RecordCodecBuilder.<JigsawStructure>mapCodec((p_241097_) -> {
+       return p_241097_.group(m_229135_(p_241097_), StructureTemplatePool.f_210555_.fieldOf("start_pool").forGetter((p_229238_) -> {
           return p_229238_.f_218287_;
-       }), Codec.intRange(0, 7).fieldOf("size").forGetter((p_229236_) -> {
+       }), ResourceLocation.f_135803_.optionalFieldOf("start_jigsaw_name").forGetter((p_241109_) -> {
