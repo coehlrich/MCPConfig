@@ -42,15 +42,16 @@ jobs:
         NEW_VERSION: ${{ github.event.inputs.new_version }}
       with:
         script: |
+          const os = require('os')
           const fs = require('fs')
-          const versions = JSON.parse(fs.readFileSync('~/.minecraft/version_manifest_v2.json', 'utf8')).versions
+          const versions = JSON.parse(fs.readFileSync(os.getHomeDir() + '/.minecraft/version_manifest_v2.json', 'utf8')).versions
           for (var i = 0; i < versions.length; i++) {
             var version = versions[i]
             if (version.id == process.env.OLD_VERSION || version.id == process.env.NEW_VERSION) {
-                var file = '~/.minecraft/versions/' + version.id + '/' + version.id
-                exec.exec('wget ' + version.url + ' -o '  + file + '.json')
-                var versionJson = JSON.parse(fs.readFileSync(file + '.json', 'utf8'))
-                exec.exec('wget ' + versionJson.downloads.client.url + ' -o ' + file + '.jar')
+                var file = '/.minecraft/versions/' + version.id + '/' + version.id
+                exec.exec('wget ' + version.url + ' -O ~'  + file + '.json')
+                var versionJson = JSON.parse(fs.readFileSync(os.getHomeDir() + file + '.json', 'utf8'))
+                exec.exec('wget ' + versionJson.downloads.client.url + ' -O ~' + file + '.jar')
             }
           }
     - name: Build with Gradle
