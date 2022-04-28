@@ -40,13 +40,12 @@ jobs:
         echo "::set-output name=manifest::$manifest"
     - uses: actions/github-script@v6
       env:
-        MANIFEST: ${{ steps.get_versions.outputs.manifest }}
         OLD_VERSION: ${{ github.event.inputs.old_version }}
         NEW_VERSION: ${{ github.event.inputs.new_version }}
       with:
         script: |
           const fs = require('fs')
-          const versions = JSON.parse(process.env.MANIFEST).versions
+          const versions = JSON.parse(core.getInput('manifest')).versions
           for (var i = 0; i < versions.length; i++) {
             var version = versions[i]
             if (version.id == process.env.OLD_VERSION || version.id == process.env.NEW_VERSION) {
@@ -56,6 +55,7 @@ jobs:
                 exec.exec('wget ' + versionJson.downloads.client.url + ' -o ' + file + '.jar')
             }
           }
+        manifest: ${{ steps.get_versions.outputs.manifest }}
     - name: Build with Gradle
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
