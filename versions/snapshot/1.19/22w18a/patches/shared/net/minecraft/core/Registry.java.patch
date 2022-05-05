@@ -1,6 +1,6 @@
 --- a/net/minecraft/core/Registry.java
 +++ b/net/minecraft/core/Registry.java
-@@ -230,7 +230,7 @@
+@@ -235,7 +235,7 @@
     public static final Registry<PositionSourceType<?>> f_175420_ = m_206008_(f_175408_, (p_239681_) -> {
        return PositionSourceType.f_157871_;
     });
@@ -9,7 +9,7 @@
     public static final Registry<StatType<?>> f_122867_ = m_206008_(f_122917_, (p_239679_) -> {
        return Stats.f_12982_;
     });
-@@ -363,9 +363,9 @@
+@@ -368,9 +368,9 @@
     public static final Registry<Codec<? extends ChunkGenerator>> f_122890_ = m_205999_(f_122853_, Lifecycle.stable(), (p_206063_) -> {
        return ChunkGenerator.f_62136_;
     });
@@ -22,7 +22,7 @@
     public static final Registry<StructureProcessorType<?>> f_122891_ = m_206008_(f_122854_, (p_239721_) -> {
        return StructureProcessorType.f_74456_;
     });
-@@ -434,7 +434,7 @@
+@@ -445,7 +445,7 @@
        f_122834_.put(resourcelocation, () -> {
           return p_206014_.m_206149_(p_206013_);
        });
@@ -31,7 +31,7 @@
        return p_206013_;
     }
  
-@@ -595,7 +595,7 @@
+@@ -606,7 +606,7 @@
     public abstract Optional<HolderSet.Named<T>> m_203431_(TagKey<T> p_206052_);
  
     public Iterable<Holder<T>> m_206058_(TagKey<T> p_206059_) {
@@ -40,7 +40,7 @@
     }
  
     public abstract HolderSet.Named<T> m_203561_(TagKey<T> p_206045_);
-@@ -618,7 +618,7 @@
+@@ -629,7 +629,7 @@
  
           @Nullable
           public Holder<T> m_7942_(int p_206147_) {
@@ -49,7 +49,7 @@
           }
  
           public int m_183450_() {
-@@ -627,7 +627,7 @@
+@@ -638,7 +638,7 @@
  
           public Iterator<Holder<T>> iterator() {
              return Registry.this.m_203611_().map((p_206140_) -> {
