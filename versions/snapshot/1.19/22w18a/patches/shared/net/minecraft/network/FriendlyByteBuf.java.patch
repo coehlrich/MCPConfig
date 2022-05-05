@@ -18,6 +18,15 @@
        }
  
     }
+@@ -169,7 +169,7 @@
+ 
+    public void m_178345_(IntList p_178346_) {
+       this.m_130130_(p_178346_.size());
+-      p_178346_.forEach(this::m_130130_);
++      p_178346_.forEach((java.util.function.IntConsumer)this::m_130130_);
+    }
+ 
+    public <K, V, M extends Map<K, V>> M m_243454_(IntFunction<M> p_243455_, FriendlyByteBuf.Reader<K> p_243456_, FriendlyByteBuf.Reader<V> p_243457_) {
 @@ -177,8 +177,8 @@
        M m = p_243455_.apply(i);
  
