@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/entity/ai/village/poi/PoiSection.java
 +++ b/net/minecraft/world/entity/ai/village/poi/PoiSection.java
-@@ -30,7 +30,7 @@
+@@ -31,7 +31,7 @@
     private boolean f_27264_;
  
     public static Codec<PoiSection> m_27295_(Runnable p_27296_) {

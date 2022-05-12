@@ -1,6 +1,6 @@
 --- a/net/minecraft/data/worldgen/placement/PlacementUtils.java
 +++ b/net/minecraft/data/worldgen/placement/PlacementUtils.java
-@@ -72,7 +72,7 @@
+@@ -73,7 +73,7 @@
     }
  
     public static <FC extends FeatureConfiguration, F extends Feature<FC>> Holder<PlacedFeature> m_206502_(F p_206503_, FC p_206504_, PlacementModifier... p_206505_) {

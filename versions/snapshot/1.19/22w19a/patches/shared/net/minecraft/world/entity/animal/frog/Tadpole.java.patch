@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/entity/animal/frog/Tadpole.java
 +++ b/net/minecraft/world/entity/animal/frog/Tadpole.java
-@@ -61,7 +61,7 @@
+@@ -63,7 +63,7 @@
     }
  
     public Brain<Tadpole> m_6274_() {
