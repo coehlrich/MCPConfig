@@ -80,8 +80,14 @@ jobs:
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
         arguments: update -Pold_version=${{ github.event.inputs.old_version }} -Pnew_version=${{ github.event.inputs.new_version }}
-#    - run: |
-#        cp -r versions/snapshot/1.19/${{ github.event.inputs.old_version }}/patches versions/snapshot/1.19/${{ github.event.inputs.new_version}}/patches
+    - run: |
+        cp -r versions/${{ github.event.inputs.patch_src }}/patches versions/${{ github.event.inputs.new_version}}/patches
+        git add .
+    - if: ${{ github.event.inputs.new_branch }}
+      run: |
+        git checkout -B ${{ github.event.inputs.new_branch }} remotes/upstream/master
+        git branch -u origin/${{ github.event.inputs.new_branch }}
+        git branch -r
 #        git config --global user.name github-actions
 #        git config --global user.email 41898282+github-actions[bot]@users.noreply.github.com
 #        git add .
