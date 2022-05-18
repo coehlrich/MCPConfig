@@ -85,7 +85,8 @@ jobs:
         git add .
     - if: ${{ github.event.inputs.new_branch }}
       run: |
-        git branch -a
+        git remote add upstream https://github.com/MinecraftForge/MCPConfig
+        git fetch upstream/master
         git checkout -B ${{ github.event.inputs.new_branch }} remotes/upstream/master
         git branch -u origin/${{ github.event.inputs.new_branch }}
         git branch -r
