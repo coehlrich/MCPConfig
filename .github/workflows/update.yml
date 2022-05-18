@@ -8,16 +8,27 @@ on:
   workflow_dispatch:
     # Inputs the workflow accepts.
     inputs:
+      old_branch:
+        description: 'Old branch'
+        required: true
       old_version:
         # Friendly description to be shown in the UI instead of 'name'
         description: 'Old version'
         # Input has to be provided for the workflow to run
         required: true
+      patch_src:
+        description: 'Patches version'
+        required: true
+      new_branch:
+        description: 'New branch'
+        required: false
       new_version:
         # Friendly description to be shown in the UI instead of 'name'
         description: 'New version'
         # Input has to be provided for the workflow to run
         required: true
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   update:
 
@@ -25,3 +36,54 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+      with:
+        ref: ${{ github.event.inputs.old_branch }}
+    - uses: actions/github-script@v6
+      id: split_version
+      env:
+        OLD_VERSION: ${{ github.event.inputs.old_version }}
+        NEW_VERSION: ${{ github.event.inputs.new_version }}
+      with:
+        script: |
+          const oldVersion = process.env.OLD_VERSION.split("/");
+          const newVersion = process.env.NEW_VERSION.split("/");
+          return {new_version_name: newVersion[newVersion.length - 1], old_version_name: oldVersion[oldVersion.length - 1]}
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - id: get_versions
+      run: |
+        mkdir -p ~/.minecraft/versions/
+        wget https://launchermeta.mojang.com/mc/game/version_manifest_v2.json -O ~/.minecraft/version_manifest_v2.json
+    - uses: actions/github-script@v6
+      env:
+        OLD_VERSION: ${{ fromJson(steps.split_version.outputs.result).old_version_name }}
+        NEW_VERSION: ${{ fromJson(steps.split_version.outputs.result).new_version_name }}
+      with:
+        script: |
+          const os = require('os')
+          const fs = require('fs')
+          const versions = JSON.parse(fs.readFileSync(os.homedir() + '/.minecraft/version_manifest_v2.json', 'utf8')).versions
+          for (var i = 0; i < versions.length; i++) {
+            var version = versions[i]
+            if (version.id == process.env.OLD_VERSION || version.id == process.env.NEW_VERSION) {
+                var file = os.homedir() + '/.minecraft/versions/' + version.id + '/' + version.id
+                io.mkdirP(os.homedir() + '/.minecraft/versions/' + version.id + '/')
+                await exec.exec('wget ' + version.url + ' -O '  + file + '.json')
+                var versionJson = JSON.parse(fs.readFileSync(file + '.json', 'utf8'))
+                await exec.exec('wget ' + versionJson.downloads.client.url + ' -O ' + file + '.jar')
+            }
+          }
+    - name: Build with Gradle
+      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      with:
+        arguments: update -Pold_version=${{ github.event.inputs.old_version }} -Pnew_version=${{ github.event.inputs.new_version }}
+#    - run: |
+#        cp -r versions/snapshot/1.19/${{ github.event.inputs.old_version }}/patches versions/snapshot/1.19/${{ github.event.inputs.new_version}}/patches
+#        git config --global user.name github-actions
+#        git config --global user.email 41898282+github-actions[bot]@users.noreply.github.com
+#        git add .
+#        git commit -m "Start ${{ github.event.inputs.new_version }}"
+#        git push 
