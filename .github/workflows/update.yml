@@ -85,6 +85,7 @@ jobs:
         git add .
     - if: ${{ github.event.inputs.new_branch }}
       run: |
+        git branch -a
         git checkout -B ${{ github.event.inputs.new_branch }} remotes/upstream/master
         git branch -u origin/${{ github.event.inputs.new_branch }}
         git branch -r
