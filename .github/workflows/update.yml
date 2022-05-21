@@ -11,6 +11,7 @@ on:
       old_branch:
         description: 'Old branch'
         required: true
+        default: 'upstream/master'
       old_version:
         # Friendly description to be shown in the UI instead of 'name'
         description: 'Old version'
@@ -18,7 +19,7 @@ on:
         required: true
       patch_src:
         description: 'Patches version'
-        required: true
+        required: false
       new_branch:
         description: 'New branch'
         required: false
@@ -37,9 +38,11 @@ jobs:
     steps:
     - uses: actions/checkout@v3
       with:
-        ref: ${{ github.event.inputs.old_branch }}
         fetch-depth: 0
-    - run: git branch -a
+    - run: |
+        git remote add upstream
+        git fetch upstream
+        git checkout -b ${{ github.event.inputs.old_branch }} remotes/${{ github.event.inputs.old_branch }}
     - uses: actions/github-script@v6
       id: split_version
       env:
@@ -83,13 +86,11 @@ jobs:
       with:
         arguments: update -Pold_version=${{ github.event.inputs.old_version }} -Pnew_version=${{ github.event.inputs.new_version }}
     - run: |
-        cp -r versions/${{ github.event.inputs.patch_src }}/patches versions/${{ github.event.inputs.new_version}}/patches
+        cp -r versions/${{ github.event.inputs.patch_src || github.event.inputs.old_version }}/patches versions/${{ github.event.inputs.new_version}}/patches
         git add .
     - if: ${{ github.event.inputs.new_branch }}
       run: |
         git stash
-        git remote add upstream https://github.com/MinecraftForge/MCPConfig
-        git fetch upstream
         git checkout -B ${{ github.event.inputs.new_branch }} remotes/upstream/master
         git push -u origin ${{ github.event.inputs.new_branch }}
         git stash apply
