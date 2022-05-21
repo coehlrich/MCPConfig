@@ -40,7 +40,7 @@ jobs:
       with:
         fetch-depth: 0
     - run: |
-        git remote add upstream
+        git remote add upstream https://github.com/MinecraftForge/MCPConfig
         git fetch upstream
         git checkout -b ${{ github.event.inputs.old_branch }} remotes/${{ github.event.inputs.old_branch }}
     - uses: actions/github-script@v6
