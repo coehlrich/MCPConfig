@@ -93,7 +93,9 @@ jobs:
         git stash
         git checkout -B ${{ github.event.inputs.new_branch }} remotes/upstream/master
         git push -u origin ${{ github.event.inputs.new_branch }}
+        ls versions/${{ github.event.inputs.new_version }}
         rm -rf versions/${{ github.event.inputs.new_version }}
+        ls versions/${{ github.event.inputs.new_version }}
         git stash apply
     - run: |
         git config --global user.name github-actions
