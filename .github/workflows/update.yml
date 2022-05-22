@@ -39,7 +39,9 @@ jobs:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
+        path: MCPConfig
     - run: |
+        cd MCPConfig
         git remote add upstream https://github.com/MinecraftForge/MCPConfig
         git fetch upstream
         git checkout -b ${{ github.event.inputs.old_branch }} remotes/${{ github.event.inputs.old_branch }}
@@ -48,11 +50,16 @@ jobs:
       env:
         OLD_VERSION: ${{ github.event.inputs.old_version }}
         NEW_VERSION: ${{ github.event.inputs.new_version }}
+        PATCH_SRC_VERSION: ${{ github.event.inputs.patch_src }}
       with:
         script: |
           const oldVersion = process.env.OLD_VERSION.split("/");
           const newVersion = process.env.NEW_VERSION.split("/");
-          return {new_version_name: newVersion[newVersion.length - 1], old_version_name: oldVersion[oldVersion.length - 1]}
+          var returnValue = {new_version_name: newVersion[newVersion.length - 1], old_version_name: oldVersion[oldVersion.length - 1]}
+          if (process.env.PATCH_SRC_VERSION) {
+            retunValue.patch_src_version_name = process.env.PATCH_SRC_VERSION.split("/");
+          }
+          return returnValue;
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
@@ -66,6 +73,7 @@ jobs:
       env:
         OLD_VERSION: ${{ fromJson(steps.split_version.outputs.result).old_version_name }}
         NEW_VERSION: ${{ fromJson(steps.split_version.outputs.result).new_version_name }}
+        PATCH_SRC_VERSION: ${{ fromJson(steps.split_version.outputs.result).patch_src_version_name }}
       with:
         script: |
           const os = require('os')
@@ -73,7 +81,7 @@ jobs:
           const versions = JSON.parse(fs.readFileSync(os.homedir() + '/.minecraft/version_manifest_v2.json', 'utf8')).versions
           for (var i = 0; i < versions.length; i++) {
             var version = versions[i]
-            if (version.id == process.env.OLD_VERSION || version.id == process.env.NEW_VERSION) {
+            if (version.id == process.env.OLD_VERSION || version.id == process.env.NEW_VERSION || version.id == process.env.PATCH_SRC_VERSION) {
                 var file = os.homedir() + '/.minecraft/versions/' + version.id + '/' + version.id
                 io.mkdirP(os.homedir() + '/.minecraft/versions/' + version.id + '/')
                 await exec.exec('wget ' + version.url + ' -O '  + file + '.json')
@@ -81,10 +89,24 @@ jobs:
                 await exec.exec('wget ' + versionJson.downloads.client.url + ' -O ' + file + '.jar')
             }
           }
+    - if: ${{ github.event.inputs.patch_src_version }}
+      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      with:
+        arguments: update -Pold_version=${{ github.event.inputs.patch_src_version }} -Pnew_version=${{ github.event.inputs.new_version }}
+    - if: ${{ github.event.inputs.patch_src_version }}
+      run: |
+        cp versions/${{ github.event.inputs.new_version }}/joined.tsrg ../old_joined.tsrg
     - name: Build with Gradle
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
         arguments: update -Pold_version=${{ github.event.inputs.old_version }} -Pnew_version=${{ github.event.inputs.new_version }}
+    - if: ${{ github.event.inputs.patch_src_version }}
+      run: |
+        cp versions/${{ github.event.inputs.new_version }}/joined.tsrg ../new_joined.tsrg
+        cd ..
+        wget https://github.com/coehlrich/remap-patches/releases/download/1.0.5/remap-patches-all.jar
+        java -jar remap-patches-all.jar old_joined.tsrg new_joined.tsrg MCPConfig/versions/${{ github.event.inputs.new_version }}/patches
+        cd MCPConfig
     - run: |
         cp -r versions/${{ github.event.inputs.patch_src || github.event.inputs.old_version }}/patches versions/${{ github.event.inputs.new_version}}/patches
         git add .
