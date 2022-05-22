@@ -55,7 +55,7 @@ jobs:
           const newVersion = process.env.NEW_VERSION.split("/");
           var returnValue = {new_version_name: newVersion[newVersion.length - 1], old_version_name: oldVersion[oldVersion.length - 1]}
           if (process.env.PATCH_SRC_VERSION) {
-            retunValue.patch_src_version_name = process.env.PATCH_SRC_VERSION.split("/");
+            returnValue.patch_src_version_name = process.env.PATCH_SRC_VERSION.split("/");
           }
           return returnValue;
     - name: Set up JDK 17
