@@ -104,7 +104,7 @@ jobs:
     - if: ${{ github.event.inputs.patch_src }}
       run: |
         cd ..
-        wget https://github.com/coehlrich/remap-patches/releases/download/1.0.5/remap-patches-all.jar
+        wget https://github.com/coehlrich/remap-patches/releases/download/1.0.6/remap-patches-all.jar
         java -jar remap-patches-all.jar old_joined.tsrg new_joined.tsrg MCPConfig/versions/${{ github.event.inputs.new_version }}/patches
         cd MCPConfig
     - run: git add .
