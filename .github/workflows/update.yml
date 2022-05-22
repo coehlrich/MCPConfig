@@ -88,20 +88,20 @@ jobs:
                 await exec.exec('wget ' + versionJson.downloads.client.url + ' -O ' + file + '.jar')
             }
           }
-    - if: ${{ github.event.inputs.patch_src_version }}
+    - if: ${{ github.event.inputs.patch_src }}
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
-        arguments: update -Pold_version=${{ github.event.inputs.patch_src_version }} -Pnew_version=${{ github.event.inputs.new_version }}
-    - if: ${{ github.event.inputs.patch_src_version }}
+        arguments: update -Pold_version=${{ github.event.inputs.patch_src }} -Pnew_version=${{ github.event.inputs.new_version }}
+    - if: ${{ github.event.inputs.patch_src }}
       run: cp versions/${{ github.event.inputs.new_version }}/joined.tsrg ../old_joined.tsrg
     - name: Build with Gradle
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
         arguments: update -Pold_version=${{ github.event.inputs.old_version }} -Pnew_version=${{ github.event.inputs.new_version }}
-    - if: ${{ github.event.inputs.patch_src_version }}
+    - if: ${{ github.event.inputs.patch_src }}
       run: cp versions/${{ github.event.inputs.new_version }}/joined.tsrg ../new_joined.tsrg
     - run: cp -r versions/${{ github.event.inputs.patch_src || github.event.inputs.old_version }}/patches versions/${{ github.event.inputs.new_version}}/patches
-    - if: ${{ github.event.inputs.patch_src_version }}
+    - if: ${{ github.event.inputs.patch_src }}
       run: |
         cd ..
         wget https://github.com/coehlrich/remap-patches/releases/download/1.0.5/remap-patches-all.jar
