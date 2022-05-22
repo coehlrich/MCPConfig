@@ -92,8 +92,7 @@ jobs:
       with:
         arguments: update -Pold_version=${{ github.event.inputs.patch_src_version }} -Pnew_version=${{ github.event.inputs.new_version }}
     - if: ${{ github.event.inputs.patch_src_version }}
-      run: |
-        cp versions/${{ github.event.inputs.new_version }}/joined.tsrg ../old_joined.tsrg
+      run: cp versions/${{ github.event.inputs.new_version }}/joined.tsrg ../old_joined.tsrg
     - name: Build with Gradle
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
