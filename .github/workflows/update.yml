@@ -140,7 +140,7 @@ jobs:
       run: |
         git add .
         git diff-index --quiet HEAD
-    - if: ${{ steps.check_changes.outcome == 'success' }}
+    - if: ${{ steps.check_changes.outcome == 'failure' }}
       run: |
         git commit -m "Update patches"
         git push
