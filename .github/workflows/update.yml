@@ -53,7 +53,7 @@ jobs:
         script: |
           const oldVersion = process.env.OLD_VERSION.split("/");
           const newVersion = process.env.NEW_VERSION.split("/");
-          var returnValue = {new_version_name: newVersion[newVersion.length - 1], old_version_name: oldVersion[oldVersion.length - 1]}
+          var returnValue = {new_version_name: newVersion[newVersion.length - 1], old_version_name: oldVersion[oldVersion.length - 1], new_version_type: newVersion[0]}
           if (process.env.PATCH_SRC_VERSION) {
             var pathSrcVersion = process.env.PATCH_SRC_VERSION.split("/");
             returnValue.patch_src_version_name = pathSrcVersion[pathSrcVersion.length - 1]
@@ -63,6 +63,11 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '17'
+        distribution: 'temurin'
+    - name: Set up JDK 18
+      uses: actions/setup-java@v3
+      with:
+        java-version: '18'
         distribution: 'temurin'
     - id: get_versions
       run: |
@@ -122,3 +127,25 @@ jobs:
         git add .
         git commit -m "Start ${{ github.event.inputs.new_version }}"
         git push 
+    - name: Apply and Create patches
+      id: patches
+      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      continue-on-error: true
+      with:
+        arguments: :${{ fromJson(steps.split_version.outputs.result).new_version_name }}:projectApplyAll :${{ fromJson(steps.split_version.outputs.result).new_version_name }}:projectMakeAll -Ptype=${{ fromJson(steps.split_version.outputs.result).new_version_type }}
+    - if: ${{ steps.patches.outcome == 'success' }}
+      name: Check if patches have changed
+      id: check_changes
+      continue-on-error: true
+      run: |
+        git add .
+        git diff-index --quiet HEAD
+    - if: ${{ steps.check_changes.outcome == 'success' }}
+      run: |
+        git commit -m "Update patches"
+        git push
+    - name: Test jdks
+      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      continue-on-error: true
+      with:
+        arguments: :${{ fromJson(steps.split_version.outputs.result).new_version_name }}:testJdks -Ptype=${{ fromJson(steps.split_version.outputs.result).new_version_type }}
