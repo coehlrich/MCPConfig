@@ -1,20 +1,20 @@
 --- a/net/minecraft/network/FriendlyByteBuf.java
 +++ b/net/minecraft/network/FriendlyByteBuf.java
 @@ -149,7 +149,7 @@
-       C c = p_236839_.apply(i);
+       C c = p_217193_.apply(i);
  
        for(int j = 0; j < i; ++j) {
--         c.add(p_236840_.apply((T)this));
-+         c.add(p_236840_.apply(this));
+-         c.add(p_217194_.apply((T)this));
++         c.add(p_217194_.apply(this));
        }
  
        return c;
 @@ -159,7 +159,7 @@
-       this.m_130130_(p_236829_.size());
+       this.m_130130_(p_217365_.size());
  
-       for(T t : p_236829_) {
--         p_236830_.accept((T)this, t);
-+         p_236830_.accept(this, t);
+       for(T t : p_217365_) {
+-         p_217366_.accept((T)this, t);
++         p_217366_.accept(this, t);
        }
  
     }
@@ -26,76 +26,76 @@
 +      p_178346_.forEach((java.util.function.IntConsumer)this::m_130130_);
     }
  
-    public <K, V, M extends Map<K, V>> M m_236841_(IntFunction<M> p_236842_, FriendlyByteBuf.Reader<K> p_236843_, FriendlyByteBuf.Reader<V> p_236844_) {
+    public <K, V, M extends Map<K, V>> M m_222866_(IntFunction<M> p_222867_, FriendlyByteBuf.Reader<K> p_222868_, FriendlyByteBuf.Reader<V> p_222869_) {
 @@ -189,8 +189,8 @@
-       M m = p_236842_.apply(i);
+       M m = p_222867_.apply(i);
  
        for(int j = 0; j < i; ++j) {
--         K k = p_236843_.apply((K)this);
--         V v = p_236844_.apply((V)this);
-+         K k = p_236843_.apply(this);
-+         V v = p_236844_.apply(this);
+-         K k = p_222868_.apply((K)this);
+-         V v = p_222869_.apply((V)this);
++         K k = p_222868_.apply(this);
++         V v = p_222869_.apply(this);
           m.put(k, v);
        }
  
 @@ -204,8 +204,8 @@
-    public <K, V> void m_236831_(Map<K, V> p_236832_, FriendlyByteBuf.Writer<K> p_236833_, FriendlyByteBuf.Writer<V> p_236834_) {
-       this.m_130130_(p_236832_.size());
-       p_236832_.forEach((p_236856_, p_236857_) -> {
--         p_236833_.accept((K)this, p_236856_);
--         p_236834_.accept((V)this, p_236857_);
-+         p_236833_.accept(this, p_236856_);
-+         p_236834_.accept(this, p_236857_);
+    public <K, V> void m_178355_(Map<K, V> p_178356_, FriendlyByteBuf.Writer<K> p_216166_, FriendlyByteBuf.Writer<V> p_216167_) {
+       this.m_130130_(p_178356_.size());
+       p_178356_.forEach((p_223511_, p_223512_) -> {
+-         p_216166_.accept((K)this, p_223511_);
+-         p_216167_.accept((V)this, p_223512_);
++         p_216166_.accept(this, p_223511_);
++         p_216167_.accept(this, p_223512_);
        });
     }
  
 @@ -221,7 +221,7 @@
-    public <T> void m_236835_(Optional<T> p_236836_, FriendlyByteBuf.Writer<T> p_236837_) {
-       if (p_236836_.isPresent()) {
+    public <T> void m_216916_(Optional<T> p_216917_, FriendlyByteBuf.Writer<T> p_216918_) {
+       if (p_216917_.isPresent()) {
           this.writeBoolean(true);
--         p_236837_.accept((T)this, p_236836_.get());
-+         p_236837_.accept(this, p_236836_.get());
+-         p_216918_.accept((T)this, p_216917_.get());
++         p_216918_.accept(this, p_216917_.get());
        } else {
           this.writeBoolean(false);
        }
 @@ -229,18 +229,18 @@
     }
  
-    public <T> Optional<T> m_236860_(FriendlyByteBuf.Reader<T> p_236861_) {
--      return this.readBoolean() ? Optional.of(p_236861_.apply((T)this)) : Optional.empty();
-+      return this.readBoolean() ? Optional.of(p_236861_.apply(this)) : Optional.empty();
+    public <T> Optional<T> m_229121_(FriendlyByteBuf.Reader<T> p_229122_) {
+-      return this.readBoolean() ? Optional.of(p_229122_.apply((T)this)) : Optional.empty();
++      return this.readBoolean() ? Optional.of(p_229122_.apply(this)) : Optional.empty();
     }
  
     @Nullable
-    public <T> T m_236868_(FriendlyByteBuf.Reader<T> p_236869_) {
--      return (T)(this.readBoolean() ? p_236869_.apply((T)this) : null);
-+      return (T)(this.readBoolean() ? p_236869_.apply(this) : null);
+    public <T> T m_233346_(FriendlyByteBuf.Reader<T> p_233347_) {
+-      return (T)(this.readBoolean() ? p_233347_.apply((T)this) : null);
++      return (T)(this.readBoolean() ? p_233347_.apply(this) : null);
     }
  
-    public <T> void m_236821_(@Nullable T p_236822_, FriendlyByteBuf.Writer<T> p_236823_) {
-       if (p_236822_ != null) {
+    public <T> void m_223038_(@Nullable T p_223039_, FriendlyByteBuf.Writer<T> p_223040_) {
+       if (p_223039_ != null) {
           this.writeBoolean(true);
--         p_236823_.accept((T)this, p_236822_);
-+         p_236823_.accept(this, p_236822_);
+-         p_223040_.accept((T)this, p_223039_);
++         p_223040_.accept(this, p_223039_);
        } else {
           this.writeBoolean(false);
        }
 @@ -250,15 +250,15 @@
-    public <L, R> void m_236810_(Either<L, R> p_236811_, FriendlyByteBuf.Writer<L> p_236812_, FriendlyByteBuf.Writer<R> p_236813_) {
-       p_236811_.ifLeft((p_236867_) -> {
+    public <L, R> void m_220245_(Either<L, R> p_220246_, FriendlyByteBuf.Writer<L> p_220247_, FriendlyByteBuf.Writer<R> p_220248_) {
+       p_220246_.ifLeft((p_217271_) -> {
           this.writeBoolean(true);
--         p_236812_.accept((L)this, p_236867_);
-+         p_236812_.accept(this, p_236867_);
-       }).ifRight((p_236852_) -> {
+-         p_220247_.accept((L)this, p_217271_);
++         p_220247_.accept(this, p_217271_);
+       }).ifRight((p_220405_) -> {
           this.writeBoolean(false);
--         p_236813_.accept((R)this, p_236852_);
-+         p_236813_.accept(this, p_236852_);
+-         p_220248_.accept((R)this, p_220405_);
++         p_220248_.accept(this, p_220405_);
        });
     }
  
-    public <L, R> Either<L, R> m_236862_(FriendlyByteBuf.Reader<L> p_236863_, FriendlyByteBuf.Reader<R> p_236864_) {
--      return this.readBoolean() ? Either.left(p_236863_.apply((L)this)) : Either.right(p_236864_.apply((R)this));
-+      return this.readBoolean() ? Either.left(p_236863_.apply(this)) : Either.right(p_236864_.apply(this));
+    public <L, R> Either<L, R> m_230964_(FriendlyByteBuf.Reader<L> p_230965_, FriendlyByteBuf.Reader<R> p_230966_) {
+-      return this.readBoolean() ? Either.left(p_230965_.apply((L)this)) : Either.right(p_230966_.apply((R)this));
++      return this.readBoolean() ? Either.left(p_230965_.apply(this)) : Either.right(p_230966_.apply(this));
     }
  
     public byte[] m_130052_() {

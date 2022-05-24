@@ -3,19 +3,19 @@
 @@ -94,15 +94,15 @@
     }
  
-    private static void m_219536_(Brain<Warden> p_219537_) {
--      p_219537_.m_21891_(Activity.f_37979_, 10, ImmutableList.of(new SetRoarTarget<>(Warden::m_219448_), new TryToSniff(), new RunOne(ImmutableMap.of(MemoryModuleType.f_217785_, MemoryStatus.VALUE_ABSENT), ImmutableList.of(Pair.of(new RandomStroll(0.5F), 2), Pair.of(new DoNothing(30, 60), 1)))));
-+      p_219537_.m_21891_(Activity.f_37979_, 10, ImmutableList.of(new SetRoarTarget<>(Warden::m_219448_), new TryToSniff(), new RunOne<>(ImmutableMap.of(MemoryModuleType.f_217785_, MemoryStatus.VALUE_ABSENT), ImmutableList.of(Pair.of(new RandomStroll(0.5F), 2), Pair.of(new DoNothing(30, 60), 1)))));
+    private static void m_229026_(Brain<Warden> p_229027_) {
+-      p_229027_.m_21891_(Activity.f_37979_, 10, ImmutableList.of(new SetRoarTarget<>(Warden::m_229966_), new TryToSniff(), new RunOne(ImmutableMap.of(MemoryModuleType.f_214128_, MemoryStatus.VALUE_ABSENT), ImmutableList.of(Pair.of(new RandomStroll(0.5F), 2), Pair.of(new DoNothing(30, 60), 1)))));
++      p_229027_.m_21891_(Activity.f_37979_, 10, ImmutableList.of(new SetRoarTarget<>(Warden::m_229966_), new TryToSniff(), new RunOne<>(ImmutableMap.of(MemoryModuleType.f_214128_, MemoryStatus.VALUE_ABSENT), ImmutableList.of(Pair.of(new RandomStroll(0.5F), 2), Pair.of(new DoNothing(30, 60), 1)))));
     }
  
-    private static void m_219541_(Brain<Warden> p_219542_) {
--      p_219542_.m_21895_(Activity.f_219850_, 5, ImmutableList.of(new SetRoarTarget<>(Warden::m_219448_), new GoToTargetLocation(MemoryModuleType.f_217783_, 2, 0.7F)), MemoryModuleType.f_217783_);
-+      p_219542_.m_21895_(Activity.f_219850_, 5, ImmutableList.of(new SetRoarTarget<>(Warden::m_219448_), new GoToTargetLocation<>(MemoryModuleType.f_217783_, 2, 0.7F)), MemoryModuleType.f_217783_);
+    private static void m_229604_(Brain<Warden> p_229605_) {
+-      p_229605_.m_21895_(Activity.f_214988_, 5, ImmutableList.of(new SetRoarTarget<>(Warden::m_229966_), new GoToTargetLocation(MemoryModuleType.f_214439_, 2, 0.7F)), MemoryModuleType.f_214439_);
++      p_229605_.m_21895_(Activity.f_214988_, 5, ImmutableList.of(new SetRoarTarget<>(Warden::m_229966_), new GoToTargetLocation<>(MemoryModuleType.f_214439_, 2, 0.7F)), MemoryModuleType.f_214439_);
     }
  
-    private static void m_219543_(Brain<Warden> p_219544_) {
--      p_219544_.m_21895_(Activity.f_219849_, 5, ImmutableList.of(new SetRoarTarget<>(Warden::m_219448_), new Sniffing(f_219498_)), MemoryModuleType.f_217785_);
-+      p_219544_.m_21895_(Activity.f_219849_, 5, ImmutableList.of(new SetRoarTarget<>(Warden::m_219448_), new Sniffing<>(f_219498_)), MemoryModuleType.f_217785_);
+    private static void m_235197_(Brain<Warden> p_235198_) {
+-      p_235198_.m_21895_(Activity.f_215092_, 5, ImmutableList.of(new SetRoarTarget<>(Warden::m_229966_), new Sniffing(f_214715_)), MemoryModuleType.f_214128_);
++      p_235198_.m_21895_(Activity.f_215092_, 5, ImmutableList.of(new SetRoarTarget<>(Warden::m_229966_), new Sniffing<>(f_214715_)), MemoryModuleType.f_214128_);
     }
  
-    private static void m_219545_(Brain<Warden> p_219546_) {
+    private static void m_223186_(Brain<Warden> p_223187_) {

@@ -25,7 +25,7 @@
 -         longset.removeIf((p_157574_) -> {
 +         longset.removeIf((long p_157574_) -> {
              boolean flag = this.f_157497_.get(p_157574_) == Visibility.HIDDEN;
-             return flag ? this.m_157568_(p_157574_) : this.m_157512_(p_157574_, (p_157589_) -> {
+             return flag ? this.m_157568_(p_157574_) : this.m_157512_(p_157574_, (p_157591_) -> {
              });
 @@ -327,7 +327,7 @@
  
