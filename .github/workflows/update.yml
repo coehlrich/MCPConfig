@@ -40,6 +40,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: "Log arguments"
+      run: |
+        echo "Old branch: ${{ github.event.inputs.old_branch }}"
+        echo "Old version: ${{ github.event.inputs.old_version }}"
+        echo "Patches version: ${{ github.event.inputs.patch_src }}"
+        echo "New branch: ${{ github.event.inputs.new_branch }}"
+        echo "New version: ${{ github.event.inputs.new_version }}"
+        echo "Fix getLevel issue: ${{ github.event.inputs.fix_getlevel}}"
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
