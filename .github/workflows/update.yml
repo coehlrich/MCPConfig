@@ -28,6 +28,10 @@ on:
         description: 'New version'
         # Input has to be provided for the workflow to run
         required: true
+      fix_getlevel:
+        description: 'Fix getLevel issue'
+        required: false
+        type: boolean
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
@@ -112,6 +116,8 @@ jobs:
         wget https://github.com/coehlrich/remap-patches/releases/download/1.0.6/remap-patches-all.jar
         java -jar remap-patches-all.jar old_joined.tsrg new_joined.tsrg MCPConfig/versions/${{ github.event.inputs.new_version }}/patches
         cd MCPConfig
+    - if: ${{ github.event.inputs.fix_getlevel == 'true' }}
+      run: sed -i 's/m_183503_/m_214157_/g' versions/${{ github.event.inputs.new_version }}/joined.tsrg
     - run: git add .
     - if: ${{ github.event.inputs.new_branch }}
       run: |
