@@ -3,9 +3,9 @@
 @@ -20,7 +20,7 @@
  
  public final class JigsawStructure extends Structure {
-    public static final int f_214380_ = 128;
--   public static final Codec<JigsawStructure> f_215817_ = RecordCodecBuilder.mapCodec((p_219522_) -> {
-+   public static final Codec<JigsawStructure> f_215817_ = RecordCodecBuilder.<JigsawStructure>mapCodec((p_219522_) -> {
-       return p_219522_.group(m_221810_(p_219522_), StructureTemplatePool.f_210555_.fieldOf("start_pool").forGetter((p_224612_) -> {
-          return p_224612_.f_216142_;
-       }), ResourceLocation.f_135803_.optionalFieldOf("start_jigsaw_name").forGetter((p_233693_) -> {
+    public static final int f_215169_ = 128;
+-   public static final Codec<JigsawStructure> f_215656_ = RecordCodecBuilder.mapCodec((p_234039_) -> {
++   public static final Codec<JigsawStructure> f_215656_ = RecordCodecBuilder.<JigsawStructure>mapCodec((p_234039_) -> {
+       return p_234039_.group(m_227150_(p_234039_), StructureTemplatePool.f_210555_.fieldOf("start_pool").forGetter((p_218519_) -> {
+          return p_218519_.f_213783_;
+       }), ResourceLocation.f_135803_.optionalFieldOf("start_jigsaw_name").forGetter((p_232307_) -> {

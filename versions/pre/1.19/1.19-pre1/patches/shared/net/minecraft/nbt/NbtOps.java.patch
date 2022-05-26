@@ -6,8 +6,8 @@
        if (p_129014_ instanceof CollectionTag) {
 -         CollectionTag<?> collectiontag = (CollectionTag)p_129014_;
 +         CollectionTag<T> collectiontag = (CollectionTag<T>)p_129014_;
-          collectiontag.forEach((p_129055_) -> {
-             p_129013_.add(p_129055_);
+          collectiontag.forEach((p_129064_) -> {
+             p_129013_.add(p_129064_);
           });
        }
  
@@ -19,8 +19,8 @@
        if (p_129010_ instanceof CollectionTag) {
 -         CollectionTag<?> collectiontag = (CollectionTag)p_129010_;
 +         CollectionTag<T> collectiontag = (CollectionTag<T>)p_129010_;
-          collectiontag.forEach((p_129064_) -> {
-             p_129009_.add(p_129064_);
+          collectiontag.forEach((p_129055_) -> {
+             p_129009_.add(p_129055_);
           });
        }
  

@@ -1,16 +1,16 @@
 --- a/net/minecraft/network/syncher/EntityDataSerializer.java
 +++ b/net/minecraft/network/syncher/EntityDataSerializer.java
 @@ -18,11 +18,11 @@
-    static <T> EntityDataSerializer<T> m_220173_(final FriendlyByteBuf.Writer<T> p_220174_, final FriendlyByteBuf.Reader<T> p_220175_) {
+    static <T> EntityDataSerializer<T> m_224556_(final FriendlyByteBuf.Writer<T> p_224557_, final FriendlyByteBuf.Reader<T> p_224558_) {
        return new EntityDataSerializer.ForValueType<T>() {
-          public void m_6856_(FriendlyByteBuf p_218847_, T p_218848_) {
--            p_220174_.accept((T)p_218847_, p_218848_);
-+            p_220174_.accept(p_218847_, p_218848_);
+          public void m_6856_(FriendlyByteBuf p_227274_, T p_227275_) {
+-            p_224557_.accept((T)p_227274_, p_227275_);
++            p_224557_.accept(p_227274_, p_227275_);
           }
  
-          public T m_6709_(FriendlyByteBuf p_220604_) {
--            return p_220175_.apply((T)p_220604_);
-+            return p_220175_.apply(p_220604_);
+          public T m_6709_(FriendlyByteBuf p_226262_) {
+-            return p_224558_.apply((T)p_226262_);
++            return p_224558_.apply(p_226262_);
           }
        };
     }

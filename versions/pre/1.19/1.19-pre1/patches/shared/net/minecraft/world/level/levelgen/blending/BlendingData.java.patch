@@ -4,8 +4,8 @@
     private final List<List<Holder<Biome>>> f_202276_;
     private final transient double[][] f_190270_;
     private static final Codec<double[]> f_190272_ = Codec.DOUBLE.listOf().xmap(Doubles::toArray, Doubles::asList);
--   public static final Codec<BlendingData> f_190254_ = RecordCodecBuilder.create((p_221847_) -> {
-+   public static final Codec<BlendingData> f_190254_ = RecordCodecBuilder.<BlendingData>create((p_221847_) -> {
-       return p_221847_.group(Codec.INT.fieldOf("min_section").forGetter((p_227199_) -> {
-          return p_227199_.f_213677_.m_151560_();
-       }), Codec.INT.fieldOf("max_section").forGetter((p_221171_) -> {
+-   public static final Codec<BlendingData> f_190254_ = RecordCodecBuilder.create((p_222826_) -> {
++   public static final Codec<BlendingData> f_190254_ = RecordCodecBuilder.<BlendingData>create((p_222826_) -> {
+       return p_222826_.group(Codec.INT.fieldOf("min_section").forGetter((p_233324_) -> {
+          return p_233324_.f_214679_.m_151560_();
+       }), Codec.INT.fieldOf("max_section").forGetter((p_217577_) -> {
