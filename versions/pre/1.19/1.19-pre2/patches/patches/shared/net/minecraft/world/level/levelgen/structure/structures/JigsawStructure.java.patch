@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/level/levelgen/structure/structures/JigsawStructure.java
++++ b/net/minecraft/world/level/levelgen/structure/structures/JigsawStructure.java
+@@ -20,7 +20,7 @@
+ 
+ public final class JigsawStructure extends Structure {
+    public static final int f_215169_ = 128;
+-   public static final Codec<JigsawStructure> f_215656_ = RecordCodecBuilder.mapCodec((p_234039_) -> {
++   public static final Codec<JigsawStructure> f_215656_ = RecordCodecBuilder.<JigsawStructure>mapCodec((p_234039_) -> {
+       return p_234039_.group(m_227150_(p_234039_), StructureTemplatePool.f_210555_.fieldOf("start_pool").forGetter((p_218519_) -> {
+          return p_218519_.f_213783_;
+       }), ResourceLocation.f_135803_.optionalFieldOf("start_jigsaw_name").forGetter((p_232307_) -> {
