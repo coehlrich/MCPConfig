@@ -1,21 +1,21 @@
 --- a/net/minecraft/data/BuiltinRegistries.java
 +++ b/net/minecraft/data/BuiltinRegistries.java
 @@ -52,7 +52,7 @@
-    public static final Registry<ConfiguredWorldCarver<?>> f_123860_ = m_230486_(Registry.f_122880_, (p_216459_) -> {
+    public static final Registry<ConfiguredWorldCarver<?>> f_123860_ = m_218913_(Registry.f_122880_, (p_216183_) -> {
        return Carvers.f_126848_;
     });
--   public static final Registry<ConfiguredFeature<?, ?>> f_123861_ = m_230486_(Registry.f_122881_, FeatureUtils::m_222066_);
-+   public static final Registry<ConfiguredFeature<?, ?>> f_123861_ = m_230486_(Registry.f_122881_, (RegistryBootstrap)FeatureUtils::m_222066_);
-    public static final Registry<PlacedFeature> f_194653_ = m_230486_(Registry.f_194567_, PlacementUtils::m_216767_);
-    public static final Registry<Structure> f_214344_ = m_230486_(Registry.f_214543_, Structures::m_224127_);
-    public static final Registry<StructureSet> f_211084_ = m_230486_(Registry.f_211073_, StructureSets::m_227686_);
+-   public static final Registry<ConfiguredFeature<?, ?>> f_123861_ = m_218913_(Registry.f_122881_, FeatureUtils::m_221041_);
++   public static final Registry<ConfiguredFeature<?, ?>> f_123861_ = m_218913_(Registry.f_122881_, (RegistryBootstrap)FeatureUtils::m_221041_);
+    public static final Registry<PlacedFeature> f_194653_ = m_218913_(Registry.f_194567_, PlacementUtils::m_218105_);
+    public static final Registry<Structure> f_213590_ = m_218913_(Registry.f_214511_, Structures::m_226860_);
+    public static final Registry<StructureSet> f_211084_ = m_218913_(Registry.f_211073_, StructureSets::m_228764_);
 @@ -82,12 +82,12 @@
        f_123867_.put(resourcelocation, () -> {
-          return p_228441_.m_229043_(p_228440_);
+          return p_224008_.m_233170_(p_224007_);
        });
--      f_123868_.m_203505_(p_228439_, p_228440_, p_228442_);
-+      f_123868_.m_203505_((ResourceKey)p_228439_, p_228440_, p_228442_);
-       return p_228440_;
+-      f_123868_.m_203505_(p_224006_, p_224007_, p_224009_);
++      f_123868_.m_203505_((ResourceKey)p_224006_, p_224007_, p_224009_);
+       return p_224007_;
     }
  
     public static <V extends T, T> Holder<V> m_206380_(Registry<T> p_206381_, String p_206382_, V p_206383_) {

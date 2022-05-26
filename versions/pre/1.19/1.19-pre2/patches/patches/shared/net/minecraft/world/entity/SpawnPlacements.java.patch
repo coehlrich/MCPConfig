@@ -2,10 +2,10 @@
 +++ b/net/minecraft/world/entity/SpawnPlacements.java
 @@ -61,7 +61,7 @@
  
-    public static <T extends Entity> boolean m_234272_(EntityType<T> p_234273_, ServerLevelAccessor p_234274_, MobSpawnType p_234275_, BlockPos p_234276_, RandomSource p_234277_) {
-       SpawnPlacements.Data spawnplacements$data = f_21750_.get(p_234273_);
--      return spawnplacements$data == null || spawnplacements$data.f_21769_.m_21780_(p_234273_, p_234274_, p_234275_, p_234276_, p_234277_);
-+      return spawnplacements$data == null || spawnplacements$data.f_21769_.m_21780_((EntityType)p_234273_, p_234274_, p_234275_, p_234276_, p_234277_);
+    public static <T extends Entity> boolean m_217974_(EntityType<T> p_217975_, ServerLevelAccessor p_217976_, MobSpawnType p_217977_, BlockPos p_217978_, RandomSource p_217979_) {
+       SpawnPlacements.Data spawnplacements$data = f_21750_.get(p_217975_);
+-      return spawnplacements$data == null || spawnplacements$data.f_21769_.m_21780_(p_217975_, p_217976_, p_217977_, p_217978_, p_217979_);
++      return spawnplacements$data == null || spawnplacements$data.f_21769_.m_21780_((EntityType)p_217975_, p_217976_, p_217977_, p_217978_, p_217979_);
     }
  
     static {
