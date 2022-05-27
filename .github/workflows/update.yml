@@ -118,7 +118,9 @@ jobs:
     - if: ${{ github.event.inputs.patch_src }}
       run: cp versions/${{ github.event.inputs.new_version }}/joined.tsrg ../new_joined.tsrg
     - if: ${{ github.event.inputs.patch_src != github.event.inputs.new_version }}
-      run: cp -r versions/${{ github.event.inputs.patch_src || github.event.inputs.old_version }}/patches versions/${{ github.event.inputs.new_version}}/patches
+      run: |
+        rm -rf versions/${{ github.event.inputs.new_version}}/patches
+        cp -r versions/${{ github.event.inputs.patch_src || github.event.inputs.old_version }}/patches versions/${{ github.event.inputs.new_version}}/patches
     - if: ${{ github.event.inputs.patch_src }}
       run: |
         cd ..
