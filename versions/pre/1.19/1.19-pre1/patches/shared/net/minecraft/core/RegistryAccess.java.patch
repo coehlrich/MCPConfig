@@ -59,7 +59,7 @@
           });
        }
  
-@@ -288,7 +288,7 @@
+@@ -284,7 +284,7 @@
        }
  
        private static <T> RegistryAccess.RegistryEntry<T> m_206243_(ResourceKey<? extends Registry<?>> p_206244_, Registry<?> p_206245_) {
@@ -68,7 +68,7 @@
        }
  
        private RegistryAccess.RegistryEntry<T> m_206247_() {
-@@ -323,13 +323,13 @@
+@@ -311,13 +311,13 @@
  
        public <E> Optional<Registry<E>> m_142664_(ResourceKey<? extends Registry<? extends E>> p_206263_) {
           return Optional.ofNullable(this.f_206257_.get(p_206263_)).map((p_206266_) -> {
