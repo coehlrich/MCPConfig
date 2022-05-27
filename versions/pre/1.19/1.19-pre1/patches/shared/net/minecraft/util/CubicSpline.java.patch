@@ -7,9 +7,6 @@
 -      Codec<Point<C, I>> codec = RecordCodecBuilder.create((p_184270_) -> {
 -         return p_184270_.group(Codec.FLOAT.fieldOf("location").forGetter(Point::f_184273_), ExtraCodecs.m_184415_(mutableobject::getValue).fieldOf("value").forGetter(Point::m_184281_), Codec.FLOAT.fieldOf("derivative").forGetter(Point::f_184275_)).apply(p_184270_, (p_184242_, p_184243_, p_184244_) -> {
              record Point<C, I extends ToFloatFunction<C>>(float f_184273_, CubicSpline<C, I> f_184274_, float f_184275_) {
-                public CubicSpline<C, I> m_184281_() {
-                   return this.f_184274_;
-                }
              }
 +      Codec<Point<C, I>> codec = RecordCodecBuilder.create((p_184270_) -> {
 +         return p_184270_.group(Codec.FLOAT.fieldOf("location").forGetter(Point::f_184273_), ExtraCodecs.m_184415_(mutableobject::getValue).fieldOf("value").forGetter(Point::m_184281_), Codec.FLOAT.fieldOf("derivative").forGetter(Point::f_184275_)).apply(p_184270_, (p_184242_, p_184243_, p_184244_) -> {
