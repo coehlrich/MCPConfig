@@ -13,11 +13,11 @@
     private static <K extends ResourceKey<? extends Registry<?>>, V extends Registry<?>> Codec<RegistryAccess> m_206163_(UnboundedMapCodec<K, V> p_206164_) {
        return p_206164_.xmap(RegistryAccess.ImmutableRegistryAccess::new, (p_206180_) -> {
           return p_206180_.m_206206_().collect(ImmutableMap.toImmutableMap((p_206195_) -> {
--            return p_206195_.m_206238_();
-+            return (K)p_206195_.m_206238_();
+-            return p_206195_.f_206233_();
++            return (K)p_206195_.f_206233_();
           }, (p_206190_) -> {
--            return p_206190_.m_206246_();
-+            return (V)p_206190_.m_206246_();
+-            return p_206190_.f_206234_();
++            return (V)p_206190_.f_206234_();
           }));
        });
     }
