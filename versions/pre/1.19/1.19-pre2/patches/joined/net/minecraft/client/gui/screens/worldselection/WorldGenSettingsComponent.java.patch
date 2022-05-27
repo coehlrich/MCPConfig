@@ -3,9 +3,9 @@
 @@ -189,7 +189,7 @@
     }
  
-    private static Component m_227089_(Holder<WorldPreset> p_227090_) {
--      return p_227090_.m_203543_().map((p_232006_) -> {
-+      return p_227090_.m_203543_().<Component>map((p_232006_) -> {
-          return Component.m_225505_(p_232006_.m_135782_().m_228450_("generator"));
+    private static Component m_225383_(Holder<WorldPreset> p_225384_) {
+-      return p_225384_.m_203543_().map((p_229397_) -> {
++      return p_225384_.m_203543_().<Component>map((p_229397_) -> {
+          return Component.m_220198_(p_229397_.m_135782_().m_228306_("generator"));
        }).orElse(f_101382_);
     }
