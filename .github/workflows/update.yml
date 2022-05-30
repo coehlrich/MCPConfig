@@ -91,7 +91,7 @@ jobs:
       name: Cache ETags
       with:
         path: build/download-task/**
-        key: gradle-download-task-${{ hashFiles('build/download-task/etags.json) }}
+        key: gradle-download-task-${{ hashFiles('build/download-task/etags.json') }}
     - uses: actions/cache@v3
       name: Cache Version Manifest
       with:
