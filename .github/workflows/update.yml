@@ -199,6 +199,7 @@ jobs:
       with:
         java-version: ${{ matrix.jdk_version }}
         distribution: 'temurin'
+    - run: "echo \"Required JDK version: ${{ needs.update.outputs.jdk_version }}\""
     - name: Test jdks
       if: ${{ matrix.jdk_version >= needs.update.outputs.jdk_version}}
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
