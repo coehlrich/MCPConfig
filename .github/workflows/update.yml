@@ -194,7 +194,7 @@ jobs:
     steps: 
     - uses: actions/checkout@v3
       with:
-        ref: ${{ jobs.update.outputs.branch }}
+        ref: ${{ needs.update.outputs.branch }}
     - name: Set up JDK ${{ matrix.jdk_version }}
       uses: actions/setup-java@v3
       with:
@@ -204,6 +204,6 @@ jobs:
       if: ${{ matrix.jdk_version >= jobs.update.outputs.jdk_version}}
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
-        arguments: :${{ jobs.update.outputs.version_name }}:testCompile${{ matrix.side }}${{ matrix.mappings }}${{ matrix.jdk_version }} :${{ jobs.update.outputs.version_name }}:testDecompile${{ matrix.side }}${{ matrix.mappings }}${{ matrix.jdk_version }}Compare -Ptype=${{ jobs.update.outputs.version_type }}
+        arguments: :${{ needs.update.outputs.version_name }}:testCompile${{ matrix.side }}${{ matrix.mappings }}${{ matrix.jdk_version }} :${{ needs.update.outputs.version_name }}:testDecompile${{ matrix.side }}${{ matrix.mappings }}${{ matrix.jdk_version }}Compare -Ptype=${{ needs.update.outputs.version_type }}
 
       
