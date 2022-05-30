@@ -75,7 +75,7 @@ jobs:
     - run: |
         git remote add upstream https://github.com/MinecraftForge/MCPConfig
         git fetch upstream
-        git checkout -b ${{ fromJson(steps.split_version.outputs.result).old_branch }} remotes/${{ github.event.inputs.old_branch }}
+        git checkout -B ${{ fromJson(steps.split_version.outputs.result).old_branch }} remotes/${{ github.event.inputs.old_branch }}
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
