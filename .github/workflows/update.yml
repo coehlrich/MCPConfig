@@ -38,7 +38,11 @@ jobs:
   update:
 
     runs-on: ubuntu-latest
-
+    outputs:
+      jdk_versions: ${{ steps.java_versions.outputs.result }}
+      version_type: ${{ fromJson(steps.split_version.outputs.result).new_version_type }}
+      version_name: ${{ fromJson(steps.split_version.outputs.result).new_version_name }}
+      branch: ${{ github.event.inputs.new_branch || fromJson(steps.split_version.outputs.result).old_branch }}
     steps:
     - name: "Log arguments"
       run: |
@@ -51,35 +55,31 @@ jobs:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
-    - run: |
-        git remote add upstream https://github.com/MinecraftForge/MCPConfig
-        git fetch upstream
-        git checkout -b ${{ github.event.inputs.old_branch }} remotes/${{ github.event.inputs.old_branch }}
     - uses: actions/github-script@v6
       id: split_version
       env:
         OLD_VERSION: ${{ github.event.inputs.old_version }}
         NEW_VERSION: ${{ github.event.inputs.new_version }}
         PATCH_SRC_VERSION: ${{ github.event.inputs.patch_src }}
+        OLD_BRANCH: ${{ github.event.inputs.old_branch }}
       with:
         script: |
           const oldVersion = process.env.OLD_VERSION.split("/");
           const newVersion = process.env.NEW_VERSION.split("/");
-          var returnValue = {new_version_name: newVersion[newVersion.length - 1], old_version_name: oldVersion[oldVersion.length - 1], new_version_type: newVersion[0]}
+          var returnValue = {new_version_name: newVersion[newVersion.length - 1], old_version_name: oldVersion[oldVersion.length - 1], new_version_type: newVersion[0], old_branch: oldBranch.replace(/^[^/]+\//, '')}
           if (process.env.PATCH_SRC_VERSION) {
             var pathSrcVersion = process.env.PATCH_SRC_VERSION.split("/");
             returnValue.patch_src_version_name = pathSrcVersion[pathSrcVersion.length - 1]
           }
           return returnValue;
+    - run: |
+        git remote add upstream https://github.com/MinecraftForge/MCPConfig
+        git fetch upstream
+        git checkout -b ${{ fromJson(steps.split_version.outputs.result).old_branch }} remotes/${{ github.event.inputs.old_branch }}
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
         java-version: '17'
-        distribution: 'temurin'
-    - name: Set up JDK 18
-      uses: actions/setup-java@v3
-      with:
-        java-version: '18'
         distribution: 'temurin'
     - id: get_versions
       run: |
@@ -138,12 +138,9 @@ jobs:
         rm -rf versions/${{ github.event.inputs.new_version }}
         git add .
         git stash apply
-    - if: ${{ !github.event.inputs.new_branch }}
-      run: git config push.default "upstream"
     - run: |
         git config --global user.name github-actions
         git config --global user.email 41898282+github-actions[bot]@users.noreply.github.com
-        git add .
         git commit -m "Start ${{ github.event.inputs.new_version }}"
         git push
     - name: Apply and Create patches
@@ -163,9 +160,50 @@ jobs:
       run: |
         git commit -m "Update patches"
         git push
+    - name: Get Java Versions
+      id: java_versions
+      uses: actions/github-script@v6
+      env:
+        VERSION: ${{ github.event.inputs.new_version }}
+        PATCHES_OUTCOME: ${{ steps.patches.outcome }}
+      with:
+        script: |
+          if (process.env.PATCHES_OUTCOME === 'success') {
+            return [];
+          }
+          const config = JSON.parse(fs.readFileSync('versions/' + process.env.VERSION + '/config.json', 'utf8'))
+          return [8, 11, 15, 16, 17, 18].filter(x => x >= config.java_target);
     - name: Test jdks
       if: ${{ steps.patches.outcome == 'success' }}
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       continue-on-error: true
       with:
         arguments: :${{ fromJson(steps.split_version.outputs.result).new_version_name }}:testJdks -Ptype=${{ fromJson(steps.split_version.outputs.result).new_version_type }}
+
+  testjdks:
+    name: Test Jdks on side ${{ matrix.side }} using mappings ${{ matrix.mappings }} using java version ${{ matrix.jdk_version }} 
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    needs: update
+    strategy:
+      fail-fast: false
+      matrix:
+        jdk_version: ${{ jobs.update.outputs.jdk_versions }}
+        mappings: [Official, HotSpot]
+        side: [Client, Joined, Server]
+    
+    steps: 
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ jobs.update.outputs.branch }}
+    - name: Set up JDK ${{ matrix.jdk_version }}
+      uses: actions/setup-java@v3
+      with:
+        java-version: ${{ matrix.jdk_version }}
+        distribution: 'temurin'
+    - name: Test jdks
+      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      with:
+        arguments: :${{ jobs.update.outputs.version_name }}:testCompile${{ matrix.side }}${{ matrix.mappings }}${{ matrix.jdk_version }} :${{ jobs.update.outputs.version_name }}:testDecompile${{ matrix.side }}${{ matrix.mappings }}${{ matrix.jdk_version }}Compare -Ptype=${{ jobs.update.outputs.version_type }}
+
+      
