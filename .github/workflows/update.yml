@@ -76,7 +76,7 @@ jobs:
       name: Cache ${{ fromJson(steps.split_version.outputs.result).new_version_name }}
       with:
         path: build/versions/${{ fromJson(steps.split_version.outputs.result).new_version_name }}/**
-        key: version-${{ fromJson(steps.split_version.outputs.result).new_version_name }}-${{ hashFiles(format('build/versions/{0}/**', fromJson(steps.split_version.outputs.result).new_version_name) }}
+        key: version-${{ fromJson(steps.split_version.outputs.result).new_version_name }}-${{ hashFiles(format('build/versions/{0}/**', fromJson(steps.split_version.outputs.result).new_version_name)) }}
     - uses: actions/cache@v3
       name: Cache Assets
       with:
