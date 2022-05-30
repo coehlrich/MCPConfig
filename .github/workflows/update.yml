@@ -201,7 +201,7 @@ jobs:
         java-version: ${{ matrix.jdk_version }}
         distribution: 'temurin'
     - name: Test jdks
-      if: ${{ matrix.jdk_version >= jobs.update.outputs.jdk_version}}
+      if: ${{ matrix.jdk_version >= needs.update.outputs.jdk_version}}
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
         arguments: :${{ needs.update.outputs.version_name }}:testCompile${{ matrix.side }}${{ matrix.mappings }}${{ matrix.jdk_version }} :${{ needs.update.outputs.version_name }}:testDecompile${{ matrix.side }}${{ matrix.mappings }}${{ matrix.jdk_version }}Compare -Ptype=${{ needs.update.outputs.version_type }}
