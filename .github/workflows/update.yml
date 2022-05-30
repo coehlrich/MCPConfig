@@ -229,7 +229,7 @@ jobs:
       name: Cache ${{ needs.update.outputs.version_name }}
       with:
         path: build/versions/${{ needs.update.outputs.version_name }}/**
-        key: version-${{ needs.update.outputs.version_name }}-${{ hashFiles(format('build/versions/{0}/**', needs.update.outputs.version_name) }}
+        key: version-${{ needs.update.outputs.version_name }}-${{ hashFiles(format('build/versions/{0}/**', needs.update.outputs.version_name)) }}
     - uses: actions/cache@v3
       name: Cache Assets
       with:
