@@ -76,27 +76,32 @@ jobs:
       name: Cache ${{ fromJson(steps.split_version.outputs.result).new_version_name }}
       with:
         path: build/versions/${{ fromJson(steps.split_version.outputs.result).new_version_name }}/**
-        key: version-${{ fromJson(steps.split_version.outputs.result).new_version_name }}-${{ hashFiles(format('build/versions/{0}/**', fromJson(steps.split_version.outputs.result).new_version_name)) }}
+        key: version-${{ fromJson(steps.split_version.outputs.result).new_version_name }}
     - uses: actions/cache@v3
       name: Cache Assets
       with:
         path: build/assets/**
-        key: minecraft-assets-${{ hashFiles('build/assets/**') }}
+        key: minecraft-assets-${{ hashFiles('**/build/assets/**') }}
     - uses: actions/cache@v3
       name: Cache Libraries
       with:
         path: build/libraries/**
-        key: minecraft-libraries-${{ hashFiles('build/libraries/**') }}
+        key: minecraft-libraries-${{ hashFiles('**/build/libraries/**') }}
     - uses: actions/cache@v3
       name: Cache ETags
       with:
         path: build/download-task/**
-        key: gradle-download-task-${{ hashFiles('build/download-task/etags.json') }}
+        key: gradle-download-task-${{ hashFiles('**/build/download-task/etags.json') }}
     - uses: actions/cache@v3
       name: Cache Version Manifest
       with:
         path: build/versions/version_manifest.json
-        key: minecraft-version-manifest-${{ hashFiles('build/versions/version_manifest.json') }}
+        key: minecraft-version-manifest-${{ hashFiles('**/build/versions/version_manifest.json') }}
+    - uses: actions/cache@v3
+      name: Cache BuildSrc
+      with:
+        path: buildSrc/build/**
+        key: buildsrc-build-${{ hashFiles('**/buildsrc/build/**') }}
     - run: |
         git remote add upstream https://github.com/MinecraftForge/MCPConfig
         git fetch upstream
@@ -229,27 +234,32 @@ jobs:
       name: Cache ${{ needs.update.outputs.version_name }}
       with:
         path: build/versions/${{ needs.update.outputs.version_name }}/**
-        key: version-${{ needs.update.outputs.version_name }}-${{ hashFiles(format('build/versions/{0}/**', needs.update.outputs.version_name)) }}
+        key: version-${{ needs.update.outputs.version_name }}
     - uses: actions/cache@v3
       name: Cache Assets
       with:
         path: build/assets/**
-        key: minecraft-assets-${{ hashFiles('build/assets/**') }}
+        key: minecraft-assets-${{ hashFiles('**/build/assets/**') }}
     - uses: actions/cache@v3
       name: Cache Libraries
       with:
         path: build/libraries/**
-        key: minecraft-libraries-${{ hashFiles('build/libraries/**') }}
+        key: minecraft-libraries-${{ hashFiles('**/build/libraries/**') }}
     - uses: actions/cache@v3
       name: Cache ETags
       with:
         path: build/download-task/**
-        key: gradle-download-task-${{ hashFiles('build/download-task/etags.json') }}
+        key: gradle-download-task-${{ hashFiles('**/build/download-task/etags.json') }}
     - uses: actions/cache@v3
       name: Cache Version Manifest
       with:
         path: build/versions/version_manifest.json
-        key: minecraft-version-manifest-${{ hashFiles('build/versions/version_manifest.json') }}
+        key: minecraft-version-manifest-${{ hashFiles('**/build/versions/version_manifest.json') }}
+    - uses: actions/cache@v3
+      name: Cache BuildSrc
+      with:
+        path: buildSrc/build/**
+        key: buildsrc-build-${{ hashFiles('**/buildsrc/build/**') }}
     - name: Test jdks
       if: ${{ matrix.jdk_version >= needs.update.outputs.jdk_version}}
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
