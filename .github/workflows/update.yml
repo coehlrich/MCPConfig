@@ -92,6 +92,11 @@ jobs:
       with:
         path: build/libraries/**
         key: minecraft-libraries
+    - uses: actions/cache@v3
+      name: Cache ETags
+      with:
+        path: build/download-task/**
+        key: gradle-download-task
     - run: |
         git remote add upstream https://github.com/MinecraftForge/MCPConfig
         git fetch upstream
@@ -235,6 +240,11 @@ jobs:
       with:
         path: build/libraries/**
         key: minecraft-libraries
+    - uses: actions/cache@v3
+      name: Cache ETags
+      with:
+        path: build/download-task/**
+        key: gradle-download-task
     - name: Test jdks
       if: ${{ matrix.jdk_version >= needs.update.outputs.jdk_version}}
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
