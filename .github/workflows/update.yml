@@ -192,7 +192,7 @@ jobs:
           if (process.env.PATCHES_OUTCOME != 'success') {
             return Number.MAX_SAFE_INTEGER;
           }
-          const fs = import('fs');
+          const fs = require('fs');
           const config = JSON.parse(fs.readFileSync('versions/' + process.env.VERSION + '/config.json', 'utf8'))
           return config.java_target;
 
