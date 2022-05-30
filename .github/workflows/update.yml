@@ -101,7 +101,7 @@ jobs:
       name: Cache BuildSrc
       with:
         path: buildSrc/build/**
-        key: buildsrc-build-${{ hashFiles('**/buildsrc/build/**') }}
+        key: buildsrc-build-${{ hashFiles('**/buildSrc/build/**') }}
     - run: |
         git remote add upstream https://github.com/MinecraftForge/MCPConfig
         git fetch upstream
