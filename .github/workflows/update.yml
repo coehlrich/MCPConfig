@@ -39,7 +39,7 @@ jobs:
 
     runs-on: ubuntu-latest
     outputs:
-      jdk_versions: ${{ steps.java_versions.outputs.result }}
+      jdk_version: ${{ steps.java_version.outputs.result }}
       version_type: ${{ fromJson(steps.split_version.outputs.result).new_version_type }}
       version_name: ${{ fromJson(steps.split_version.outputs.result).new_version_name }}
       branch: ${{ github.event.inputs.new_branch || fromJson(steps.split_version.outputs.result).old_branch }}
@@ -160,8 +160,8 @@ jobs:
       run: |
         git commit -m "Update patches"
         git push
-    - name: Get Java Versions
-      id: java_versions
+    - name: Get Java Version
+      id: java_version
       uses: actions/github-script@v6
       env:
         VERSION: ${{ github.event.inputs.new_version }}
@@ -169,16 +169,10 @@ jobs:
       with:
         script: |
           if (process.env.PATCHES_OUTCOME === 'success') {
-            return [];
+            return Number.MAX_SAFE_INTEGER;
           }
           const config = JSON.parse(fs.readFileSync('versions/' + process.env.VERSION + '/config.json', 'utf8'))
-          return [8, 11, 15, 16, 17, 18].filter(x => x >= config.java_target);
-    - name: Test jdks
-      if: ${{ steps.patches.outcome == 'success' }}
-      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
-      continue-on-error: true
-      with:
-        arguments: :${{ fromJson(steps.split_version.outputs.result).new_version_name }}:testJdks -Ptype=${{ fromJson(steps.split_version.outputs.result).new_version_type }}
+          return config.java_target;
 
   testjdks:
     name: Test Jdks on side ${{ matrix.side }} using mappings ${{ matrix.mappings }} using java version ${{ matrix.jdk_version }} 
@@ -188,9 +182,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jdk_version: ${{ jobs.update.outputs.jdk_versions }}
+        jdk_version: [8, 11, 15, 16, 17, 18]
         mappings: [Official, HotSpot]
         side: [Client, Joined, Server]
+        exclude:
+        - jdk_version: 11
+          mappings: HotSpot
+        - jdk_version: 15
+          mappings: HotSpot
     
     steps: 
     - uses: actions/checkout@v3
@@ -202,6 +201,7 @@ jobs:
         java-version: ${{ matrix.jdk_version }}
         distribution: 'temurin'
     - name: Test jdks
+      if: ${{ matrix.jdk_version >= jobs.update.outputs.jdk_version}}
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
         arguments: :${{ jobs.update.outputs.version_name }}:testCompile${{ matrix.side }}${{ matrix.mappings }}${{ matrix.jdk_version }} :${{ jobs.update.outputs.version_name }}:testDecompile${{ matrix.side }}${{ matrix.mappings }}${{ matrix.jdk_version }}Compare -Ptype=${{ jobs.update.outputs.version_type }}
