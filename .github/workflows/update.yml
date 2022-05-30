@@ -72,6 +72,26 @@ jobs:
             returnValue.patch_src_version_name = pathSrcVersion[pathSrcVersion.length - 1]
           }
           return returnValue;
+    - uses: actions/cache@v3
+      name: Cache ${{ fromJson(steps.split_version.outputs.result).old_version_name }}
+      with:
+        path: build/versions/${{ fromJson(steps.split_version.outputs.result).old_version_name }}/**
+        key: version-${{ fromJson(steps.split_version.outputs.result).old_version_name }}
+    - uses: actions/cache@v3
+      name: Cache ${{ fromJson(steps.split_version.outputs.result).new_version_name }}
+      with:
+        path: build/versions/${{ fromJson(steps.split_version.outputs.result).new_version_name }}/**
+        key: version-${{ fromJson(steps.split_version.outputs.result).new_version_name }}
+    - uses: actions/cache@v3
+      name: Cache Assets
+      with:
+        path: build/assets/**
+        key: minecraft-assets
+    - uses: actions/cache@v3
+      name: Cache Libraries
+      with:
+        path: build/libraries/**
+        key: minecraft-libraries
     - run: |
         git remote add upstream https://github.com/MinecraftForge/MCPConfig
         git fetch upstream
@@ -172,7 +192,6 @@ jobs:
           if (process.env.PATCHES_OUTCOME != 'success') {
             return Number.MAX_SAFE_INTEGER;
           }
-          const fs = require('fs');
           const config = JSON.parse(fs.readFileSync('versions/' + process.env.VERSION + '/config.json', 'utf8'))
           return config.java_target;
 
@@ -200,6 +219,21 @@ jobs:
       with:
         java-version: ${{ matrix.jdk_version }}
         distribution: 'temurin'
+    - uses: actions/cache@v3
+      name: Cache ${{ needs.update.outputs.version_name }}
+      with:
+        path: build/versions/${{ needs.update.outputs.version_name }}/**
+        key: version-${{ needs.update.outputs.version_name }}
+    - uses: actions/cache@v3
+      name: Cache Assets
+      with:
+        path: build/assets/**
+        key: minecraft-assets
+    - uses: actions/cache@v3
+      name: Cache Libraries
+      with:
+        path: build/libraries/**
+        key: minecraft-libraries
     - name: Test jdks
       if: ${{ matrix.jdk_version >= needs.update.outputs.jdk_version}}
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
