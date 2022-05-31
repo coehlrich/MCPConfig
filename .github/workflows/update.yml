@@ -111,7 +111,9 @@ jobs:
     - uses: actions/cache@v3
       name: Cache BuildSrc
       with:
-        path: buildSrc/build/**
+        path: |
+          buildSrc/build/**
+          buildSrc/.gradle/**
         key: buildsrc-build-jdk17-v3-${{ steps.time.outputs.time }}
         restore-keys: |
           buildsrc-build-jdk17-v3-
@@ -282,7 +284,9 @@ jobs:
     - uses: actions/cache@v3
       name: Cache BuildSrc
       with:
-        path: buildSrc/build/**
+        path: |
+          buildSrc/build/**
+          buildSrc/.gradle/**
         key: buildsrc-build-jdk${{ matrix.jdk_version }}-v3-${{ steps.time.outputs.time }}
         restore-keys: |
           buildsrc-build-jdk${{ matrix.jdk_version }}-v3-
