@@ -112,9 +112,9 @@ jobs:
       name: Cache BuildSrc
       with:
         path: buildSrc/build/**
-        key: buildsrc-build-v3-${{ steps.time.outputs.time }}
+        key: buildsrc-build-jdk17-v3-${{ steps.time.outputs.time }}
         restore-keys: |
-          buildsrc-build-v3-
+          buildsrc-build-jdk17-v3-
     - run: |
         git remote add upstream https://github.com/MinecraftForge/MCPConfig
         git fetch upstream
@@ -283,9 +283,9 @@ jobs:
       name: Cache BuildSrc
       with:
         path: buildSrc/build/**
-        key: buildsrc-build-v3-${{ steps.time.outputs.time }}
+        key: buildsrc-build-jdk${{ matrix.jdk_version }}-v3-${{ steps.time.outputs.time }}
         restore-keys: |
-          buildsrc-build-v3-
+          buildsrc-build-jdk${{ matrix.jdk_version }}-v3-
     - name: Test jdks
       if: ${{ matrix.jdk_version >= needs.update.outputs.jdk_version}}
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
