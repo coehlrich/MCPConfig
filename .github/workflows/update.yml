@@ -34,6 +34,9 @@ on:
         type: boolean
 
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
+env:
+  JAVA_VERSION: 17
+
 jobs:
   update:
 
@@ -109,9 +112,9 @@ jobs:
         path: |
           buildSrc/build/**
           buildSrc/.gradle/**
-        key: buildsrc-build-jdk17-v3-${{ steps.time.outputs.time }}
+        key: buildsrc-build-jdk${{ env.JAVA_VERSION }}-v3-${{ steps.time.outputs.time }}
         restore-keys: |
-          buildsrc-build-jdk17-v3-
+          buildsrc-build-jdk${{ env.JAVA_VERSION }}-v3-
     - uses: actions/cache@v3
       name: Cache Other
       with:
@@ -125,10 +128,10 @@ jobs:
         git remote add upstream https://github.com/MinecraftForge/MCPConfig
         git fetch upstream
         git checkout -B ${{ fromJson(steps.split_version.outputs.result).old_branch }} remotes/${{ github.event.inputs.old_branch }}
-    - name: Set up JDK 17
+    - name: Set up JDK ${{ env.JAVA_VERSION }}
       uses: actions/setup-java@v3
       with:
-        java-version: '17'
+        java-version: '${{ env.JAVA_VERSION }}'
         distribution: 'temurin'
     - id: get_versions
       run: |
@@ -245,9 +248,15 @@ jobs:
       with:
         ref: ${{ needs.update.outputs.branch }}
     - name: Set up JDK ${{ matrix.jdk_version }}
+      if: ${{ matrix.jdk_version != env.JAVA_VERSION}}
       uses: actions/setup-java@v3
       with:
         java-version: ${{ matrix.jdk_version }}
+        distribution: 'temurin'
+    - name: Set up JDK ${{ env.JAVA_VERSION }}
+      uses: actions/setup-java@v3
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
         distribution: 'temurin'
     - name: Get Time
       id: time
