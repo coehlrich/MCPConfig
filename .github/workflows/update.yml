@@ -97,13 +97,6 @@ jobs:
         restore-keys: |
           minecraft-libraries-v3-
     - uses: actions/cache@v3
-      name: Cache ETags
-      with:
-        path: build/download-task/**
-        key: gradle-download-task-v3-${{ steps.time.outputs.time }}
-        restore-keys: |
-          gradle-download-task-v3-  
-    - uses: actions/cache@v3
       name: Cache Version Manifest
       with:
         path: build/versions/version_manifest.json
@@ -119,6 +112,15 @@ jobs:
         key: buildsrc-build-jdk17-v3-${{ steps.time.outputs.time }}
         restore-keys: |
           buildsrc-build-jdk17-v3-
+    - uses: actions/cache@v3
+      name: Cache Other
+      with:
+        path: |
+          build/download-task/**
+          .gradle/**
+        key: gradle-other-${{ steps.time.outputs.time }}
+        restore-keys: |
+          gradle-other-  
     - run: |
         git remote add upstream https://github.com/MinecraftForge/MCPConfig
         git fetch upstream
@@ -272,13 +274,6 @@ jobs:
         restore-keys: |
           minecraft-libraries-v3-
     - uses: actions/cache@v3
-      name: Cache ETags
-      with:
-        path: build/download-task/**
-        key: gradle-download-task-v3-${{ steps.time.outputs.time }}
-        restore-keys: |
-          gradle-download-task-v3-  
-    - uses: actions/cache@v3
       name: Cache Version Manifest
       with:
         path: build/versions/version_manifest.json
@@ -294,6 +289,15 @@ jobs:
         key: buildsrc-build-jdk${{ matrix.jdk_version }}-v3-${{ steps.time.outputs.time }}
         restore-keys: |
           buildsrc-build-jdk${{ matrix.jdk_version }}-v3-
+    - uses: actions/cache@v3
+      name: Cache Other
+      with:
+        path: |
+          build/download-task/**
+          .gradle/**
+        key: gradle-other-${{ steps.time.outputs.time }}
+        restore-keys: |
+          gradle-other-  
     - name: Test jdks
       if: ${{ matrix.jdk_version >= needs.update.outputs.jdk_version}}
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
