@@ -80,8 +80,8 @@ jobs:
       with:
         path: |
           build/versions/${{ fromJson(steps.split_version.outputs.result).new_version_name }}/**
-          versions/${{ github.event.inputs.new_version }}/build/download-task
-        key: version-v2-${{ fromJson(steps.split_version.outputs.result).new_version_name }}
+          versions/${{ github.event.inputs.new_version }}/build/download-task/**
+        key: version-v3-${{ fromJson(steps.split_version.outputs.result).new_version_name }}
     - uses: actions/cache@v3
       name: Cache Assets
       with:
@@ -256,7 +256,7 @@ jobs:
         path: |
           build/versions/${{ needs.update.outputs.version_name }}/**
           versions/${{ github.event.inputs.new_version }}/build/download-task/**
-        key: version-v2-${{ needs.update.outputs.version_name }}
+        key: version-v3-${{ needs.update.outputs.version_name }}
     - uses: actions/cache@v3
       name: Cache Assets
       with:
