@@ -81,27 +81,37 @@ jobs:
       name: Cache Assets
       with:
         path: build/assets/**
-        key: minecraft-assets-v2-${{ hashFiles('**/build/assets/**') }}
+        key: minecraft-assets-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          minecraft-assets-v3-
     - uses: actions/cache@v3
       name: Cache Libraries
       with:
         path: build/libraries/**
-        key: minecraft-libraries-v2-${{ hashFiles('**/build/libraries/**') }}
+        key: minecraft-libraries-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          minecraft-libraries-v3-
     - uses: actions/cache@v3
       name: Cache ETags
       with:
         path: build/download-task/**
-        key: gradle-download-task-v2-${{ hashFiles('**/build/download-task/etags.json') }}
+        key: gradle-download-task-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          gradle-download-task-v3-  
     - uses: actions/cache@v3
       name: Cache Version Manifest
       with:
         path: build/versions/version_manifest.json
-        key: minecraft-version-manifest-v2-${{ hashFiles('**/build/versions/version_manifest.json') }}
+        key: minecraft-version-manifest-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          minecraft-version-manifest-v3-
     - uses: actions/cache@v3
       name: Cache BuildSrc
       with:
         path: buildSrc/build/**
-        key: buildsrc-build-v2-${{ hashFiles('**/buildSrc/build/**') }}
+        key: buildsrc-build-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          buildsrc-build-v3-
     - run: |
         git remote add upstream https://github.com/MinecraftForge/MCPConfig
         git fetch upstream
@@ -230,6 +240,9 @@ jobs:
       with:
         java-version: ${{ matrix.jdk_version }}
         distribution: 'temurin'
+    - name: Get Time
+      id: time
+      run: echo "::set-output name=time::$(date -Isecond -u)"
     - uses: actions/cache@v3
       name: Cache ${{ needs.update.outputs.version_name }}
       with:
@@ -239,27 +252,37 @@ jobs:
       name: Cache Assets
       with:
         path: build/assets/**
-        key: minecraft-assets-v2-${{ hashFiles('**/build/assets/**') }}
+        key: minecraft-assets-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          minecraft-assets-v3-
     - uses: actions/cache@v3
       name: Cache Libraries
       with:
         path: build/libraries/**
-        key: minecraft-libraries-v2-${{ hashFiles('**/build/libraries/**') }}
+        key: minecraft-libraries-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          minecraft-libraries-v3-
     - uses: actions/cache@v3
       name: Cache ETags
       with:
         path: build/download-task/**
-        key: gradle-download-task-v2-${{ hashFiles('**/build/download-task/etags.json') }}
+        key: gradle-download-task-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          gradle-download-task-v3-  
     - uses: actions/cache@v3
       name: Cache Version Manifest
       with:
         path: build/versions/version_manifest.json
-        key: minecraft-version-manifest-v2-${{ hashFiles('**/build/versions/version_manifest.json') }}
+        key: minecraft-version-manifest-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          minecraft-version-manifest-v3-
     - uses: actions/cache@v3
       name: Cache BuildSrc
       with:
         path: buildSrc/build/**
-        key: buildsrc-build-v2-${{ hashFiles('**/buildsrc/build/**') }}
+        key: buildsrc-build-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          buildsrc-build-v3-
     - name: Test jdks
       if: ${{ matrix.jdk_version >= needs.update.outputs.jdk_version}}
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
