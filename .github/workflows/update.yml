@@ -81,7 +81,7 @@ jobs:
         path: |
           build/versions/${{ fromJson(steps.split_version.outputs.result).new_version_name }}/**
           versions/${{ github.event.inputs.new_version }}/build/download-task
-        key: version-${{ fromJson(steps.split_version.outputs.result).new_version_name }}
+        key: version-v2-${{ fromJson(steps.split_version.outputs.result).new_version_name }}
     - uses: actions/cache@v3
       name: Cache Assets
       with:
