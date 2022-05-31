@@ -212,6 +212,15 @@ jobs:
       run: |
         git commit -m "Update patches"
         git push
+    - name: Make Zip
+      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      with:
+        arguments: :${{ fromJson(steps.split_version.outputs.result).new_version_name }}:makeZip -Ptype=${{ fromJson(steps.split_version.outputs.result).new_version_type }}
+    - name: Upload Zip as Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: mcp_config-${{ fromJson(steps.split_version.outputs.result).new_version_name }}
+        path: build/distributions/*.zip
     - name: Get Java Version
       id: java_version
       uses: actions/github-script@v6
