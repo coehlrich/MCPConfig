@@ -328,7 +328,7 @@ jobs:
     - name: Upload diff as artifact
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ needs.update.outputs.old_version_name }}-${{ needs.update.outputs.new_version_name }}-patch
+        name: ${{ needs.update.outputs.old_version_name }}-${{ needs.update.outputs.version_name }}-patch
         path: '*.patch'
 
   testjdks:
