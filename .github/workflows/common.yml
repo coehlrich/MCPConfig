@@ -160,7 +160,7 @@ jobs:
     name: Get diff
     runs-on: ubuntu-latest
     continue-on-error: true
-    needs: update
+    needs: common
     steps:
     - uses: actions/checkout@v3
       with:
@@ -251,7 +251,7 @@ jobs:
     name: Test Jdks on side ${{ matrix.side }} using mappings ${{ matrix.mappings }} using java version ${{ matrix.jdk_version }} 
     runs-on: ubuntu-latest
     continue-on-error: true
-    needs: update
+    needs: common
     strategy:
       fail-fast: false
       matrix:
