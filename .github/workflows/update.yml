@@ -310,7 +310,7 @@ jobs:
     - run: |
         git remote add upstream https://github.com/MinecraftForge/MCPConfig
         git fetch upstream
-        git checkout -B ${{ fromJson(steps.split_version.outputs.result).old_branch }} remotes/${{ github.event.inputs.old_branch }}
+        git checkout -B ${{ needs.update.outputs.old_branch }} remotes/${{ github.event.inputs.old_branch }}
     - name: Get old joined src
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
@@ -329,6 +329,7 @@ jobs:
       with:
         name: ${{ needs.update.outputs.old_version_name }}-${{ needs.update.outputs.new_version_name }}-patch
         path: '*.patch'
+
   testjdks:
     name: Test Jdks on side ${{ matrix.side }} using mappings ${{ matrix.mappings }} using java version ${{ matrix.jdk_version }} 
     runs-on: ubuntu-latest
