@@ -323,6 +323,7 @@ jobs:
       with:
         arguments: :${{ needs.update.outputs.version_name }}:projectApplyAll -Pupdating -Ptype=${{ needs.update.outputs.version_type }}
     - name: Get diff
+      continue-on-error: true
       run: git diff --no-index versions/${{ github.event.inputs.old_version }}/projects/joined/src/main/java versions/${{ github.event.inputs.new_version }}/projects/joined/src/main/java > ${{ needs.update.outputs.old_version_name }}-${{ needs.update.outputs.version_name }}.patch
     - name: Upload diff as artifact
       uses: actions/upload-artifact@v3
