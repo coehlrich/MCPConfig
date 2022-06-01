@@ -32,7 +32,7 @@ jobs:
       version_name: ${{ fromJson(steps.split_version.outputs.result).new_version_name }}
       old_version_type: ${{ fromJson(steps.split_version.outputs.result).old_version_type }}
       old_version_name: ${{ fromJson(steps.split_version.outputs.result).old_version_name }}
-      branch: ${{ github.event.inputs.new_branch || fromJson(steps.split_version.outputs.result).old_branch }}
+      branch: ${{ inputs.new_branch || fromJson(steps.split_version.outputs.result).old_branch }}
       old_branch: ${{ fromJson(steps.split_version.outputs.result).old_branch }}
     steps:
     - name: Get Time
@@ -108,67 +108,12 @@ jobs:
       with:
         java-version: '${{ env.JAVA_VERSION }}'
         distribution: 'temurin'
-    - id: get_versions
+    - if: ${{ inputs.new_branch }}
       run: |
-        mkdir -p ~/.minecraft/versions/
-        wget https://launchermeta.mojang.com/mc/game/version_manifest_v2.json -O ~/.minecraft/version_manifest_v2.json
-    - uses: actions/github-script@v6
-      env:
-        OLD_VERSION: ${{ fromJson(steps.split_version.outputs.result).old_version_name }}
-        NEW_VERSION: ${{ fromJson(steps.split_version.outputs.result).new_version_name }}
-      with:
-        script: |
-          const os = require('os')
-          const fs = require('fs')
-          const versions = JSON.parse(fs.readFileSync(os.homedir() + '/.minecraft/version_manifest_v2.json', 'utf8')).versions
-          for (var i = 0; i < versions.length; i++) {
-            var version = versions[i]
-            if (version.id == process.env.OLD_VERSION || version.id == process.env.NEW_VERSION || version.id == process.env.PATCH_SRC_VERSION) {
-                var file = os.homedir() + '/.minecraft/versions/' + version.id + '/' + version.id
-                io.mkdirP(os.homedir() + '/.minecraft/versions/' + version.id + '/')
-                await exec.exec('wget ' + version.url + ' -O '  + file + '.json')
-                var versionJson = JSON.parse(fs.readFileSync(file + '.json', 'utf8'))
-                await exec.exec('wget ' + versionJson.downloads.client.url + ' -O ' + file + '.jar')
-            }
-          }
-    - if: ${{ github.event.inputs.patch_src && github.event.inputs.patch_src != github.event.inputs.new_version }}
-      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
-      with:
-        arguments: update -Pold_version=${{ github.event.inputs.patch_src }} -Pnew_version=${{ github.event.inputs.new_version }}
-    - if: ${{ github.event.inputs.patch_src }}
-      run: cp versions/${{ github.event.inputs.new_version }}/joined.tsrg ../old_joined.tsrg
-    - name: Build with Gradle
-      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
-      with:
-        arguments: update -Pold_version=${{ github.event.inputs.old_version }} -Pnew_version=${{ github.event.inputs.new_version }}
-    - if: ${{ github.event.inputs.patch_src }}
-      run: cp versions/${{ github.event.inputs.new_version }}/joined.tsrg ../new_joined.tsrg
-    - if: ${{ github.event.inputs.patch_src != github.event.inputs.new_version }}
-      run: |
-        rm -rf versions/${{ github.event.inputs.new_version}}/patches
-        cp -r versions/${{ github.event.inputs.patch_src || github.event.inputs.old_version }}/patches versions/${{ github.event.inputs.new_version}}/patches
-    - if: ${{ github.event.inputs.patch_src }}
-      run: |
-        cd ..
-        wget https://github.com/coehlrich/remap-patches/releases/download/1.0.6/remap-patches-all.jar
-        java -jar remap-patches-all.jar old_joined.tsrg new_joined.tsrg MCPConfig/versions/${{ github.event.inputs.new_version }}/patches
-        cd MCPConfig
-    - if: ${{ github.event.inputs.fix_getlevel == 'true' }}
-      run: sed -i 's/m_183503_/m_214157_/g' versions/${{ github.event.inputs.new_version }}/joined.tsrg
-    - run: git add .
-    - if: ${{ github.event.inputs.new_branch }}
-      run: |
-        git stash
-        git checkout -B ${{ github.event.inputs.new_branch }} remotes/upstream/master
-        git push -u origin ${{ github.event.inputs.new_branch }}
-        rm -rf versions/${{ github.event.inputs.new_version }}
-        git add .
-        git stash apply
+        git checkout ${{ inputs.new_branch }}
     - run: |
         git config --global user.name github-actions
         git config --global user.email 41898282+github-actions[bot]@users.noreply.github.com
-        git commit -m "Start ${{ github.event.inputs.new_version }}"
-        git push
     - name: Apply and Create patches
       id: patches
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
@@ -199,7 +144,7 @@ jobs:
       id: java_version
       uses: actions/github-script@v6
       env:
-        VERSION: ${{ github.event.inputs.new_version }}
+        VERSION: ${{ inputs.new_version }}
         PATCHES_OUTCOME: ${{ steps.patches.outcome }}
       with:
         result-encoding: "string"
@@ -226,19 +171,19 @@ jobs:
         java-version: ${{ env.JAVA_VERSION }}
         distribution: 'temurin'
     - uses: actions/cache@v3
-      name: Cache ${{ needs.update.outputs.version_name }}
+      name: Cache ${{ needs.common.outputs.version_name }}
       with:
         path: |
-          build/versions/${{ needs.update.outputs.version_name }}/**
-          versions/${{ github.event.inputs.new_version }}/build/download-task/**
-        key: version-v3-${{ needs.update.outputs.version_name }}
+          build/versions/${{ needs.common.outputs.version_name }}/**
+          versions/${{ inputs.new_version }}/build/download-task/**
+        key: version-v3-${{ needs.common.outputs.version_name }}
     - uses: actions/cache@v3
-      name: Cache ${{ needs.update.outputs.old_version_name }}
+      name: Cache ${{ needs.common.outputs.old_version_name }}
       with:
         path: |
-          build/versions/${{ needs.update.outputs.old_version_name }}/**
-          versions/${{ github.event.inputs.old_version }}/build/download-task/**
-        key: version-v3-${{ needs.update.outputs.old_version_name }}
+          build/versions/${{ needs.common.outputs.old_version_name }}/**
+          versions/${{ inputs.old_version }}/build/download-task/**
+        key: version-v3-${{ needs.common.outputs.old_version_name }}
     - uses: actions/cache@v3
       name: Cache Assets
       with:
@@ -281,25 +226,25 @@ jobs:
     - run: |
         git remote add upstream https://github.com/MinecraftForge/MCPConfig
         git fetch upstream
-        git checkout -B ${{ needs.update.outputs.old_branch }} remotes/${{ github.event.inputs.old_branch }}
+        git checkout -B ${{ needs.common.outputs.old_branch }} remotes/${{ inputs.old_branch }}
     - name: Get old joined src
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
-        arguments: :${{ needs.update.outputs.old_version_name }}:projectApplyAll -Pupdating -Ptype=${{ needs.update.outputs.old_version_type }}
+        arguments: :${{ needs.common.outputs.old_version_name }}:projectApplyAll -Pupdating -Ptype=${{ needs.common.outputs.old_version_type }}
     - name: Checkout new branch
-      if: ${{ github.event.inputs.new_branch }}
-      run: git checkout ${{ github.event.inputs.new_branch }}
+      if: ${{ inputs.new_branch }}
+      run: git checkout ${{ inputs.new_branch }}
     - name: Get new joined src
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
-        arguments: :${{ needs.update.outputs.version_name }}:projectApplyAll -Pupdating -Ptype=${{ needs.update.outputs.version_type }}
+        arguments: :${{ needs.common.outputs.version_name }}:projectApplyAll -Pupdating -Ptype=${{ needs.common.outputs.version_type }}
     - name: Get diff
       continue-on-error: true
-      run: git diff --no-index versions/${{ github.event.inputs.old_version }}/projects/joined/src/main/java versions/${{ github.event.inputs.new_version }}/projects/joined/src/main/java > ${{ needs.update.outputs.old_version_name }}-${{ needs.update.outputs.version_name }}.patch
+      run: git diff --no-index versions/${{ inputs.old_version }}/projects/joined/src/main/java versions/${{ inputs.new_version }}/projects/joined/src/main/java > ${{ needs.common.outputs.old_version_name }}-${{ needs.common.outputs.version_name }}.patch
     - name: Upload diff as artifact
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ needs.update.outputs.old_version_name }}-${{ needs.update.outputs.version_name }}-patch
+        name: ${{ needs.common.outputs.old_version_name }}-${{ needs.common.outputs.version_name }}-patch
         path: '*.patch'
 
   testjdks:
@@ -320,7 +265,7 @@ jobs:
     steps: 
     - uses: actions/checkout@v3
       with:
-        ref: ${{ needs.update.outputs.branch }}
+        ref: ${{ needs.common.outputs.branch }}
     - name: Set up JDK ${{ matrix.jdk_version }}
       if: ${{ matrix.jdk_version != env.JAVA_VERSION}}
       uses: actions/setup-java@v3
@@ -336,12 +281,12 @@ jobs:
       id: time
       run: echo "::set-output name=time::$(date -Isecond -u)"
     - uses: actions/cache@v3
-      name: Cache ${{ needs.update.outputs.version_name }}
+      name: Cache ${{ needs.common.outputs.version_name }}
       with:
         path: |
-          build/versions/${{ needs.update.outputs.version_name }}/**
-          versions/${{ github.event.inputs.new_version }}/build/download-task/**
-        key: version-v3-${{ needs.update.outputs.version_name }}
+          build/versions/${{ needs.common.outputs.version_name }}/**
+          versions/${{ inputs.new_version }}/build/download-task/**
+        key: version-v3-${{ needs.common.outputs.version_name }}
     - uses: actions/cache@v3
       name: Cache Assets
       with:
@@ -382,9 +327,9 @@ jobs:
         restore-keys: |
           gradle-other-  
     - name: Test jdks
-      if: ${{ matrix.jdk_version >= needs.update.outputs.jdk_version}}
+      if: ${{ matrix.jdk_version >= needs.common.outputs.jdk_version}}
       uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
       with:
-        arguments: :${{ needs.update.outputs.version_name }}:testCompile${{ matrix.side }}${{ matrix.mappings }}${{ matrix.jdk_version }} :${{ needs.update.outputs.version_name }}:testDecompile${{ matrix.side }}${{ matrix.mappings }}${{ matrix.jdk_version }}Compare -Ptype=${{ needs.update.outputs.version_type }}
+        arguments: :${{ needs.common.outputs.version_name }}:testCompile${{ matrix.side }}${{ matrix.mappings }}${{ matrix.jdk_version }} :${{ needs.common.outputs.version_name }}:testDecompile${{ matrix.side }}${{ matrix.mappings }}${{ matrix.jdk_version }}Compare -Ptype=${{ needs.common.outputs.version_type }}
 
       
