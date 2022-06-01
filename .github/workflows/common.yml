@@ -1,0 +1,390 @@
+name: Finish update
+
+on:
+  workflow_call:
+    inputs:
+      old_branch:
+        required: true
+        type: string
+      new_branch:
+        required: false
+        type: string
+      old_version:
+        required: true
+        type: string
+      new_version:
+        required: true
+        type: string
+      fix_getlevel:
+        required: false
+        type: boolean
+
+
+env:
+  JAVA_VERSION: 17
+
+jobs:
+  common:
+    runs-on: ubuntu-latest
+    outputs:
+      jdk_version: ${{ steps.java_version.outputs.result }}
+      version_type: ${{ fromJson(steps.split_version.outputs.result).new_version_type }}
+      version_name: ${{ fromJson(steps.split_version.outputs.result).new_version_name }}
+      old_version_type: ${{ fromJson(steps.split_version.outputs.result).old_version_type }}
+      old_version_name: ${{ fromJson(steps.split_version.outputs.result).old_version_name }}
+      branch: ${{ github.event.inputs.new_branch || fromJson(steps.split_version.outputs.result).old_branch }}
+      old_branch: ${{ fromJson(steps.split_version.outputs.result).old_branch }}
+    steps:
+    - name: Get Time
+      id: time
+      run: echo "::set-output name=time::$(date -Isecond -u)"
+    - uses: actions/github-script@v6
+      id: split_version
+      env:
+        OLD_VERSION: ${{ inputs.old_version }}
+        NEW_VERSION: ${{ inputs.new_version }}
+        OLD_BRANCH: ${{ inputs.old_branch }}
+      with:
+        script: |
+          const oldVersion = process.env.OLD_VERSION.split("/");
+          const newVersion = process.env.NEW_VERSION.split("/");
+          var returnValue = {new_version_name: newVersion[newVersion.length - 1], old_version_name: oldVersion[oldVersion.length - 1], new_version_type: newVersion[0], old_version_type: oldVersion[0], old_branch: process.env.OLD_BRANCH.replace(/^[^/]+\//, '')}
+          return returnValue;
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - uses: actions/cache@v3
+      name: Cache ${{ fromJson(steps.split_version.outputs.result).new_version_name }}
+      with:
+        path: |
+          build/versions/${{ fromJson(steps.split_version.outputs.result).new_version_name }}/**
+          versions/${{ inputs.new_version }}/build/download-task/**
+        key: version-v3-${{ fromJson(steps.split_version.outputs.result).new_version_name }}
+    - uses: actions/cache@v3
+      name: Cache Assets
+      with:
+        path: build/assets/**
+        key: minecraft-assets-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          minecraft-assets-v3-
+    - uses: actions/cache@v3
+      name: Cache Libraries
+      with:
+        path: build/libraries/**
+        key: minecraft-libraries-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          minecraft-libraries-v3-
+    - uses: actions/cache@v3
+      name: Cache Version Manifest
+      with:
+        path: build/versions/version_manifest.json
+        key: minecraft-version-manifest-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          minecraft-version-manifest-v3-
+    - uses: actions/cache@v3
+      name: Cache BuildSrc
+      with:
+        path: |
+          buildSrc/build/**
+          buildSrc/.gradle/**
+        key: buildsrc-build-jdk${{ env.JAVA_VERSION }}-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          buildsrc-build-jdk${{ env.JAVA_VERSION }}-v3-
+    - uses: actions/cache@v3
+      name: Cache Other
+      with:
+        path: |
+          build/download-task/**
+          .gradle/**
+        key: gradle-other-${{ steps.time.outputs.time }}
+        restore-keys: |
+          gradle-other-  
+    - run: |
+        git remote add upstream https://github.com/MinecraftForge/MCPConfig
+        git fetch upstream
+        git checkout -B ${{ fromJson(steps.split_version.outputs.result).old_branch }} remotes/${{ inputs.old_branch }}
+    - name: Set up JDK ${{ env.JAVA_VERSION }}
+      uses: actions/setup-java@v3
+      with:
+        java-version: '${{ env.JAVA_VERSION }}'
+        distribution: 'temurin'
+    - id: get_versions
+      run: |
+        mkdir -p ~/.minecraft/versions/
+        wget https://launchermeta.mojang.com/mc/game/version_manifest_v2.json -O ~/.minecraft/version_manifest_v2.json
+    - uses: actions/github-script@v6
+      env:
+        OLD_VERSION: ${{ fromJson(steps.split_version.outputs.result).old_version_name }}
+        NEW_VERSION: ${{ fromJson(steps.split_version.outputs.result).new_version_name }}
+      with:
+        script: |
+          const os = require('os')
+          const fs = require('fs')
+          const versions = JSON.parse(fs.readFileSync(os.homedir() + '/.minecraft/version_manifest_v2.json', 'utf8')).versions
+          for (var i = 0; i < versions.length; i++) {
+            var version = versions[i]
+            if (version.id == process.env.OLD_VERSION || version.id == process.env.NEW_VERSION || version.id == process.env.PATCH_SRC_VERSION) {
+                var file = os.homedir() + '/.minecraft/versions/' + version.id + '/' + version.id
+                io.mkdirP(os.homedir() + '/.minecraft/versions/' + version.id + '/')
+                await exec.exec('wget ' + version.url + ' -O '  + file + '.json')
+                var versionJson = JSON.parse(fs.readFileSync(file + '.json', 'utf8'))
+                await exec.exec('wget ' + versionJson.downloads.client.url + ' -O ' + file + '.jar')
+            }
+          }
+    - if: ${{ github.event.inputs.patch_src && github.event.inputs.patch_src != github.event.inputs.new_version }}
+      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      with:
+        arguments: update -Pold_version=${{ github.event.inputs.patch_src }} -Pnew_version=${{ github.event.inputs.new_version }}
+    - if: ${{ github.event.inputs.patch_src }}
+      run: cp versions/${{ github.event.inputs.new_version }}/joined.tsrg ../old_joined.tsrg
+    - name: Build with Gradle
+      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      with:
+        arguments: update -Pold_version=${{ github.event.inputs.old_version }} -Pnew_version=${{ github.event.inputs.new_version }}
+    - if: ${{ github.event.inputs.patch_src }}
+      run: cp versions/${{ github.event.inputs.new_version }}/joined.tsrg ../new_joined.tsrg
+    - if: ${{ github.event.inputs.patch_src != github.event.inputs.new_version }}
+      run: |
+        rm -rf versions/${{ github.event.inputs.new_version}}/patches
+        cp -r versions/${{ github.event.inputs.patch_src || github.event.inputs.old_version }}/patches versions/${{ github.event.inputs.new_version}}/patches
+    - if: ${{ github.event.inputs.patch_src }}
+      run: |
+        cd ..
+        wget https://github.com/coehlrich/remap-patches/releases/download/1.0.6/remap-patches-all.jar
+        java -jar remap-patches-all.jar old_joined.tsrg new_joined.tsrg MCPConfig/versions/${{ github.event.inputs.new_version }}/patches
+        cd MCPConfig
+    - if: ${{ github.event.inputs.fix_getlevel == 'true' }}
+      run: sed -i 's/m_183503_/m_214157_/g' versions/${{ github.event.inputs.new_version }}/joined.tsrg
+    - run: git add .
+    - if: ${{ github.event.inputs.new_branch }}
+      run: |
+        git stash
+        git checkout -B ${{ github.event.inputs.new_branch }} remotes/upstream/master
+        git push -u origin ${{ github.event.inputs.new_branch }}
+        rm -rf versions/${{ github.event.inputs.new_version }}
+        git add .
+        git stash apply
+    - run: |
+        git config --global user.name github-actions
+        git config --global user.email 41898282+github-actions[bot]@users.noreply.github.com
+        git commit -m "Start ${{ github.event.inputs.new_version }}"
+        git push
+    - name: Apply and Create patches
+      id: patches
+      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      continue-on-error: true
+      with:
+        arguments: :${{ fromJson(steps.split_version.outputs.result).new_version_name }}:projectApplyAll :${{ fromJson(steps.split_version.outputs.result).new_version_name }}:projectMakeAll -Ptype=${{ fromJson(steps.split_version.outputs.result).new_version_type }}
+    - if: ${{ steps.patches.outcome == 'success' }}
+      name: Check if patches have changed
+      id: check_changes
+      continue-on-error: true
+      run: |
+        git add .
+        git diff-index --quiet HEAD
+    - if: ${{ steps.check_changes.outcome == 'failure' }}
+      run: |
+        git commit -m "Update patches"
+        git push
+    - name: Make Zip
+      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      with:
+        arguments: :${{ fromJson(steps.split_version.outputs.result).new_version_name }}:makeZip -Ptype=${{ fromJson(steps.split_version.outputs.result).new_version_type }}
+    - name: Upload Zip as Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: mcp_config-${{ fromJson(steps.split_version.outputs.result).new_version_name }}
+        path: build/distributions/*.zip
+    - name: Get Java Version
+      id: java_version
+      uses: actions/github-script@v6
+      env:
+        VERSION: ${{ github.event.inputs.new_version }}
+        PATCHES_OUTCOME: ${{ steps.patches.outcome }}
+      with:
+        result-encoding: "string"
+        script: |
+          if (process.env.PATCHES_OUTCOME != 'success') {
+            return Number.MAX_SAFE_INTEGER;
+          }
+          const fs = require('fs');
+          const config = JSON.parse(fs.readFileSync('versions/' + process.env.VERSION + '/config.json', 'utf8'))
+          return config.java_target;
+  
+  get-diff:
+    name: Get diff
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    needs: update
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Set up JDK ${{ env.JAVA_VERSION }}
+      uses: actions/setup-java@v3
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: 'temurin'
+    - uses: actions/cache@v3
+      name: Cache ${{ needs.update.outputs.version_name }}
+      with:
+        path: |
+          build/versions/${{ needs.update.outputs.version_name }}/**
+          versions/${{ github.event.inputs.new_version }}/build/download-task/**
+        key: version-v3-${{ needs.update.outputs.version_name }}
+    - uses: actions/cache@v3
+      name: Cache ${{ needs.update.outputs.old_version_name }}
+      with:
+        path: |
+          build/versions/${{ needs.update.outputs.old_version_name }}/**
+          versions/${{ github.event.inputs.old_version }}/build/download-task/**
+        key: version-v3-${{ needs.update.outputs.old_version_name }}
+    - uses: actions/cache@v3
+      name: Cache Assets
+      with:
+        path: build/assets/**
+        key: minecraft-assets-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          minecraft-assets-v3-
+    - uses: actions/cache@v3
+      name: Cache Libraries
+      with:
+        path: build/libraries/**
+        key: minecraft-libraries-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          minecraft-libraries-v3-
+    - uses: actions/cache@v3
+      name: Cache Version Manifest
+      with:
+        path: build/versions/version_manifest.json
+        key: minecraft-version-manifest-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          minecraft-version-manifest-v3-
+    - uses: actions/cache@v3
+      name: Cache BuildSrc
+      with:
+        path: |
+          buildSrc/build/**
+          buildSrc/.gradle/**
+        key: buildsrc-build-jdk17-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          buildsrc-build-jdk17-v3-
+    - uses: actions/cache@v3
+      name: Cache Other
+      with:
+        path: |
+          build/download-task/**
+          .gradle/**
+        key: gradle-other-${{ steps.time.outputs.time }}
+        restore-keys: |
+          gradle-other-  
+    - run: |
+        git remote add upstream https://github.com/MinecraftForge/MCPConfig
+        git fetch upstream
+        git checkout -B ${{ needs.update.outputs.old_branch }} remotes/${{ github.event.inputs.old_branch }}
+    - name: Get old joined src
+      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      with:
+        arguments: :${{ needs.update.outputs.old_version_name }}:projectApplyAll -Pupdating -Ptype=${{ needs.update.outputs.old_version_type }}
+    - name: Checkout new branch
+      if: ${{ github.event.inputs.new_branch }}
+      run: git checkout ${{ github.event.inputs.new_branch }}
+    - name: Get new joined src
+      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      with:
+        arguments: :${{ needs.update.outputs.version_name }}:projectApplyAll -Pupdating -Ptype=${{ needs.update.outputs.version_type }}
+    - name: Get diff
+      continue-on-error: true
+      run: git diff --no-index versions/${{ github.event.inputs.old_version }}/projects/joined/src/main/java versions/${{ github.event.inputs.new_version }}/projects/joined/src/main/java > ${{ needs.update.outputs.old_version_name }}-${{ needs.update.outputs.version_name }}.patch
+    - name: Upload diff as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ needs.update.outputs.old_version_name }}-${{ needs.update.outputs.version_name }}-patch
+        path: '*.patch'
+
+  testjdks:
+    name: Test Jdks on side ${{ matrix.side }} using mappings ${{ matrix.mappings }} using java version ${{ matrix.jdk_version }} 
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    needs: update
+    strategy:
+      fail-fast: false
+      matrix:
+        jdk_version: [8, 11, 16, 17, 18]
+        mappings: [Official, HotSpot]
+        side: [Client, Joined, Server]
+        exclude:
+        - jdk_version: 11
+          mappings: HotSpot
+    
+    steps: 
+    - uses: actions/checkout@v3
+      with:
+        ref: ${{ needs.update.outputs.branch }}
+    - name: Set up JDK ${{ matrix.jdk_version }}
+      if: ${{ matrix.jdk_version != env.JAVA_VERSION}}
+      uses: actions/setup-java@v3
+      with:
+        java-version: ${{ matrix.jdk_version }}
+        distribution: 'temurin'
+    - name: Set up JDK ${{ env.JAVA_VERSION }}
+      uses: actions/setup-java@v3
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: 'temurin'
+    - name: Get Time
+      id: time
+      run: echo "::set-output name=time::$(date -Isecond -u)"
+    - uses: actions/cache@v3
+      name: Cache ${{ needs.update.outputs.version_name }}
+      with:
+        path: |
+          build/versions/${{ needs.update.outputs.version_name }}/**
+          versions/${{ github.event.inputs.new_version }}/build/download-task/**
+        key: version-v3-${{ needs.update.outputs.version_name }}
+    - uses: actions/cache@v3
+      name: Cache Assets
+      with:
+        path: build/assets/**
+        key: minecraft-assets-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          minecraft-assets-v3-
+    - uses: actions/cache@v3
+      name: Cache Libraries
+      with:
+        path: build/libraries/**
+        key: minecraft-libraries-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          minecraft-libraries-v3-
+    - uses: actions/cache@v3
+      name: Cache Version Manifest
+      with:
+        path: build/versions/version_manifest.json
+        key: minecraft-version-manifest-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          minecraft-version-manifest-v3-
+    - uses: actions/cache@v3
+      name: Cache BuildSrc
+      with:
+        path: |
+          buildSrc/build/**
+          buildSrc/.gradle/**
+        key: buildsrc-build-jdk${{ matrix.jdk_version }}-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          buildsrc-build-jdk${{ matrix.jdk_version }}-v3-
+    - uses: actions/cache@v3
+      name: Cache Other
+      with:
+        path: |
+          build/download-task/**
+          .gradle/**
+        key: gradle-other-${{ steps.time.outputs.time }}
+        restore-keys: |
+          gradle-other-  
+    - name: Test jdks
+      if: ${{ matrix.jdk_version >= needs.update.outputs.jdk_version}}
+      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      with:
+        arguments: :${{ needs.update.outputs.version_name }}:testCompile${{ matrix.side }}${{ matrix.mappings }}${{ matrix.jdk_version }} :${{ needs.update.outputs.version_name }}:testDecompile${{ matrix.side }}${{ matrix.mappings }}${{ matrix.jdk_version }}Compare -Ptype=${{ needs.update.outputs.version_type }}
+
+      
