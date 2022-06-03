@@ -164,6 +164,7 @@ jobs:
         git push
 
   finish:
+    needs: update
     uses: ./.github/workflows/common.yml
     with:
       old_branch: ${{ github.event.inputs.old_branch }}
