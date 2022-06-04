@@ -137,8 +137,8 @@ jobs:
         arguments: update -Pold_version=${{ github.event.inputs.old_version }} -Pnew_version=${{ github.event.inputs.new_version }}
     - name: Write summary for update
       run: |
-        cat versions/${{ github.event.inputs.old_version }}/statistics.md >> $GITHUB_STEP_SUMMARY
-        rm -f versions/${{ github.event.inputs.old_version }}/statistics.md
+        cat versions/${{ github.event.inputs.new_version }}/statistics.md >> $GITHUB_STEP_SUMMARY
+        rm -f versions/${{ github.event.inputs.new_version }}/statistics.md
     - if: ${{ github.event.inputs.patch_src }}
       run: cp versions/${{ github.event.inputs.new_version }}/joined.tsrg ../new_joined.tsrg
     - if: ${{ github.event.inputs.patch_src != github.event.inputs.new_version }}
