@@ -157,7 +157,7 @@ jobs:
     - if: ${{ github.event.inputs.new_branch }}
       run: |
         git stash
-        git checkout -B ${{ github.event.inputs.new_branch }} remotes/upstream/master
+        git checkout ${{ github.event.inputs.new_branch }} || git checkout -B ${{ github.event.inputs.new_branch }} remotes/upstream/master
         git push -u origin ${{ github.event.inputs.new_branch }}
         rm -rf versions/${{ github.event.inputs.new_version }}
         git add .
