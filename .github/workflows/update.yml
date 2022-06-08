@@ -9,7 +9,7 @@ on:
     # Inputs the workflow accepts.
     inputs:
       old_branch:
-        description: 'Old branch in the format of `repo/branch`'
+        description: 'Old branch'
         required: true
         default: 'upstream/master'
       old_version:
@@ -29,7 +29,7 @@ on:
         # Input has to be provided for the workflow to run
         required: true
       fix_getlevel:
-        description: 'Fix getLevel issue'
+        description: 'update task uses MigrateMappings'
         required: false
         type: boolean
 
@@ -51,6 +51,57 @@ jobs:
         echo "New branch: ${{ github.event.inputs.new_branch }}"
         echo "New version: ${{ github.event.inputs.new_version }}"
         echo "Fix getLevel issue: ${{ github.event.inputs.fix_getlevel}}"
+    - uses: actions/github-script@v6
+      name: Check arguments
+      env:
+        OLD_BRANCH: ${{ github.event.inputs.old_branch }}
+        OLD_VERSION: ${{ github.event.inputs.old_version }}
+        PATCHES_VERSION: ${{ github.event.inputs.patch_src }}
+        NEW_BRANCH: ${{ github.event.inputs.new_branch }}
+        NEW_VERSION: ${{ github.event.inputs.new_version }}
+      with:
+        script: |
+          const oldBranch = process.env.OLD_BRANCH;
+          const oldVersion = process.env.OLD_VERSION;
+          const patchesVersion = process.env.PATCHES_VERSION;
+          const newBranch = process.env.NEW_BRANCH;
+          const newVersion = process.env.NEW_VERSION;
+          
+          const versionRegex = /^(release|(snapshot|pre)\/[^/]+)\/[^/]+$/;
+          var failed = 0
+          if (!/^(upstream|origin)\/.+/.test(oldBranch)) {
+            core.error("Old branch needs to be set to an existing branch on either `MinecraftForge/MCPConfig` or `coehlrich/MCPConfig` in the format of `<repo>/<branch>` where repo is either `upstream` or `origin`")
+            failed++;
+          }
+          
+          if (!versionRegex.test(oldVersion)) {
+            core.error("Old version needs to be set to a version that is on the old branch and needs to be in the format of either `release/<version>`, `pre/<target>/<version>`, or `snapshot/<target>/<version>`")
+            failed++;
+          }
+          
+          if (patchesVersion == oldVersion) {
+            core.error("Patches version inputted as the same as the old version only the oldVersion is needed")
+            failed++;
+          }
+          
+          if (patchesVersion != "" && !versionRegex.test(patchesVersion)) {
+            core.error("Patches version either needs to be kept empty or needs to be set to a version that is on the old branch and needs to be in the format of either `release/<version>`, `pre/<target>/<version>`, or `snapshot/<target>/<version>`")
+            failed++;
+          }
+          
+          if (oldBranch.startsWith("upstream/") && newBranch == "") {
+            core.error("if the old branch is set to an upstream branch then the new branch needs to be set since this workflow cannot push to upstream")
+            failed++;
+          }
+          
+          if (!versionRegex.test(newVersion)) {
+            core.error("New version needs to be a version that doesn't exist on the new branch and needs to be in the format of either `release/<version>`, `pre/<target>/<version>`, or `snapshot/<target>/<version>`")
+            failed++;
+          }
+          
+          if (failed > 0) {
+            core.setFailed("${failed} errors detected in arguments. Check logs for more details")
+          }
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
