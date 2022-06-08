@@ -9,7 +9,7 @@ on:
     # Inputs the workflow accepts.
     inputs:
       old_branch:
-        description: 'Old branch'
+        description: 'Old branch in the format of `repo/branch`'
         required: true
         default: 'upstream/master'
       old_version:
