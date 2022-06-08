@@ -95,7 +95,7 @@ jobs:
           }
           
           if (failed > 0) {
-            core.setFailed("${failed} errors detected in arguments. Check logs for more details")
+            core.setFailed(failed + " errors detected in arguments. Check logs for more details")
           }
     - uses: actions/checkout@v3
       with:
