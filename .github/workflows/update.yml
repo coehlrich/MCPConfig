@@ -181,12 +181,14 @@ jobs:
       uses: gradle/gradle-build-action@v2
       with:
         arguments: update -Pold_version=${{ github.event.inputs.patch_src }} -Pnew_version=${{ github.event.inputs.new_version }}
+        generate-job-summary: false
     - if: ${{ github.event.inputs.patch_src }}
       run: cp versions/${{ github.event.inputs.new_version }}/joined.tsrg ../old_joined.tsrg
     - name: Build with Gradle
       uses: gradle/gradle-build-action@v2
       with:
         arguments: update -Pold_version=${{ github.event.inputs.old_version }} -Pnew_version=${{ github.event.inputs.new_version }}
+        generate-job-summary: false
     - name: Write summary for update
       run: |
         cat versions/${{ github.event.inputs.new_version }}/statistics.md >> $GITHUB_STEP_SUMMARY
@@ -293,6 +295,7 @@ jobs:
       uses: gradle/gradle-build-action@v2
       with:
         arguments: :${{ needs.update.outputs.old_version_name }}:projectApplyAll -Pupdating -Ptype=${{ needs.update.outputs.old_version_type }}
+        generate-job-summary: false
     - name: Checkout new branch
       if: ${{ inputs.new_branch }}
       run: git checkout ${{ inputs.new_branch }}
@@ -300,9 +303,9 @@ jobs:
       uses: gradle/gradle-build-action@v2
       with:
         arguments: :${{ needs.update.outputs.new_version_name }}:projectApplyAll -Pupdating -Ptype=${{ needs.update.outputs.new_version_type }}
+        generate-job-summary: false
     - name: Get diff
-      continue-on-error: true
-      run: git diff --no-index versions/${{ inputs.old_version }}/projects/joined/src/main/java versions/${{ inputs.new_version }}/projects/joined/src/main/java > ${{ needs.update.outputs.old_version_name }}-${{ needs.update.outputs.new_version_name }}.patch
+      run: git diff --no-index versions/${{ inputs.old_version }}/projects/joined/src/main/java versions/${{ inputs.new_version }}/projects/joined/src/main/java > ${{ needs.update.outputs.old_version_name }}-${{ needs.update.outputs.new_version_name }}.patch || true
     - name: Upload diff as artifact
       uses: actions/upload-artifact@v3
       with:
