@@ -38,6 +38,12 @@ jobs:
 
     name: Update
     runs-on: ubuntu-latest
+    outputs:
+      old_version_type: ${{ fromJson(steps.split_version.outputs.result).old_version_type }}
+      old_version_name: ${{ fromJson(steps.split_version.outputs.result).old_version_name }}
+      new_version_type: ${{ fromJson(steps.split_version.outputs.result).new_version_type }}
+      new_version_name: ${{ fromJson(steps.split_version.outputs.result).new_version_name }}
+      old_branch_name: ${{ fromJson(steps.split_version.outputs.result).old_branch }}
     steps:
     - name: "Log arguments"
       run: |
@@ -114,7 +120,7 @@ jobs:
         script: |
           const oldVersion = process.env.OLD_VERSION.split("/");
           const newVersion = process.env.NEW_VERSION.split("/");
-          var returnValue = {new_version_name: newVersion[newVersion.length - 1], old_version_name: oldVersion[oldVersion.length - 1], old_branch: process.env.OLD_BRANCH.replace(/^[^/]+\//, '')}
+          var returnValue = {old_version_type: oldVersion[0], old_version_name: oldVersion[oldVersion.length - 1], new_version_type: newVersion[0], new_version_name: newVersion[newVersion.length - 1], old_branch: process.env.OLD_BRANCH.replace(/^[^/]+\//, '')}
           if (process.env.PATCH_SRC_VERSION) {
             var pathSrcVersion = process.env.PATCH_SRC_VERSION.split("/");
             returnValue.patch_src_version_name = pathSrcVersion[pathSrcVersion.length - 1]
@@ -211,6 +217,97 @@ jobs:
         git config --global user.email 41898282+github-actions[bot]@users.noreply.github.com
         git commit -m "Start ${{ github.event.inputs.new_version }}"
         git push
+
+  get-diff:
+    name: Get diff
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    needs: update
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Set up JDK ${{ env.JAVA_VERSION }}
+      uses: actions/setup-java@v3
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: 'temurin'
+    - uses: actions/cache@v3
+      name: Cache ${{ needs.update.outputs.new_version_name }}
+      with:
+        path: |
+          build/versions/${{ needs.update.outputs.new_version_name }}/**
+          versions/${{ inputs.new_version }}/build/download-task/**
+        key: version-v3-${{ needs.update.outputs.new_version_name }}
+    - uses: actions/cache@v3
+      name: Cache ${{ needs.update.outputs.old_version_name }}
+      with:
+        path: |
+          build/versions/${{ needs.update.outputs.old_version_name }}/**
+          versions/${{ inputs.old_version }}/build/download-task/**
+        key: version-v3-${{ needs.update.outputs.old_version_name }}
+    - uses: actions/cache@v3
+      name: Cache Assets
+      with:
+        path: build/assets/**
+        key: minecraft-assets-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          minecraft-assets-v3-
+    - uses: actions/cache@v3
+      name: Cache Libraries
+      with:
+        path: build/libraries/**
+        key: minecraft-libraries-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          minecraft-libraries-v3-
+    - uses: actions/cache@v3
+      name: Cache Version Manifest
+      with:
+        path: build/versions/version_manifest.json
+        key: minecraft-version-manifest-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          minecraft-version-manifest-v3-
+    - uses: actions/cache@v3
+      name: Cache BuildSrc
+      with:
+        path: |
+          buildSrc/build/**
+          buildSrc/.gradle/**
+        key: buildsrc-build-jdk17-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          buildsrc-build-jdk17-v3-
+    - uses: actions/cache@v3
+      name: Cache Other
+      with:
+        path: |
+          build/download-task/**
+          .gradle/**
+        key: gradle-other-${{ steps.time.outputs.time }}
+        restore-keys: |
+          gradle-other-  
+    - run: |
+        git remote add upstream https://github.com/MinecraftForge/MCPConfig
+        git fetch upstream
+        git checkout -B ${{ needs.update.outputs.old_branch }} remotes/${{ inputs.old_branch }}
+    - name: Get old joined src
+      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      with:
+        arguments: :${{ needs.update.outputs.old_version_name }}:projectApplyAll -Pupdating -Ptype=${{ needs.update.outputs.old_version_type }}
+    - name: Checkout new branch
+      if: ${{ inputs.new_branch }}
+      run: git checkout ${{ inputs.new_branch }}
+    - name: Get new joined src
+      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      with:
+        arguments: :${{ needs.update.outputs.new_version_name }}:projectApplyAll -Pupdating -Ptype=${{ needs.update.outputs.new_version_type }}
+    - name: Get diff
+      continue-on-error: true
+      run: git diff --no-index versions/${{ inputs.old_version }}/projects/joined/src/main/java versions/${{ inputs.new_version }}/projects/joined/src/main/java > ${{ needs.update.outputs.old_version_name }}-${{ needs.update.outputs.new_version_name }}.patch
+    - name: Upload diff as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ needs.update.outputs.old_version_name }}-${{ needs.update.outputs.new_version_name }}-patch
+        path: '*.patch'
 
   finish:
     needs: update
