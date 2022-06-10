@@ -4,21 +4,12 @@ on:
   workflow_dispatch:
     # Inputs the workflow accepts.
     inputs:
-      old_branch:
-        description: 'Old branch'
+      branch:
+        description: 'Branch'
         required: true
-        default: 'upstream/master'
-      old_version:
+      version:
         # Friendly description to be shown in the UI instead of 'name'
-        description: 'Old version'
-        # Input has to be provided for the workflow to run
-        required: true
-      new_branch:
-        description: 'New branch'
-        required: false
-      new_version:
-        # Friendly description to be shown in the UI instead of 'name'
-        description: 'New version'
+        description: 'Version'
         # Input has to be provided for the workflow to run
         required: true
 
@@ -26,7 +17,5 @@ jobs:
   run:
     uses: ./.github/workflows/common.yml
     with:
-      old_branch: ${{ github.event.inputs.old_branch }}
-      new_branch: ${{ github.event.inputs.new_branch }}
-      old_version: ${{ github.event.inputs.old_version }}
-      new_version: ${{ github.event.inputs.new_version }}
+      branch: ${{ github.event.inputs.branch }}
+      version: ${{ github.event.inputs.version }}

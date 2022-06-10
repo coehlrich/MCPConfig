@@ -9,9 +9,6 @@ on:
       version:
         required: true
         type: string
-      fix_getlevel:
-        required: false
-        type: boolean
 
 
 env:

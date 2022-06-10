@@ -313,7 +313,5 @@ jobs:
     needs: update
     uses: ./.github/workflows/common.yml
     with:
-      old_branch: ${{ github.event.inputs.old_branch }}
-      new_branch: ${{ github.event.inputs.new_branch }}
-      old_version: ${{ github.event.inputs.old_version }}
-      new_version: ${{ github.event.inputs.new_version }}
+      branch: ${{ github.event.inputs.new_branch }}
+      version: ${{ github.event.inputs.new_version }}
