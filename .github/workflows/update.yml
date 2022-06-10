@@ -178,13 +178,13 @@ jobs:
             }
           }
     - if: ${{ github.event.inputs.patch_src && github.event.inputs.patch_src != github.event.inputs.new_version }}
-      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      uses: gradle/gradle-build-action@v2
       with:
         arguments: update -Pold_version=${{ github.event.inputs.patch_src }} -Pnew_version=${{ github.event.inputs.new_version }}
     - if: ${{ github.event.inputs.patch_src }}
       run: cp versions/${{ github.event.inputs.new_version }}/joined.tsrg ../old_joined.tsrg
     - name: Build with Gradle
-      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      uses: gradle/gradle-build-action@v2
       with:
         arguments: update -Pold_version=${{ github.event.inputs.old_version }} -Pnew_version=${{ github.event.inputs.new_version }}
     - name: Write summary for update
@@ -288,16 +288,16 @@ jobs:
     - run: |
         git remote add upstream https://github.com/MinecraftForge/MCPConfig
         git fetch upstream
-        git checkout -B ${{ needs.update.outputs.old_branch }} remotes/${{ inputs.old_branch }}
+        git checkout -B ${{ needs.update.outputs.old_branch_name }} remotes/${{ inputs.old_branch }}
     - name: Get old joined src
-      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      uses: gradle/gradle-build-action@v2
       with:
         arguments: :${{ needs.update.outputs.old_version_name }}:projectApplyAll -Pupdating -Ptype=${{ needs.update.outputs.old_version_type }}
     - name: Checkout new branch
       if: ${{ inputs.new_branch }}
       run: git checkout ${{ inputs.new_branch }}
     - name: Get new joined src
-      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      uses: gradle/gradle-build-action@v2
       with:
         arguments: :${{ needs.update.outputs.new_version_name }}:projectApplyAll -Pupdating -Ptype=${{ needs.update.outputs.new_version_type }}
     - name: Get diff

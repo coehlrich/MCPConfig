@@ -88,13 +88,13 @@ jobs:
     - run: |
         git remote add upstream https://github.com/MinecraftForge/MCPConfig
         git fetch upstream
-        git checkout -B ${{ inputs.branch }}
+        git checkout ${{ inputs.branch }}
     - run: |
         git config --global user.name github-actions
         git config --global user.email 41898282+github-actions[bot]@users.noreply.github.com
     - name: Apply and Create patches
       id: patches
-      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      uses: gradle/gradle-build-action@v2
       continue-on-error: true
       with:
         arguments: :${{ fromJson(steps.split_version.outputs.result).version_name }}:projectApplyAll :${{ fromJson(steps.split_version.outputs.result).version_name }}:projectMakeAll -Ptype=${{ fromJson(steps.split_version.outputs.result).version_type }}
@@ -110,7 +110,7 @@ jobs:
         git commit -m "Update patches"
         git push
     - name: Make Zip
-      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      uses: gradle/gradle-build-action@v2
       with:
         arguments: :${{ fromJson(steps.split_version.outputs.result).version_name }}:makeZip -Ptype=${{ fromJson(steps.split_version.outputs.result).version_type }}
     - name: Upload Zip as Artifact
@@ -215,7 +215,7 @@ jobs:
           gradle-other-  
     - name: Test jdks
       if: ${{ matrix.jdk_version >= needs.common.outputs.jdk_version}}
-      uses: gradle/gradle-build-action@0d13054264b0bb894ded474f08ebb30921341cee
+      uses: gradle/gradle-build-action@v2
       with:
         arguments: :${{ needs.common.outputs.version_name }}:testCompile${{ matrix.side }}${{ matrix.mappings }}${{ matrix.jdk_version }} :${{ needs.common.outputs.version_name }}:testDecompile${{ matrix.side }}${{ matrix.mappings }}${{ matrix.jdk_version }}Compare -Ptype=${{ needs.common.outputs.version_type }}
 
