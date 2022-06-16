@@ -85,10 +85,7 @@ jobs:
         key: gradle-other-${{ steps.time.outputs.time }}
         restore-keys: |
           gradle-other-  
-    - run: |
-        git remote add upstream https://github.com/MinecraftForge/MCPConfig
-        git fetch upstream
-        git checkout ${{ inputs.branch }}
+    - run: git checkout ${{ inputs.branch }}
     - run: |
         git config --global user.name github-actions
         git config --global user.email 41898282+github-actions[bot]@users.noreply.github.com
