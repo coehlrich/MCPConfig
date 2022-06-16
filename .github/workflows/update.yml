@@ -316,5 +316,5 @@ jobs:
     needs: update
     uses: ./.github/workflows/common.yml
     with:
-      branch: ${{ github.event.inputs.new_branch }}
+      branch: ${{ github.event.inputs.new_branch || needs.update.outputs.old_branch_name }}
       version: ${{ github.event.inputs.new_version }}
