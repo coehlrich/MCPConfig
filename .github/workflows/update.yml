@@ -156,7 +156,7 @@ jobs:
     - id: get_versions
       run: |
         mkdir -p ~/.minecraft/versions/
-        wget https://launchermeta.mojang.com/mc/game/version_manifest_v2.json -O ~/.minecraft/version_manifest_v2.json
+        wget https://piston-meta.mojang.com/mc/game/version_manifest_v2.json -O ~/.minecraft/version_manifest_v2.json
     - uses: actions/github-script@v6
       env:
         OLD_VERSION: ${{ fromJson(steps.split_version.outputs.result).old_version_name }}
