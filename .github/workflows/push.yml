@@ -1,0 +1,11 @@
+name: On push
+
+on:
+  push:
+    paths:
+      - versions/**
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "${{ github.events.push.compare }}"
