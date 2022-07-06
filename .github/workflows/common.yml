@@ -92,26 +92,22 @@ jobs:
     - name: Apply and Create patches
       id: patches
       uses: gradle/gradle-build-action@v2
-      continue-on-error: true
       with:
         arguments: :${{ fromJson(steps.split_version.outputs.result).version_name }}:projectApplyAll :${{ fromJson(steps.split_version.outputs.result).version_name }}:projectMakeAll -Ptype=${{ fromJson(steps.split_version.outputs.result).version_type }}
         generate-job-summary: false
-    - if: ${{ steps.patches.outcome == 'success' }}
-      name: Check if patches have changed
+    - name: Check if patches have changed
       id: check_changes
       run: |
         git add .
         git diff-index --quiet HEAD || git commit -m "Update patches" && git push
-    - if: ${{ steps.check_changes.outcome == 'failure' }}
-      run: |
-        git commit -m "Update patches"
-        git push
     - name: Make Zip
+      if: ${{ always() }}
       uses: gradle/gradle-build-action@v2
       with:
         arguments: :${{ fromJson(steps.split_version.outputs.result).version_name }}:makeZip -Ptype=${{ fromJson(steps.split_version.outputs.result).version_type }}
         generate-job-summary: false
     - name: Upload Zip as Artifact
+      if: ${{ always() }}
       uses: actions/upload-artifact@v3
       with:
         name: mcp_config-${{ fromJson(steps.split_version.outputs.result).version_name }}
@@ -135,7 +131,6 @@ jobs:
   testjdks:
     name: Test Jdks on side ${{ matrix.side }} using mappings ${{ matrix.mappings }} using java version ${{ matrix.jdk_version }} 
     runs-on: ubuntu-latest
-    continue-on-error: true
     needs: common
     strategy:
       fail-fast: false
@@ -217,4 +212,3 @@ jobs:
       with:
         arguments: :${{ needs.common.outputs.version_name }}:testCompile${{ matrix.side }}${{ matrix.mappings }}${{ matrix.jdk_version }} :${{ needs.common.outputs.version_name }}:testDecompile${{ matrix.side }}${{ matrix.mappings }}${{ matrix.jdk_version }}Compare -Ptype=${{ needs.common.outputs.version_type }}
         generate-job-summary: false
-      
