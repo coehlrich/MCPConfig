@@ -297,7 +297,7 @@ jobs:
     - name: Get old joined src
       uses: gradle/gradle-build-action@v2
       with:
-        arguments: :${{ needs.update.outputs.old_version_name }}:projectApplyAll -Pupdating -Ptype=${{ needs.update.outputs.old_version_type }}
+        arguments: :${{ needs.update.outputs.old_version_name }}:projectResetAll -Pupdating -Ptype=${{ needs.update.outputs.old_version_type }}
         generate-job-summary: false
     - name: Checkout new branch
       if: ${{ inputs.new_branch }}
@@ -305,7 +305,7 @@ jobs:
     - name: Get new joined src
       uses: gradle/gradle-build-action@v2
       with:
-        arguments: :${{ needs.update.outputs.new_version_name }}:projectApplyAll -Pupdating -Ptype=${{ needs.update.outputs.new_version_type }}
+        arguments: :${{ needs.update.outputs.new_version_name }}:projectResetAll -Pupdating -Ptype=${{ needs.update.outputs.new_version_type }}
         generate-job-summary: false
     - name: Get diff
       run: git diff --no-index versions/${{ inputs.old_version }}/projects/joined/src/main/java versions/${{ inputs.new_version }}/projects/joined/src/main/java > ${{ needs.update.outputs.old_version_name }}-${{ needs.update.outputs.new_version_name }}.patch || true
