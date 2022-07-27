@@ -28,8 +28,6 @@ jobs:
   get-diff:
     name: Get diff
     runs-on: ubuntu-latest
-    continue-on-error: true
-    needs: update
     steps:
     - uses: actions/checkout@v3
       with:
