@@ -1,0 +1,133 @@
+name: Get diff
+
+# Controls when the action will run. Workflow runs when manually triggered using the UI
+# or API.
+on:
+  workflow_dispatch:
+    # Inputs the workflow accepts.
+    inputs:
+      old_branch:
+        description: 'Old branch'
+        required: true
+        default: 'upstream/master'
+      old_version:
+        # Friendly description to be shown in the UI instead of 'name'
+        description: 'Old version'
+        # Input has to be provided for the workflow to run
+        required: true
+      new_branch:
+        description: 'New branch'
+        required: false
+      new_version:
+        # Friendly description to be shown in the UI instead of 'name'
+        description: 'New version'
+        # Input has to be provided for the workflow to run
+        required: true
+
+jobs:
+  get-diff:
+    name: Get diff
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    needs: update
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    - name: Get Time
+      id: time
+      run: echo "::set-output name=time::$(date -Isecond -u)"
+    - uses: actions/github-script@v6
+      id: split_version
+      env:
+        OLD_VERSION: ${{ inputs.old_version }}
+        NEW_VERSION: ${{ inputs.new_version }}
+        OLD_BRANCH: ${{ inputs.old_branch }}
+      with:
+        script: |
+          const oldVersion = process.env.OLD_VERSION.split("/");
+          const newVersion = process.env.NEW_VERSION.split("/");
+          var returnValue = {old_version_type: oldVersion[0], old_version_name: oldVersion[oldVersion.length - 1], new_version_type: newVersion[0], new_version_name: newVersion[newVersion.length - 1], old_branch: process.env.OLD_BRANCH.replace(/^[^/]+\//, '')}
+          return returnValue;
+    - name: Set up JDK ${{ env.JAVA_VERSION }}
+      uses: actions/setup-java@v3
+      with:
+        java-version: ${{ env.JAVA_VERSION }}
+        distribution: 'temurin'
+    - uses: actions/cache@v3
+      name: Cache ${{ fromJson(steps.split_version.outputs.result).new_version_name }}
+      with:
+        path: |
+          build/versions/${{ fromJson(steps.split_version.outputs.result).new_version_name }}/**
+          versions/${{ inputs.new_version }}/build/download-task/**
+        key: version-v3-${{ fromJson(steps.split_version.outputs.result).new_version_name }}
+    - uses: actions/cache@v3
+      name: Cache ${{ fromJson(steps.split_version.outputs.result).old_version_name }}
+      with:
+        path: |
+          build/versions/${{ fromJson(steps.split_version.outputs.result).old_version_name }}/**
+          versions/${{ inputs.old_version }}/build/download-task/**
+        key: version-v3-${{ fromJson(steps.split_version.outputs.result).old_version_name }}
+    - uses: actions/cache@v3
+      name: Cache Assets
+      with:
+        path: build/assets/**
+        key: minecraft-assets-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          minecraft-assets-v3-
+    - uses: actions/cache@v3
+      name: Cache Libraries
+      with:
+        path: build/libraries/**
+        key: minecraft-libraries-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          minecraft-libraries-v3-
+    - uses: actions/cache@v3
+      name: Cache Version Manifest
+      with:
+        path: build/versions/version_manifest.json
+        key: minecraft-version-manifest-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          minecraft-version-manifest-v3-
+    - uses: actions/cache@v3
+      name: Cache BuildSrc
+      with:
+        path: |
+          buildSrc/build/**
+          buildSrc/.gradle/**
+        key: buildsrc-build-jdk17-v3-${{ steps.time.outputs.time }}
+        restore-keys: |
+          buildsrc-build-jdk17-v3-
+    - uses: actions/cache@v3
+      name: Cache Other
+      with:
+        path: |
+          build/download-task/**
+          .gradle/**
+        key: gradle-other-${{ steps.time.outputs.time }}
+        restore-keys: |
+          gradle-other-  
+    - run: |
+        git remote add upstream https://github.com/MinecraftForge/MCPConfig
+        git fetch upstream
+        git checkout -B ${{ fromJson(steps.split_version.outputs.result).old_branch }} remotes/${{ inputs.old_branch }}
+    - name: Get old joined src
+      uses: gradle/gradle-build-action@v2
+      with:
+        arguments: :${{ fromJson(steps.split_version.outputs.result).old_version_name }}:projectResetAll -Pupdating -Ptype=${{ fromJson(steps.split_version.outputs.result).old_version_type }}
+        generate-job-summary: false
+    - name: Checkout new branch
+      if: ${{ inputs.new_branch }}
+      run: git checkout ${{ inputs.new_branch }}
+    - name: Get new joined src
+      uses: gradle/gradle-build-action@v2
+      with:
+        arguments: :${{ fromJson(steps.split_version.outputs.result).new_version_name }}:projectResetAll -Pupdating -Ptype=${{ fromJson(steps.split_version.outputs.result).new_version_type }}
+        generate-job-summary: false
+    - name: Get diff
+      run: git diff --no-index versions/${{ inputs.old_version }}/projects/joined/src/main/java versions/${{ inputs.new_version }}/projects/joined/src/main/java > ${{ fromJson(steps.split_version.outputs.result).old_version_name }}-${{ fromJson(steps.split_version.outputs.result).new_version_name }}.patch || true
+    - name: Upload diff as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: ${{ fromJson(steps.split_version.outputs.result).old_version_name }}-${{ fromJson(steps.split_version.outputs.result).new_version_name }}-patch
+        path: '*.patch'
