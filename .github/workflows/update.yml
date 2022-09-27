@@ -1,6 +1,7 @@
 # This is a basic workflow that is manually triggered
 
 name: Update
+run-name: Update from ${{ inputs.old_version }} to ${{ inputs.new_version }}
 
 # Controls when the action will run. Workflow runs when manually triggered using the UI
 # or API.
