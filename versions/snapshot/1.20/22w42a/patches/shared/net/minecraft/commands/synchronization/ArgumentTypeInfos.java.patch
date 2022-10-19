@@ -1,6 +1,6 @@
 --- a/net/minecraft/commands/synchronization/ArgumentTypeInfos.java
 +++ b/net/minecraft/commands/synchronization/ArgumentTypeInfos.java
-@@ -126,7 +126,7 @@
+@@ -124,7 +124,7 @@
     }
  
     private static <T extends ArgumentType<?>> Class<T> m_235395_(Class<? super T> p_235396_) {
@@ -9,7 +9,7 @@
     }
  
     public static boolean m_235391_(Class<?> p_235392_) {
-@@ -138,7 +138,7 @@
+@@ -136,7 +136,7 @@
        if (argumenttypeinfo == null) {
           throw new IllegalArgumentException(String.format(Locale.ROOT, "Unrecognized argument type %s (%s)", p_235383_, p_235383_.getClass()));
        } else {

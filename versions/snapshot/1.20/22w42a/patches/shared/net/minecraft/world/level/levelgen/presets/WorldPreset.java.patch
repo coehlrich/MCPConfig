@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/level/levelgen/presets/WorldPreset.java
 +++ b/net/minecraft/world/level/levelgen/presets/WorldPreset.java
-@@ -17,7 +17,7 @@
+@@ -16,7 +16,7 @@
  import net.minecraft.world.level.levelgen.WorldDimensions;
  
  public class WorldPreset {

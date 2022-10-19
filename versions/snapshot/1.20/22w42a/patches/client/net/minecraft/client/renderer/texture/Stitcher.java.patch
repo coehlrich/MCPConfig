@@ -1,6 +1,6 @@
 --- a/net/minecraft/client/renderer/texture/Stitcher.java
 +++ b/net/minecraft/client/renderer/texture/Stitcher.java
-@@ -10,7 +10,7 @@
+@@ -9,7 +9,7 @@
  import net.minecraft.util.Mth;
  
  public class Stitcher<T extends Stitcher.Entry> {

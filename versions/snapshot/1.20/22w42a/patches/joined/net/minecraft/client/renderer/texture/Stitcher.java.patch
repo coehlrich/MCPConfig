@@ -1,6 +1,6 @@
 --- a/net/minecraft/client/renderer/texture/Stitcher.java
 +++ b/net/minecraft/client/renderer/texture/Stitcher.java
-@@ -13,7 +13,7 @@
+@@ -12,7 +12,7 @@
  
  @OnlyIn(Dist.CLIENT)
  public class Stitcher<T extends Stitcher.Entry> {

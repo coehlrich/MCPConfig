@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/entity/monster/piglin/Piglin.java
 +++ b/net/minecraft/world/entity/monster/piglin/Piglin.java
-@@ -191,7 +191,7 @@
+@@ -194,7 +194,7 @@
     }
  
     public Brain<Piglin> m_6274_() {
