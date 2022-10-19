@@ -1,5 +1,20 @@
 --- a/net/minecraft/commands/synchronization/ArgumentTypeInfos.java
 +++ b/net/minecraft/commands/synchronization/ArgumentTypeInfos.java
+@@ -109,10 +109,10 @@
+       m_235386_(p_235385_, "float_range", RangeArgument.Floats.class, SingletonArgumentInfo.m_235451_(RangeArgument::m_105405_));
+       m_235386_(p_235385_, "dimension", DimensionArgument.class, SingletonArgumentInfo.m_235451_(DimensionArgument::m_88805_));
+       m_235386_(p_235385_, "time", TimeArgument.class, SingletonArgumentInfo.m_235451_(TimeArgument::m_113037_));
+-      m_235386_(p_235385_, "resource_or_tag", m_235395_(ResourceOrTagArgument.class), new ResourceOrTagArgument.Info());
+-      m_235386_(p_235385_, "resource_or_tag_key", m_235395_(ResourceOrTagKeyArgument.class), new ResourceOrTagKeyArgument.Info());
+-      m_235386_(p_235385_, "resource", m_235395_(ResourceArgument.class), new ResourceArgument.Info());
+-      m_235386_(p_235385_, "resource_key", m_235395_(ResourceKeyArgument.class), new ResourceKeyArgument.Info());
++      m_235386_(p_235385_, "resource_or_tag", m_235395_(ResourceOrTagArgument.class), new ResourceOrTagArgument.Info<Object>());
++      m_235386_(p_235385_, "resource_or_tag_key", m_235395_(ResourceOrTagKeyArgument.class), new ResourceOrTagKeyArgument.Info<Object>());
++      m_235386_(p_235385_, "resource", m_235395_(ResourceArgument.class), new ResourceArgument.Info<Object>());
++      m_235386_(p_235385_, "resource_key", m_235395_(ResourceKeyArgument.class), new ResourceKeyArgument.Info<Object>());
+       m_235386_(p_235385_, "template_mirror", TemplateMirrorArgument.class, SingletonArgumentInfo.m_235451_(TemplateMirrorArgument::m_234343_));
+       m_235386_(p_235385_, "template_rotation", TemplateRotationArgument.class, SingletonArgumentInfo.m_235451_(TemplateRotationArgument::m_234414_));
+       if (SharedConstants.f_136183_) {
 @@ -124,7 +124,7 @@
     }
  
