@@ -1,14 +1,5 @@
 --- a/net/minecraft/resources/RegistryOps.java
 +++ b/net/minecraft/resources/RegistryOps.java
-@@ -35,7 +35,7 @@
-       super(p_206809_);
-       this.f_206805_ = p_206811_;
-       this.f_206806_ = p_206810_;
--      this.f_206807_ = p_206809_ == JsonOps.INSTANCE ? this : new RegistryOps<>(JsonOps.INSTANCE, p_206810_, p_206811_);
-+      this.f_206807_ = p_206809_ == JsonOps.INSTANCE ? (DynamicOps<JsonElement>) this : new RegistryOps<>(JsonOps.INSTANCE, p_206810_, p_206811_);
-    }
- 
-    public <E> Optional<? extends Registry<E>> m_206826_(ResourceKey<? extends Registry<? extends E>> p_206827_) {
 @@ -54,7 +54,7 @@
        return ExtraCodecs.m_203976_((p_206830_) -> {
           if (p_206830_ instanceof RegistryOps<?> registryops) {
