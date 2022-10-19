@@ -18,6 +18,12 @@
        return p_235998_;
     }
  
+    public static RegistryAccess.Frozen m_245057_() {
+       RegistryAccess.Frozen registryaccess$frozen = RegistryAccess.m_206165_(Registry.f_122897_);
+       RegistryAccess.Frozen registryaccess$frozen1 = RegistryAccess.m_206165_(f_123858_);
+       return (new RegistryAccess.ImmutableRegistryAccess(Stream.concat(registryaccess$frozen.m_206193_(), registryaccess$frozen1.m_206193_()))).m_203557_();
+    }
+ 
     public static <V extends T, T> Holder<V> m_206380_(Registry<T> p_206381_, String p_206382_, V p_206383_) {
 -      return m_206388_(p_206381_, new ResourceLocation(p_206382_), (T)p_206383_);
 +      return m_206388_((Registry<V>)p_206381_, new ResourceLocation(p_206382_), p_206383_);
