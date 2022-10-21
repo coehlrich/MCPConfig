@@ -223,98 +223,12 @@ jobs:
 
   get-diff:
     name: Get diff
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    needs: update
-    steps:
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0
-    - name: Get Time
-      id: time
-      run: echo "::set-output name=time::$(date -Isecond -u)"
-    - name: Set up JDK ${{ env.JAVA_VERSION }}
-      uses: actions/setup-java@v3
-      with:
-        java-version: ${{ env.JAVA_VERSION }}
-        distribution: 'temurin'
-    - uses: actions/cache@v3
-      name: Cache ${{ needs.update.outputs.new_version_name }}
-      with:
-        path: |
-          build/versions/${{ needs.update.outputs.new_version_name }}/**
-          versions/${{ inputs.new_version }}/build/download-task/**
-        key: version-v3-${{ needs.update.outputs.new_version_name }}
-    - uses: actions/cache@v3
-      name: Cache ${{ needs.update.outputs.old_version_name }}
-      with:
-        path: |
-          build/versions/${{ needs.update.outputs.old_version_name }}/**
-          versions/${{ inputs.old_version }}/build/download-task/**
-        key: version-v3-${{ needs.update.outputs.old_version_name }}
-    - uses: actions/cache@v3
-      name: Cache Assets
-      with:
-        path: build/assets/**
-        key: minecraft-assets-v3-${{ steps.time.outputs.time }}
-        restore-keys: |
-          minecraft-assets-v3-
-    - uses: actions/cache@v3
-      name: Cache Libraries
-      with:
-        path: build/libraries/**
-        key: minecraft-libraries-v3-${{ steps.time.outputs.time }}
-        restore-keys: |
-          minecraft-libraries-v3-
-    - uses: actions/cache@v3
-      name: Cache Version Manifest
-      with:
-        path: build/versions/version_manifest.json
-        key: minecraft-version-manifest-v3-${{ steps.time.outputs.time }}
-        restore-keys: |
-          minecraft-version-manifest-v3-
-    - uses: actions/cache@v3
-      name: Cache BuildSrc
-      with:
-        path: |
-          buildSrc/build/**
-          buildSrc/.gradle/**
-        key: buildsrc-build-jdk17-v3-${{ steps.time.outputs.time }}
-        restore-keys: |
-          buildsrc-build-jdk17-v3-
-    - uses: actions/cache@v3
-      name: Cache Other
-      with:
-        path: |
-          build/download-task/**
-          .gradle/**
-        key: gradle-other-${{ steps.time.outputs.time }}
-        restore-keys: |
-          gradle-other-  
-    - run: |
-        git remote add upstream https://github.com/MinecraftForge/MCPConfig
-        git fetch upstream
-        git checkout -B ${{ needs.update.outputs.old_branch_name }} remotes/${{ inputs.old_branch }}
-    - name: Get old joined src
-      uses: gradle/gradle-build-action@v2
-      with:
-        arguments: :${{ needs.update.outputs.old_version_name }}:projectResetAll -Pupdating -Ptype=${{ needs.update.outputs.old_version_type }}
-        generate-job-summary: false
-    - name: Checkout new branch
-      if: ${{ inputs.new_branch }}
-      run: git checkout ${{ inputs.new_branch }}
-    - name: Get new joined src
-      uses: gradle/gradle-build-action@v2
-      with:
-        arguments: :${{ needs.update.outputs.new_version_name }}:projectResetAll -Pupdating -Ptype=${{ needs.update.outputs.new_version_type }}
-        generate-job-summary: false
-    - name: Get diff
-      run: git diff --no-index versions/${{ inputs.old_version }}/projects/joined/src/main/java versions/${{ inputs.new_version }}/projects/joined/src/main/java > ${{ needs.update.outputs.old_version_name }}-${{ needs.update.outputs.new_version_name }}.patch || true
-    - name: Upload diff as artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: ${{ needs.update.outputs.old_version_name }}-${{ needs.update.outputs.new_version_name }}-patch
-        path: '*.patch'
+    uses: ./.github/workflows/get-diff.yml
+    with:
+      old_branch: ${{ inputs.old_branch }}
+      old_version: ${{ inputs.old_version }}
+      new_branch: ${{ inputs.new_branch }}
+      new_version: ${{ inputs.new_version }}
 
   finish:
     needs: update

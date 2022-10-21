@@ -23,6 +23,21 @@ on:
         description: 'New version'
         # Input has to be provided for the workflow to run
         required: true
+  workflow_call:
+    inputs:
+      old_branch:
+        default: 'upstream/master'
+        type: string
+        required: false
+      old_version:
+        type: string
+        required: true
+      new_branch:
+        type: string
+        required: false
+      new_version:
+        type: string
+        required: true
 
 env:
   JAVA_VERSION: 17
