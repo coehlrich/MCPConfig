@@ -52,7 +52,7 @@ jobs:
         fetch-depth: 0
     - name: Get Time
       id: time
-      run: echo "::set-output name=time::$(date -Isecond -u)"
+      run: echo "time=$(date -Isecond -u)" >> $GITHUB_OUTPUT
     - uses: actions/github-script@v6
       id: split_version
       env:
