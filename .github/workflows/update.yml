@@ -222,6 +222,7 @@ jobs:
         git push
 
   get-diff:
+    needs: update
     name: Get diff
     uses: ./.github/workflows/get-diff.yml
     with:
