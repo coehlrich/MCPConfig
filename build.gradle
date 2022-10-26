@@ -6,6 +6,7 @@ plugins {
 import net.minecraftforge.mcpconfig.tasks.*
 import net.minecraftforge.srgutils.MinecraftVersion
 import uk.jamierocks.propatcher.task.*
+import net.minecraftforge.gradle.common.tasks.*
 
 group = 'de.oceanlabs.mcp'
 
@@ -119,6 +120,7 @@ subprojects {
     }
 
     repositories {
+        mavenCentral()
         maven {
             name 'forge'
             url 'https://maven.minecraftforge.net/'
@@ -164,8 +166,7 @@ subprojects {
         config RENAMETOOL, PATH_CACHED_LIBRARIES
     }
     task downloadAssets(type: DownloadAssets, dependsOn: downloadJson) {
-        json = downloadJson.dest
-        dest = file(PATH_BUILD + '/assets/')
+        getMeta().set downloadJson.dest
     }
     if (MCINJECTOR != null) {
         task downloadMCInjector(type: DownloadTool) {
@@ -277,25 +278,21 @@ subprojects {
     task renameJars(dependsOn: [renameClient, renameServer, renameJoined]){}
 
     task extractInheritance(type: ExtractInheritance, dependsOn: [downloadLibraries, mergeJars]) {
-        input mergeJars.dest
+        getInput().set mergeJars.dest
         inputs.file downloadJson.dest
-        dest file(PATH_CACHED_VERSION_DATA + 'inheritance.json')
-        doFirst {
-            downloadJson.dest.json.libraries.stream().map{ it?.downloads?.artifact?.path }.findAll{ it != null }.each{ library(file(PATH_CACHED_LIBRARIES + it)) }
-        }
+        getOutput().set file(PATH_CACHED_VERSION_DATA + 'inheritance.json')
+        getLibraries().value{downloadJson.dest.json.libraries.stream().map{ it?.downloads?.artifact?.path }.filter{ it != null }.map{ file(PATH_CACHED_LIBRARIES + it) }.toList().iterator()} // Even though gradle documentation says this supports an iterable gradle is trying to cast it to an iterator for some reason
     }
     task extractInheritanceNamed(type: ExtractInheritance, dependsOn: [renameJoined]) {
-        input renameJoined.dest
+        getInput().set renameJoined.dest
         inputs.file downloadJson.dest
-        dest file(PATH_CACHED_VERSION_DATA + 'inheritance_named.json')
-        doFirst {
-            downloadJson.dest.json.libraries.stream().map{ it?.downloads?.artifact?.path }.findAll{ it != null }.each{ library(file(PATH_CACHED_LIBRARIES + it)) }
-        }
+        getOutput().set file(PATH_CACHED_VERSION_DATA + 'inheritance_named.json')
+        getLibraries().value{downloadJson.dest.json.libraries.stream().map{ it?.downloads?.artifact?.path }.filter{ it != null }.map{ file(PATH_CACHED_LIBRARIES + it) }.toList().iterator()}
     }
 
     task dumpOverrides(type: DumpOverrides, dependsOn: [extractInheritance, makeObfToIntermediate]) {
         srg makeObfToIntermediate.dest
-        meta extractInheritance.dest
+        meta file(extractInheritance.getOutput())
         dest file(PATH_CACHED_VERSION_DATA + 'overrides.txt')
     }
     
@@ -307,9 +304,8 @@ subprojects {
     }
 
     task extractNatives(type: ExtractNatives, dependsOn: [downloadJson, downloadLibraries]) {
-        meta downloadJson.dest
-        cache file(PATH_CACHED_LIBRARIES)
-        dest file(PATH_NATIVES)
+        getMeta().set downloadJson.dest
+        getOutput().set file(PATH_NATIVES)
     }
     
     task verify(type: VerifyMappings, dependsOn: [mergeJars, makeObfToIntermediate]) {
@@ -381,6 +377,7 @@ subprojects {
         task projectSharedApplyPatches(type: ApplyPatchesTask, dependsOn: [projectSharedReset, projectSharedMakePatchesDir]) {
             target projectSharedReset.target
             patches project.file('patches/shared')
+            //rejects project.file('rejects/shared')
         }
         task projectSharedMakePatches(type: MakePatchesTask, dependsOn: deduplicateSources) {
             rootZip deduplicateSources.duplicates
@@ -421,8 +418,8 @@ subprojects {
             libraryFile child.extra.extra
             replace '{java_target}', JAVA_TARGET + ''
             replaceFile '{inject}', PATH_INJECT
-            replaceFile '{assets}', child.assets ? downloadAssets.dest : null
-            replaceFile '{natives}', child.jsonlibs ? extractNatives.dest : null
+            replaceFile '{assets}', child.assets ? downloadAssets.output : null
+            replaceFile '{natives}', child.jsonlibs ? extractNatives.output.getAsFile().get() : null
             replaceFile '{merged_src}', MERGE_PATCHES ? projectSharedReset.target : null
         }
         projectAll.dependsOn(child.project)
@@ -457,6 +454,7 @@ subprojects {
         child.apply = task "project${child.Name}ApplyPatches"(type: ApplyPatchesTask, dependsOn: [child.reset, child.makePatchesDir] + (MERGE_PATCHES ? [projectSharedApplyPatches] : [])) {
             target new File(project_dir, 'src/main/java')
             patches patches_dir
+            //rejects project.file("rejects/${side}")
         }
         projectApplyAll.dependsOn(child.apply)
 

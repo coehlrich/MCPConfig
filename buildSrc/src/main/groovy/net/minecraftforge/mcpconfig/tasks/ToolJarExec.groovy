@@ -8,7 +8,7 @@ import javax.inject.Inject
 
 class ToolJarExec extends JavaExec {
     def config(def cfg, def task) {
-        classpath = project.files(task.dest)
+        classpath = project.files(task.getOutput())
         args = cfg.args
         jvmArgs = cfg.jvmargs
     }

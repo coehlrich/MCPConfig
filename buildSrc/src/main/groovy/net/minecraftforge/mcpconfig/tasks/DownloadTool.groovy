@@ -2,20 +2,16 @@ package net.minecraftforge.mcpconfig.tasks
 
 import org.gradle.api.*
 import org.gradle.api.tasks.*
-import de.undercouch.gradle.tasks.download.Download
+import net.minecraftforge.gradle.common.tasks.*
 
-public class DownloadTool extends Download {
+public abstract class DownloadTool extends DownloadMavenArtifact {
     @Input config
-    
-    public DownloadTool() {
-        useETag 'all'
-        onlyIfModified true
-        quiet true
-    }
+    @Input root
     
     def config(def cfg, def root) {
         this.config = cfg
-        src cfg.repo + cfg.path
-        dest new File(root + cfg.path)
+        this.root = root
+        setArtifact cfg.version
+        getOutput().set new File(root + cfg.path)
     }
 }
