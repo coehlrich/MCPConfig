@@ -3,7 +3,7 @@
 @@ -129,7 +129,7 @@
           }
  
-       }));
+       }).m_252987_(this.f_96543_ / 2 + 4 + 100, 185, 50, 20).m_253136_());
 -      this.m_142416_(CycleButton.m_168894_((p_169852_) -> {
 +      this.m_142416_(CycleButton.<StructureMode>m_168894_((p_169852_) -> {
           return Component.m_237115_("structure_block.mode." + p_169852_.m_7912_());
