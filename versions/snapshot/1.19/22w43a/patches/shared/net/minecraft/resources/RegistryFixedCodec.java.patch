@@ -1,0 +1,11 @@
+--- a/net/minecraft/resources/RegistryFixedCodec.java
++++ b/net/minecraft/resources/RegistryFixedCodec.java
+@@ -46,7 +46,7 @@
+             return ResourceLocation.f_135803_.decode(p_206743_, p_206744_).flatMap((p_214221_) -> {
+                ResourceLocation resourcelocation = p_214221_.getFirst();
+                DataResult<? extends Holder<E>> dataresult = optional.get().m_214185_(ResourceKey.m_135785_(this.f_206721_, resourcelocation));
+-               return dataresult.map((p_214218_) -> {
++               return dataresult.<Pair<Holder<E>, T>>map((p_214218_) -> {
+                   return Pair.of(p_214218_, (T)p_214221_.getSecond());
+                }).setLifecycle(Lifecycle.stable());
+             });
