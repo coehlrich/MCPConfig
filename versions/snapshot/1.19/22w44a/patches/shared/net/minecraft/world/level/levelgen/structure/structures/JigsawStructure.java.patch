@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/level/levelgen/structure/structures/JigsawStructure.java
 +++ b/net/minecraft/world/level/levelgen/structure/structures/JigsawStructure.java
-@@ -20,7 +20,7 @@
+@@ -19,7 +19,7 @@
  
  public final class JigsawStructure extends Structure {
     public static final int f_227603_ = 128;

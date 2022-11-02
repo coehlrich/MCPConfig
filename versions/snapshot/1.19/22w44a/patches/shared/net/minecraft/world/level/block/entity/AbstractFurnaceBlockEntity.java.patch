@@ -9,7 +9,7 @@
     }
  
     public static Map<Item, Integer> m_58423_() {
-@@ -250,7 +250,7 @@
+@@ -241,7 +241,7 @@
        if (p_155017_.m_58425_() || flag3 && flag2) {
           Recipe<?> recipe;
           if (flag2) {

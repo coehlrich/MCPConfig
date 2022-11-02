@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/dedicated/DedicatedServerProperties.java
 +++ b/net/minecraft/server/dedicated/DedicatedServerProperties.java
-@@ -175,7 +175,7 @@
+@@ -173,7 +173,7 @@
     }
  
     private static FeatureFlagSet m_246391_(String p_251025_) {

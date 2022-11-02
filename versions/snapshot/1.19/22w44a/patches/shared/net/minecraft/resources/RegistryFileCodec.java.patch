@@ -1,11 +1,11 @@
 --- a/net/minecraft/resources/RegistryFileCodec.java
 +++ b/net/minecraft/resources/RegistryFileCodec.java
-@@ -63,7 +63,7 @@
-                Pair<ResourceLocation, T> pair = dataresult.result().get();
-                ResourceKey<E> resourcekey = ResourceKey.m_135785_(this.f_135570_, pair.getFirst());
-                DataResult<? extends Holder<E>> dataresult1 = registry.m_214185_(resourcekey);
--               return dataresult1.map((p_206706_) -> {
-+               return dataresult1.<Pair<Holder<E>, T>>map((p_206706_) -> {
-                   return Pair.of(p_206706_, pair.getSecond());
+@@ -67,7 +67,7 @@
+                return holdergetter.m_254902_(resourcekey).map(DataResult::success).orElseGet(() -> {
+                   return DataResult.error("Failed to get element " + resourcekey);
+                }).map((p_255658_) -> {
+-                  return Pair.of(p_255658_, pair.getSecond());
++                  return Pair.of((Holder<E>) p_255658_, pair.getSecond());
                 }).setLifecycle(Lifecycle.stable());
              }
+          }

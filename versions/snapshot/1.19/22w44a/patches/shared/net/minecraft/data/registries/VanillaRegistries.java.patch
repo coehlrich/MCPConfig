@@ -1,0 +1,11 @@
+--- a/net/minecraft/data/registries/VanillaRegistries.java
++++ b/net/minecraft/data/registries/VanillaRegistries.java
+@@ -30,7 +30,7 @@
+ import net.minecraft.world.level.levelgen.presets.WorldPresets;
+ 
+ public class VanillaRegistries {
+-   private static final RegistrySetBuilder f_254635_ = (new RegistrySetBuilder()).m_254916_(Registry.f_122818_, DimensionTypes::m_236473_).m_254916_(Registry.f_122880_, Carvers::m_254873_).m_254916_(Registry.f_122881_, FeatureUtils::m_254925_).m_254916_(Registry.f_194567_, PlacementUtils::m_255199_).m_254916_(Registry.f_235725_, Structures::m_255324_).m_254916_(Registry.f_211073_, StructureSets::m_255117_).m_254916_(Registry.f_122883_, ProcessorLists::m_254888_).m_254916_(Registry.f_122884_, Pools::m_255181_).m_254916_(Registry.f_122885_, Biomes::m_254912_).m_254916_(Registry.f_194568_, NoiseData::m_236475_).m_254916_(Registry.f_211074_, NoiseRouterData::m_255288_).m_254916_(Registry.f_122878_, NoiseGeneratorSettings::m_254959_).m_254916_(Registry.f_235726_, WorldPresets::m_254897_).m_254916_(Registry.f_235727_, FlatLevelGeneratorPresets::m_254848_).m_254916_(Registry.f_235730_, ChatType::m_237021_);
++   private static final RegistrySetBuilder f_254635_ = (new RegistrySetBuilder()).m_254916_(Registry.f_122818_, DimensionTypes::m_236473_).m_254916_(Registry.f_122880_, (RegistrySetBuilder.RegistryBootstrap) Carvers::m_254873_).m_254916_(Registry.f_122881_, (RegistrySetBuilder.RegistryBootstrap) FeatureUtils::m_254925_).m_254916_(Registry.f_194567_, PlacementUtils::m_255199_).m_254916_(Registry.f_235725_, Structures::m_255324_).m_254916_(Registry.f_211073_, StructureSets::m_255117_).m_254916_(Registry.f_122883_, ProcessorLists::m_254888_).m_254916_(Registry.f_122884_, Pools::m_255181_).m_254916_(Registry.f_122885_, Biomes::m_254912_).m_254916_(Registry.f_194568_, NoiseData::m_236475_).m_254916_(Registry.f_211074_, NoiseRouterData::m_255288_).m_254916_(Registry.f_122878_, NoiseGeneratorSettings::m_254959_).m_254916_(Registry.f_235726_, WorldPresets::m_254897_).m_254916_(Registry.f_235727_, FlatLevelGeneratorPresets::m_254848_).m_254916_(Registry.f_235730_, ChatType::m_237021_);
+ 
+    private static void m_255148_(HolderLookup.Provider p_256242_) {
+       HolderGetter<PlacedFeature> holdergetter = p_256242_.m_255025_(Registry.f_194567_);

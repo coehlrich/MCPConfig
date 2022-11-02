@@ -9,7 +9,7 @@
 +      record Data(LevelSettings f_244166_, WorldOptions f_244534_, Registry<LevelStem> f_244151_) {
 +      }
 +      return this.<Data, Pair<LevelSettings, WorldCreationContext>>m_246486_(worldloader$packconfig, (p_247857_) -> {
-          DynamicOps<Tag> dynamicops = RegistryOps.m_206821_(NbtOps.f_128958_, p_247857_.f_244104_());
+          DynamicOps<Tag> dynamicops = RegistryOps.m_255058_(NbtOps.f_128958_, p_247857_.f_244104_());
           Registry<LevelStem> registry = (new MappedRegistry<>(Registry.f_122820_, Lifecycle.stable())).m_203521_();
           Pair<WorldData, WorldDimensions.Complete> pair = p_249540_.m_246049_(dynamicops, p_247857_.f_244127_(), registry, p_247857_.f_244104_().m_211816_());
           if (pair == null) {

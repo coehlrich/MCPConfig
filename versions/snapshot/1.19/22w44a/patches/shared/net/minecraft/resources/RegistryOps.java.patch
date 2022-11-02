@@ -1,11 +1,11 @@
 --- a/net/minecraft/resources/RegistryOps.java
 +++ b/net/minecraft/resources/RegistryOps.java
-@@ -28,7 +28,7 @@
-       return ExtraCodecs.m_203976_((p_206830_) -> {
-          if (p_206830_ instanceof RegistryOps<?> registryops) {
-             return registryops.m_206826_(p_206833_).map((p_206825_) -> {
--               return DataResult.success(p_206825_, p_206825_.m_7837_());
-+               return DataResult.<Registry<E>>success(p_206825_, p_206825_.m_7837_());
-             }).orElseGet(() -> {
-                return DataResult.error("Unknown registry: " + p_206833_);
-             });
+@@ -22,7 +22,7 @@
+          private final Map<ResourceKey<? extends Registry<?>>, Optional<? extends RegistryOps.RegistryInfo<?>>> f_254621_ = new HashMap<>();
+ 
+          public <T> Optional<RegistryOps.RegistryInfo<T>> m_254838_(ResourceKey<? extends Registry<? extends T>> p_256043_) {
+-            return this.f_254621_.computeIfAbsent(p_256043_, p_255769_::m_254838_);
++            return (Optional<RegistryOps.RegistryInfo<T>>) this.f_254621_.computeIfAbsent(p_256043_, p_255769_::m_254838_);
+          }
+       };
+    }
