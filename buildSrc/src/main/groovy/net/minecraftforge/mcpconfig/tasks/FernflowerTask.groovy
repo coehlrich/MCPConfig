@@ -3,22 +3,24 @@ package net.minecraftforge.mcpconfig.tasks
 import org.gradle.api.tasks.*
 import java.util.zip.*
 
-public class FernflowerTask extends ToolJarExec {
+public abstract class FernflowerTask extends ToolJarExec {
     @InputFile File libraries
     @InputFile File input
     @OutputFile File log
     @OutputFile File dest
     
     @Override
+    protected List<String> filterArgs(List<String> args) {
+        return replaceArgs(args, [
+            '{libraries}': libraries,
+            '{input}': input,
+            '{output}': dest
+        ], null)
+    }
+    
+    @Override
     protected void preExec() {
-        def logStream = log.newOutputStream()
-        standardOutput logStream
-        errorOutput logStream
-        setArgs(Utils.fillVariables(args, [
-            'libraries': libraries,
-            'input': input,
-            'output': dest
-        ]))
+        //logFile = log TODO: no log property
     }
     
     @Override

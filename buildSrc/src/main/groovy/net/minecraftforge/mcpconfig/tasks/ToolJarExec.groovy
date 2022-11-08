@@ -3,22 +3,21 @@ package net.minecraftforge.mcpconfig.tasks;
 import org.gradle.api.tasks.*
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 import org.gradle.jvm.toolchain.JavaToolchainService
+import net.minecraftforge.gradle.common.tasks.*
 
 import javax.inject.Inject
 
-class ToolJarExec extends JavaExec {
-    def config(def cfg, def task) {
-        classpath = project.files(task.getOutput())
-        args = cfg.args
-        jvmArgs = cfg.jvmargs
+abstract class ToolJarExec extends JarExec {
+    def config(def cfg) {
+        getTool().set(cfg.version)
+        getArgs().addAll(cfg.args)
+        //jvmArgs = cfg.jvmargs // TODO: JarExec doesnt allow for jvmArgs currently
     }
 
     ToolJarExec() {
         def javaTarget = project.ext.JAVA_TARGET
         if (javaTarget != null) {
-            javaLauncher = javaToolchainService.launcherFor {
-                it.languageVersion = JavaLanguageVersion.of(javaTarget)
-            }
+            setRuntimeJavaVersion(javaTarget)
         }
     }
 
@@ -28,9 +27,9 @@ class ToolJarExec extends JavaExec {
     }
 
     @Override
-    public final void exec() {
+    public final void apply() {
         this.preExec()
-        super.exec()
+        super.apply()
         this.postExec()
     }
     
