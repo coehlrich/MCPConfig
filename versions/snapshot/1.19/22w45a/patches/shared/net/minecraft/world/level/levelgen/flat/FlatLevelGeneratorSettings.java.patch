@@ -6,6 +6,6 @@
     private static final Logger f_70348_ = LogUtils.getLogger();
 -   public static final Codec<FlatLevelGeneratorSettings> f_70347_ = RecordCodecBuilder.create((p_209800_) -> {
 +   public static final Codec<FlatLevelGeneratorSettings> f_70347_ = RecordCodecBuilder.<FlatLevelGeneratorSettings>create((p_209800_) -> {
-       return p_209800_.group(RegistryCodecs.m_206277_(Registry.f_211073_).optionalFieldOf("structure_overrides").forGetter((p_209812_) -> {
+       return p_209800_.group(RegistryCodecs.m_206277_(Registries.f_256998_).optionalFieldOf("structure_overrides").forGetter((p_209812_) -> {
           return p_209812_.f_209788_;
        }), FlatLayerInfo.f_70329_.listOf().fieldOf("layers").forGetter(FlatLevelGeneratorSettings::m_70401_), Codec.BOOL.fieldOf("lakes").orElse(false).forGetter((p_161912_) -> {
