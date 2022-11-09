@@ -10,7 +10,7 @@
 +      }
 +      return this.<Data, Pair<LevelSettings, WorldCreationContext>>m_246486_(worldloader$packconfig, (p_247857_) -> {
           DynamicOps<Tag> dynamicops = RegistryOps.m_255058_(NbtOps.f_128958_, p_247857_.f_244104_());
-          Registry<LevelStem> registry = (new MappedRegistry<>(Registry.f_122820_, Lifecycle.stable())).m_203521_();
+          Registry<LevelStem> registry = (new MappedRegistry<>(Registries.f_256862_, Lifecycle.stable())).m_203521_();
           Pair<WorldData, WorldDimensions.Complete> pair = p_249540_.m_246049_(dynamicops, p_247857_.f_244127_(), registry, p_247857_.f_244104_().m_211816_());
           if (pair == null) {
              throw new IllegalStateException("Failed to load world");
