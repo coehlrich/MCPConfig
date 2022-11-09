@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/level/NaturalSpawner.java
 +++ b/net/minecraft/world/level/NaturalSpawner.java
-@@ -86,14 +86,15 @@
+@@ -87,14 +87,15 @@
  
           MobCategory mobcategory = entity.m_6095_().m_20674_();
           if (mobcategory != MobCategory.MISC) {

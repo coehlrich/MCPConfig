@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/entity/ai/behavior/StopBeingAngryIfTargetDead.java
++++ b/net/minecraft/world/entity/ai/behavior/StopBeingAngryIfTargetDead.java
+@@ -11,7 +11,7 @@
+ public class StopBeingAngryIfTargetDead {
+    public static BehaviorControl<LivingEntity> m_257993_() {
+       return BehaviorBuilder.m_258034_((p_258814_) -> {
+-         return p_258814_.<MemoryAccessor>group(p_258814_.m_257495_(MemoryModuleType.f_26334_)).apply(p_258814_, (p_258813_) -> {
++         return p_258814_.group(p_258814_.m_257495_(MemoryModuleType.f_26334_)).apply(p_258814_, (p_258813_) -> {
+             return (p_258807_, p_258808_, p_258809_) -> {
+                Optional.ofNullable(p_258807_.m_8791_(p_258814_.m_258051_(p_258813_))).map((p_258802_) -> {
+                   LivingEntity livingentity1;

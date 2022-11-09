@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/entity/ai/behavior/SetEntityLookTargetSometimes.java
++++ b/net/minecraft/world/entity/ai/behavior/SetEntityLookTargetSometimes.java
+@@ -30,7 +30,7 @@
+       float f = p_260336_ * p_260336_;
+       SetEntityLookTargetSometimes.Ticker setentitylooktargetsometimes$ticker = new SetEntityLookTargetSometimes.Ticker(p_259266_);
+       return BehaviorBuilder.m_258034_((p_259288_) -> {
+-         return p_259288_.<MemoryAccessor, MemoryAccessor>group(p_259288_.m_258080_(MemoryModuleType.f_26371_), p_259288_.m_257495_(MemoryModuleType.f_148205_)).apply(p_259288_, (p_259350_, p_260134_) -> {
++         return p_259288_.group(p_259288_.m_258080_(MemoryModuleType.f_26371_), p_259288_.m_257495_(MemoryModuleType.f_148205_)).apply(p_259288_, (p_259350_, p_260134_) -> {
+             return (p_259914_, p_259474_, p_259941_) -> {
+                Optional<LivingEntity> optional = p_259288_.<NearestVisibleLivingEntities>m_258051_(p_260134_).m_186116_(p_260173_.and((p_259358_) -> {
+                   return p_259358_.m_20280_(p_259474_) <= (double)f;

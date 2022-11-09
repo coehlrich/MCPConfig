@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/entity/ai/behavior/TryFindLand.java
++++ b/net/minecraft/world/entity/ai/behavior/TryFindLand.java
+@@ -19,7 +19,7 @@
+    public static BehaviorControl<PathfinderMob> m_257647_(int p_259889_, float p_259302_) {
+       MutableLong mutablelong = new MutableLong(0L);
+       return BehaviorBuilder.m_258034_((p_259851_) -> {
+-         return p_259851_.<MemoryAccessor, MemoryAccessor, MemoryAccessor>group(p_259851_.m_258080_(MemoryModuleType.f_26372_), p_259851_.m_258080_(MemoryModuleType.f_26370_), p_259851_.m_257492_(MemoryModuleType.f_26371_)).apply(p_259851_, (p_259686_, p_259882_, p_259123_) -> {
++         return p_259851_.group(p_259851_.m_258080_(MemoryModuleType.f_26372_), p_259851_.m_258080_(MemoryModuleType.f_26370_), p_259851_.m_257492_(MemoryModuleType.f_26371_)).apply(p_259851_, (p_259686_, p_259882_, p_259123_) -> {
+             return (p_260032_, p_260019_, p_259854_) -> {
+                if (!p_260032_.m_6425_(p_260019_.m_20183_()).m_205070_(FluidTags.f_13131_)) {
+                   return false;

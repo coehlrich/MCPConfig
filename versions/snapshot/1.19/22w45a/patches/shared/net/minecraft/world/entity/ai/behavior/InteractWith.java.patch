@@ -1,0 +1,20 @@
+--- a/net/minecraft/world/entity/ai/behavior/InteractWith.java
++++ b/net/minecraft/world/entity/ai/behavior/InteractWith.java
+@@ -25,7 +25,7 @@
+          return p_259366_.equals(p_258445_.m_6095_()) && p_260254_.test((T)p_258445_);
+       };
+       return BehaviorBuilder.m_258034_((p_258426_) -> {
+-         return p_258426_.<MemoryAccessor, MemoryAccessor, MemoryAccessor, MemoryAccessor>group(p_258426_.m_257492_(p_260229_), p_258426_.m_257492_(MemoryModuleType.f_26371_), p_258426_.m_258080_(MemoryModuleType.f_26370_), p_258426_.m_257495_(MemoryModuleType.f_148205_)).apply(p_258426_, (p_258439_, p_258440_, p_258441_, p_258442_) -> {
++         return p_258426_.group(p_258426_.m_257492_(p_260229_), p_258426_.m_257492_(MemoryModuleType.f_26371_), p_258426_.m_258080_(MemoryModuleType.f_26370_), p_258426_.m_257495_(MemoryModuleType.f_148205_)).apply(p_258426_, (p_258439_, p_258440_, p_258441_, p_258442_) -> {
+             return (p_258413_, p_258414_, p_258415_) -> {
+                NearestVisibleLivingEntities nearestvisiblelivingentities = p_258426_.m_258051_(p_258442_);
+                if (p_259570_.test(p_258414_) && nearestvisiblelivingentities.m_186130_(predicate)) {
+@@ -33,7 +33,7 @@
+                      return p_258419_.m_20280_(p_258414_) <= (double)i && predicate.test(p_258419_);
+                   });
+                   optional.ifPresent((p_258432_) -> {
+-                     p_258439_.m_257512_(p_258432_);
++                     p_258439_.m_257512_((T)p_258432_);
+                      p_258440_.m_257512_(new EntityTracker(p_258432_, true));
+                      p_258441_.m_257512_(new WalkTarget(new EntityTracker(p_258432_, false), p_259369_, p_259065_));
+                   });

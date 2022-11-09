@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/entity/ai/behavior/StrollToPoiList.java
++++ b/net/minecraft/world/entity/ai/behavior/StrollToPoiList.java
+@@ -13,7 +13,7 @@
+    public static BehaviorControl<Villager> m_257487_(MemoryModuleType<List<GlobalPos>> p_259573_, float p_259895_, int p_260285_, int p_259533_, MemoryModuleType<GlobalPos> p_259706_) {
+       MutableLong mutablelong = new MutableLong(0L);
+       return BehaviorBuilder.m_258034_((p_259612_) -> {
+-         return p_259612_.<MemoryAccessor, MemoryAccessor, MemoryAccessor>group(p_259612_.m_257492_(MemoryModuleType.f_26370_), p_259612_.m_257495_(p_259573_), p_259612_.m_257495_(p_259706_)).apply(p_259612_, (p_259574_, p_259801_, p_259116_) -> {
++         return p_259612_.group(p_259612_.m_257492_(MemoryModuleType.f_26370_), p_259612_.m_257495_(p_259573_), p_259612_.m_257495_(p_259706_)).apply(p_259612_, (p_259574_, p_259801_, p_259116_) -> {
+             return (p_259940_, p_259222_, p_260161_) -> {
+                List<GlobalPos> list = p_259612_.m_258051_(p_259801_);
+                GlobalPos globalpos = p_259612_.m_258051_(p_259116_);

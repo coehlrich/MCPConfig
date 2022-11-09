@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/entity/ai/behavior/PoiCompetitorScan.java
++++ b/net/minecraft/world/entity/ai/behavior/PoiCompetitorScan.java
+@@ -15,7 +15,7 @@
+ public class PoiCompetitorScan {
+    public static BehaviorControl<Villager> m_257502_() {
+       return BehaviorBuilder.m_258034_((p_258576_) -> {
+-         return p_258576_.<MemoryAccessor, MemoryAccessor>group(p_258576_.m_257495_(MemoryModuleType.f_26360_), p_258576_.m_257495_(MemoryModuleType.f_148204_)).apply(p_258576_, (p_258590_, p_258591_) -> {
++         return p_258576_.group(p_258576_.m_257495_(MemoryModuleType.f_26360_), p_258576_.m_257495_(MemoryModuleType.f_148204_)).apply(p_258576_, (p_258590_, p_258591_) -> {
+             return (p_258580_, p_258581_, p_258582_) -> {
+                GlobalPos globalpos = p_258576_.m_258051_(p_258590_);
+                p_258580_.m_8904_().m_27177_(globalpos.m_122646_()).ifPresent((p_258588_) -> {

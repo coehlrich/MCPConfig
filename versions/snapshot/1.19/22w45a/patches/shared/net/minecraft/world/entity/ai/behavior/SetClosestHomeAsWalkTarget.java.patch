@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/entity/ai/behavior/SetClosestHomeAsWalkTarget.java
++++ b/net/minecraft/world/entity/ai/behavior/SetClosestHomeAsWalkTarget.java
+@@ -32,7 +32,7 @@
+       Long2LongMap long2longmap = new Long2LongOpenHashMap();
+       MutableLong mutablelong = new MutableLong(0L);
+       return BehaviorBuilder.m_258034_((p_258633_) -> {
+-         return p_258633_.<MemoryAccessor, MemoryAccessor>group(p_258633_.m_258080_(MemoryModuleType.f_26370_), p_258633_.m_258080_(MemoryModuleType.f_26359_)).apply(p_258633_, (p_258626_, p_258627_) -> {
++         return p_258633_.group(p_258633_.m_258080_(MemoryModuleType.f_26370_), p_258633_.m_258080_(MemoryModuleType.f_26359_)).apply(p_258633_, (p_258626_, p_258627_) -> {
+             return (p_258638_, p_258639_, p_258640_) -> {
+                if (p_258638_.m_46467_() - mutablelong.getValue() < 20L) {
+                   return false;

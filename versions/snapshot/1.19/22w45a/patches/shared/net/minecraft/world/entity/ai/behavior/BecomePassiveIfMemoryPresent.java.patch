@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/entity/ai/behavior/BecomePassiveIfMemoryPresent.java
++++ b/net/minecraft/world/entity/ai/behavior/BecomePassiveIfMemoryPresent.java
+@@ -12,7 +12,7 @@
+       return BehaviorBuilder.m_258034_((p_259944_) -> {
+          return p_259944_.group(p_259944_.m_257492_(MemoryModuleType.f_26372_), p_259944_.m_258080_(MemoryModuleType.f_26357_), p_259944_.m_257495_(p_259988_)).apply(p_259944_, p_259944_.m_257851_(() -> {
+             return "[BecomePassive if " + p_259988_ + " present]";
+-         }, (Function3<MemoryAccessor, MemoryAccessor, MemoryAccessor, Trigger<LivingEntity>>)(p_260120_, p_259674_, p_259822_) -> {
++         }, (p_260120_, p_259674_, p_259822_) -> {
+             return (p_260328_, p_259412_, p_259725_) -> {
+                p_259674_.m_257465_(true, (long)p_260143_);
+                p_260120_.m_257971_();

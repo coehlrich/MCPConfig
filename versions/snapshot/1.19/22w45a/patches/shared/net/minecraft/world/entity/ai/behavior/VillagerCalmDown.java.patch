@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/entity/ai/behavior/VillagerCalmDown.java
++++ b/net/minecraft/world/entity/ai/behavior/VillagerCalmDown.java
+@@ -10,7 +10,7 @@
+ 
+    public static BehaviorControl<LivingEntity> m_257666_() {
+       return BehaviorBuilder.m_258034_((p_258884_) -> {
+-         return p_258884_.<MemoryAccessor, MemoryAccessor, MemoryAccessor>group(p_258884_.m_257492_(MemoryModuleType.f_26381_), p_258884_.m_257492_(MemoryModuleType.f_26382_), p_258884_.m_257492_(MemoryModuleType.f_26323_)).apply(p_258884_, (p_258886_, p_258887_, p_258888_) -> {
++         return p_258884_.group(p_258884_.m_257492_(MemoryModuleType.f_26381_), p_258884_.m_257492_(MemoryModuleType.f_26382_), p_258884_.m_257492_(MemoryModuleType.f_26323_)).apply(p_258884_, (p_258886_, p_258887_, p_258888_) -> {
+             return (p_258881_, p_258882_, p_258883_) -> {
+                boolean flag = p_258884_.m_257828_(p_258886_).isPresent() || p_258884_.m_257828_(p_258888_).isPresent() || p_258884_.<LivingEntity>m_257828_(p_258887_).filter((p_259890_) -> {
+                   return p_259890_.m_20280_(p_258882_) <= 36.0D;

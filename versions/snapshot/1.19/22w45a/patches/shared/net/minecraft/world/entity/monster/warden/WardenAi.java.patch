@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/entity/monster/warden/WardenAi.java
++++ b/net/minecraft/world/entity/monster/warden/WardenAi.java
+@@ -56,7 +56,7 @@
+    private static final List<SensorType<? extends Sensor<? super Warden>>> f_219500_ = List.of(SensorType.f_26812_, SensorType.f_217825_);
+    private static final List<MemoryModuleType<?>> f_219501_ = List.of(MemoryModuleType.f_148204_, MemoryModuleType.f_148205_, MemoryModuleType.f_26368_, MemoryModuleType.f_148206_, MemoryModuleType.f_26333_, MemoryModuleType.f_26371_, MemoryModuleType.f_26370_, MemoryModuleType.f_26326_, MemoryModuleType.f_26377_, MemoryModuleType.f_26372_, MemoryModuleType.f_26373_, MemoryModuleType.f_148194_, MemoryModuleType.f_217782_, MemoryModuleType.f_217783_, MemoryModuleType.f_217784_, MemoryModuleType.f_217785_, MemoryModuleType.f_217786_, MemoryModuleType.f_217769_, MemoryModuleType.f_217770_, MemoryModuleType.f_217771_, MemoryModuleType.f_217772_, MemoryModuleType.f_217773_, MemoryModuleType.f_217774_, MemoryModuleType.f_217775_, MemoryModuleType.f_217776_, MemoryModuleType.f_217777_);
+    private static final BehaviorControl<Warden> f_219502_ = BehaviorBuilder.m_258034_((p_258953_) -> {
+-      return p_258953_.<MemoryAccessor>group(p_258953_.m_257492_(MemoryModuleType.f_217770_)).apply(p_258953_, (p_258960_) -> {
++      return p_258953_.group(p_258953_.m_257492_(MemoryModuleType.f_217770_)).apply(p_258953_, (p_258960_) -> {
+          return (p_258956_, p_258957_, p_258958_) -> {
+             if (p_258953_.m_257828_(p_258960_).isPresent()) {
+                p_258960_.m_257465_(Unit.INSTANCE, 1200L);

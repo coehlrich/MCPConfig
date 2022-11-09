@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/entity/ai/behavior/PlayTagWithOtherKids.java
++++ b/net/minecraft/world/entity/ai/behavior/PlayTagWithOtherKids.java
+@@ -25,7 +25,7 @@
+ 
+    public static BehaviorControl<PathfinderMob> m_257585_() {
+       return BehaviorBuilder.m_258034_((p_258563_) -> {
+-         return p_258563_.<MemoryAccessor, MemoryAccessor, MemoryAccessor, MemoryAccessor>group(p_258563_.m_257495_(MemoryModuleType.f_26366_), p_258563_.m_258080_(MemoryModuleType.f_26370_), p_258563_.m_257492_(MemoryModuleType.f_26371_), p_258563_.m_257492_(MemoryModuleType.f_26374_)).apply(p_258563_, (p_258559_, p_258560_, p_258561_, p_258562_) -> {
++         return p_258563_.group(p_258563_.m_257495_(MemoryModuleType.f_26366_), p_258563_.m_258080_(MemoryModuleType.f_26370_), p_258563_.m_257492_(MemoryModuleType.f_26371_), p_258563_.m_257492_(MemoryModuleType.f_26374_)).apply(p_258563_, (p_258559_, p_258560_, p_258561_, p_258562_) -> {
+             return (p_258571_, p_258572_, p_258573_) -> {
+                if (p_258571_.m_213780_().m_188503_(10) != 0) {
+                   return false;

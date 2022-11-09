@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/entity/ai/behavior/TryFindLandNearWater.java
++++ b/net/minecraft/world/entity/ai/behavior/TryFindLandNearWater.java
+@@ -16,7 +16,7 @@
+    public static BehaviorControl<PathfinderMob> m_257557_(int p_259739_, float p_259118_) {
+       MutableLong mutablelong = new MutableLong(0L);
+       return BehaviorBuilder.m_258034_((p_260348_) -> {
+-         return p_260348_.<MemoryAccessor, MemoryAccessor, MemoryAccessor>group(p_260348_.m_258080_(MemoryModuleType.f_26372_), p_260348_.m_258080_(MemoryModuleType.f_26370_), p_260348_.m_257492_(MemoryModuleType.f_26371_)).apply(p_260348_, (p_259029_, p_259100_, p_259367_) -> {
++         return p_260348_.group(p_260348_.m_258080_(MemoryModuleType.f_26372_), p_260348_.m_258080_(MemoryModuleType.f_26370_), p_260348_.m_257492_(MemoryModuleType.f_26371_)).apply(p_260348_, (p_259029_, p_259100_, p_259367_) -> {
+             return (p_259876_, p_259531_, p_259771_) -> {
+                if (p_259876_.m_6425_(p_259531_.m_20183_()).m_205070_(FluidTags.f_13131_)) {
+                   return false;

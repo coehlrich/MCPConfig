@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/entity/ai/behavior/SocializeAtBell.java
++++ b/net/minecraft/world/entity/ai/behavior/SocializeAtBell.java
+@@ -14,7 +14,7 @@
+ 
+    public static OneShot<LivingEntity> m_257875_() {
+       return BehaviorBuilder.m_258034_((p_258755_) -> {
+-         return p_258755_.<MemoryAccessor, MemoryAccessor, MemoryAccessor, MemoryAccessor, MemoryAccessor>group(p_258755_.m_257492_(MemoryModuleType.f_26370_), p_258755_.m_257492_(MemoryModuleType.f_26371_), p_258755_.m_257495_(MemoryModuleType.f_26362_), p_258755_.m_257495_(MemoryModuleType.f_148205_), p_258755_.m_258080_(MemoryModuleType.f_26374_)).apply(p_258755_, (p_258750_, p_258751_, p_258752_, p_258753_, p_258754_) -> {
++         return p_258755_.group(p_258755_.m_257492_(MemoryModuleType.f_26370_), p_258755_.m_257492_(MemoryModuleType.f_26371_), p_258755_.m_257495_(MemoryModuleType.f_26362_), p_258755_.m_257495_(MemoryModuleType.f_148205_), p_258755_.m_258080_(MemoryModuleType.f_26374_)).apply(p_258755_, (p_258750_, p_258751_, p_258752_, p_258753_, p_258754_) -> {
+             return (p_258766_, p_258767_, p_258768_) -> {
+                GlobalPos globalpos = p_258755_.m_258051_(p_258752_);
+                NearestVisibleLivingEntities nearestvisiblelivingentities = p_258755_.m_258051_(p_258753_);

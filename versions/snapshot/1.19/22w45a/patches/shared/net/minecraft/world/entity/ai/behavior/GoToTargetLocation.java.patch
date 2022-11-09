@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/entity/ai/behavior/GoToTargetLocation.java
++++ b/net/minecraft/world/entity/ai/behavior/GoToTargetLocation.java
+@@ -19,7 +19,7 @@
+ 
+    public static <E extends Mob> OneShot<E> m_257680_(MemoryModuleType<BlockPos> p_259938_, int p_259740_, float p_259957_) {
+       return BehaviorBuilder.m_258034_((p_259997_) -> {
+-         return p_259997_.<MemoryAccessor, MemoryAccessor, MemoryAccessor, MemoryAccessor>group(p_259997_.m_257495_(p_259938_), p_259997_.m_258080_(MemoryModuleType.f_26372_), p_259997_.m_258080_(MemoryModuleType.f_26370_), p_259997_.m_257492_(MemoryModuleType.f_26371_)).apply(p_259997_, (p_259831_, p_259115_, p_259521_, p_259223_) -> {
++         return p_259997_.group(p_259997_.m_257495_(p_259938_), p_259997_.m_258080_(MemoryModuleType.f_26372_), p_259997_.m_258080_(MemoryModuleType.f_26370_), p_259997_.m_257492_(MemoryModuleType.f_26371_)).apply(p_259997_, (p_259831_, p_259115_, p_259521_, p_259223_) -> {
+             return (p_260356_, p_260071_, p_259130_) -> {
+                BlockPos blockpos = p_259997_.m_258051_(p_259831_);
+                boolean flag = blockpos.m_123314_(p_260071_.m_20183_(), (double)p_259740_);

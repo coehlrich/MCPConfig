@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/entity/ai/behavior/BabyFollowAdult.java
++++ b/net/minecraft/world/entity/ai/behavior/BabyFollowAdult.java
+@@ -18,7 +18,7 @@
+ 
+    public static OneShot<AgeableMob> m_257631_(UniformInt p_259321_, Function<LivingEntity, Float> p_259190_) {
+       return BehaviorBuilder.m_258034_((p_258331_) -> {
+-         return p_258331_.<MemoryAccessor, MemoryAccessor, MemoryAccessor>group(p_258331_.m_257495_(MemoryModuleType.f_26331_), p_258331_.m_257492_(MemoryModuleType.f_26371_), p_258331_.m_258080_(MemoryModuleType.f_26370_)).apply(p_258331_, (p_258317_, p_258318_, p_258319_) -> {
++         return p_258331_.group(p_258331_.m_257495_(MemoryModuleType.f_26331_), p_258331_.m_257492_(MemoryModuleType.f_26371_), p_258331_.m_258080_(MemoryModuleType.f_26370_)).apply(p_258331_, (p_258317_, p_258318_, p_258319_) -> {
+             return (p_258326_, p_258327_, p_258328_) -> {
+                if (!p_258327_.m_6162_()) {
+                   return false;

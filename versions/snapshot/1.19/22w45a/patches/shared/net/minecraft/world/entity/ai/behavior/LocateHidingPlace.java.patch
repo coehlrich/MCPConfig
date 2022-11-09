@@ -1,0 +1,11 @@
+--- a/net/minecraft/world/entity/ai/behavior/LocateHidingPlace.java
++++ b/net/minecraft/world/entity/ai/behavior/LocateHidingPlace.java
+@@ -12,7 +12,7 @@
+ public class LocateHidingPlace {
+    public static OneShot<LivingEntity> m_258090_(int p_259202_, float p_259881_, int p_259982_) {
+       return BehaviorBuilder.m_258034_((p_258505_) -> {
+-         return p_258505_.<MemoryAccessor, MemoryAccessor, MemoryAccessor, MemoryAccessor, MemoryAccessor, MemoryAccessor, MemoryAccessor>group(p_258505_.m_258080_(MemoryModuleType.f_26370_), p_258505_.m_257492_(MemoryModuleType.f_26359_), p_258505_.m_257492_(MemoryModuleType.f_26324_), p_258505_.m_257492_(MemoryModuleType.f_26377_), p_258505_.m_257492_(MemoryModuleType.f_26371_), p_258505_.m_257492_(MemoryModuleType.f_26375_), p_258505_.m_257492_(MemoryModuleType.f_26374_)).apply(p_258505_, (p_258484_, p_258485_, p_258486_, p_258487_, p_258488_, p_258489_, p_258490_) -> {
++         return p_258505_.group(p_258505_.m_258080_(MemoryModuleType.f_26370_), p_258505_.m_257492_(MemoryModuleType.f_26359_), p_258505_.m_257492_(MemoryModuleType.f_26324_), p_258505_.m_257492_(MemoryModuleType.f_26377_), p_258505_.m_257492_(MemoryModuleType.f_26371_), p_258505_.m_257492_(MemoryModuleType.f_26375_), p_258505_.m_257492_(MemoryModuleType.f_26374_)).apply(p_258505_, (p_258484_, p_258485_, p_258486_, p_258487_, p_258488_, p_258489_, p_258490_) -> {
+             return (p_258520_, p_258521_, p_258522_) -> {
+                p_258520_.m_8904_().m_27186_((p_217258_) -> {
+                   return p_217258_.m_203565_(PoiTypes.f_218060_);

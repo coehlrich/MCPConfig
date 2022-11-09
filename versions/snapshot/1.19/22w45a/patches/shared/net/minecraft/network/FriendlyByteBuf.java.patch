@@ -1,6 +1,6 @@
 --- a/net/minecraft/network/FriendlyByteBuf.java
 +++ b/net/minecraft/network/FriendlyByteBuf.java
-@@ -152,7 +152,7 @@
+@@ -154,7 +154,7 @@
        C c = p_236839_.apply(i);
  
        for(int j = 0; j < i; ++j) {
@@ -9,7 +9,7 @@
        }
  
        return c;
-@@ -162,7 +162,7 @@
+@@ -164,7 +164,7 @@
        this.m_130130_(p_236829_.size());
  
        for(T t : p_236829_) {
@@ -18,7 +18,7 @@
        }
  
     }
-@@ -184,7 +184,7 @@
+@@ -186,7 +186,7 @@
  
     public void m_178345_(IntList p_178346_) {
        this.m_130130_(p_178346_.size());
@@ -27,7 +27,7 @@
     }
  
     public <K, V, M extends Map<K, V>> M m_236841_(IntFunction<M> p_236842_, FriendlyByteBuf.Reader<K> p_236843_, FriendlyByteBuf.Reader<V> p_236844_) {
-@@ -192,8 +192,8 @@
+@@ -194,8 +194,8 @@
        M m = p_236842_.apply(i);
  
        for(int j = 0; j < i; ++j) {
@@ -38,7 +38,7 @@
           m.put(k, v);
        }
  
-@@ -207,8 +207,8 @@
+@@ -209,8 +209,8 @@
     public <K, V> void m_236831_(Map<K, V> p_236832_, FriendlyByteBuf.Writer<K> p_236833_, FriendlyByteBuf.Writer<V> p_236834_) {
        this.m_130130_(p_236832_.size());
        p_236832_.forEach((p_236856_, p_236857_) -> {
@@ -49,7 +49,7 @@
        });
     }
  
-@@ -249,7 +249,7 @@
+@@ -251,7 +251,7 @@
     public <T> void m_236835_(Optional<T> p_236836_, FriendlyByteBuf.Writer<T> p_236837_) {
        if (p_236836_.isPresent()) {
           this.writeBoolean(true);
@@ -58,7 +58,7 @@
        } else {
           this.writeBoolean(false);
        }
-@@ -257,18 +257,18 @@
+@@ -259,18 +259,18 @@
     }
  
     public <T> Optional<T> m_236860_(FriendlyByteBuf.Reader<T> p_236861_) {
@@ -80,7 +80,7 @@
        } else {
           this.writeBoolean(false);
        }
-@@ -278,15 +278,15 @@
+@@ -280,15 +280,15 @@
     public <L, R> void m_236810_(Either<L, R> p_236811_, FriendlyByteBuf.Writer<L> p_236812_, FriendlyByteBuf.Writer<R> p_236813_) {
        p_236811_.ifLeft((p_236867_) -> {
           this.writeBoolean(true);
