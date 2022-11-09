@@ -4,8 +4,8 @@
           jsonobject.addProperty("default", resourcelocation.toString());
        }
  
--      int i = Registry.f_122897_.m_7447_(p_124059_);
-+      int i = ((Registry)Registry.f_122897_).m_7447_(p_124059_);
+-      int i = BuiltInRegistries.f_257047_.m_7447_(p_124059_);
++      int i = ((Registry)BuiltInRegistries.f_257047_).m_7447_(p_124059_);
        jsonobject.addProperty("protocol_id", i);
        JsonObject jsonobject1 = new JsonObject();
        p_124059_.m_203611_().forEach((p_211092_) -> {
