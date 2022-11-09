@@ -1,6 +1,6 @@
 --- a/net/minecraft/client/OptionInstance.java
 +++ b/net/minecraft/client/OptionInstance.java
-@@ -275,7 +275,7 @@
+@@ -264,7 +264,7 @@
        default <R> OptionInstance.SliderableValueSet<R> m_231657_(final IntFunction<? extends R> p_231658_, final ToIntFunction<? super R> p_231659_) {
           return new OptionInstance.SliderableValueSet<R>() {
              public Optional<R> m_214064_(R p_231674_) {
