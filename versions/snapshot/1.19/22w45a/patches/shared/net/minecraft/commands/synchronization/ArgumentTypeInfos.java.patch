@@ -3,6 +3,7 @@
 @@ -109,10 +109,10 @@
        m_235386_(p_235385_, "float_range", RangeArgument.Floats.class, SingletonArgumentInfo.m_235451_(RangeArgument::m_105405_));
        m_235386_(p_235385_, "dimension", DimensionArgument.class, SingletonArgumentInfo.m_235451_(DimensionArgument::m_88805_));
+       m_235386_(p_235385_, "gamemode", GameModeArgument.class, SingletonArgumentInfo.m_235451_(GameModeArgument::m_257772_));
        m_235386_(p_235385_, "time", TimeArgument.class, SingletonArgumentInfo.m_235451_(TimeArgument::m_113037_));
 -      m_235386_(p_235385_, "resource_or_tag", m_235395_(ResourceOrTagArgument.class), new ResourceOrTagArgument.Info());
 -      m_235386_(p_235385_, "resource_or_tag_key", m_235395_(ResourceOrTagKeyArgument.class), new ResourceOrTagKeyArgument.Info());
