@@ -14,7 +14,7 @@
  
           return list.stream().map((p_140529_) -> {
 -            return p_140529_.map(Either::left).orElseGet(() -> {
-+            return p_140529_.<Either<T, Runnable>>map(Either::left).orElseGet(() -> {
++            return p_140529_.<Either<T,Runnable>>map(Either::left).orElseGet(() -> {
                 return Either.right(this.m_140525_(j));
              });
           });

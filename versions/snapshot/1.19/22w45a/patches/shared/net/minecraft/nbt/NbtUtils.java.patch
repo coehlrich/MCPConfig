@@ -1,22 +1,5 @@
 --- a/net/minecraft/nbt/NbtUtils.java
 +++ b/net/minecraft/nbt/NbtUtils.java
-@@ -44,14 +44,14 @@
- import org.slf4j.Logger;
- 
- public final class NbtUtils {
--   private static final Comparator<ListTag> f_178008_ = Comparator.comparingInt((p_178074_) -> {
-+   private static final Comparator<ListTag> f_178008_ = Comparator.<ListTag>comparingInt((p_178074_) -> {
-       return p_178074_.m_128763_(1);
-    }).thenComparingInt((p_178070_) -> {
-       return p_178070_.m_128763_(0);
-    }).thenComparingInt((p_178066_) -> {
-       return p_178066_.m_128763_(2);
-    });
--   private static final Comparator<ListTag> f_178009_ = Comparator.comparingDouble((p_178060_) -> {
-+   private static final Comparator<ListTag> f_178009_ = Comparator.<ListTag>comparingDouble((p_178060_) -> {
-       return p_178060_.m_128772_(1);
-    }).thenComparingDouble((p_178056_) -> {
-       return p_178056_.m_128772_(0);
 @@ -505,7 +505,7 @@
     }
  
