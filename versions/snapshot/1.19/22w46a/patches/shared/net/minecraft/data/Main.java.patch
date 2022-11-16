@@ -11,4 +11,5 @@
 +         return new UpdateOneTwentyItemTagsProvider(p_255479_, completablefuture, tagsprovider2);
        });
        datagenerator$packgenerator1.m_253108_(UpdateOneTwentyLootTableProvider::m_245645_);
+       datagenerator$packgenerator1.m_253108_(m_255400_(UpdateOneTwentyVanillaAdvancementProvider::m_261158_, completablefuture));
        datagenerator$packgenerator1.m_253108_((p_253389_) -> {
