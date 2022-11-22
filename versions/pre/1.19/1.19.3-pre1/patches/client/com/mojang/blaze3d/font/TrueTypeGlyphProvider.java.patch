@@ -1,6 +1,6 @@
 --- a/com/mojang/blaze3d/font/TrueTypeGlyphProvider.java
 +++ b/com/mojang/blaze3d/font/TrueTypeGlyphProvider.java
-@@ -94,7 +94,7 @@
+@@ -77,7 +77,7 @@
                       break label62;
                    }
  
@@ -8,4 +8,4 @@
 +                  glyphinfo = (GlyphInfo.SpaceGlyphInfo)() -> {
                       return f / this.f_83839_;
                    };
-                } catch (Throwable throwable1) {
+                }

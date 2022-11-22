@@ -21,7 +21,7 @@
                 return new ParticleDefinition(resourcelocation, this.m_245118_(resourcelocation, p_247904_));
              }, p_107309_));
           });
-@@ -334,7 +333,7 @@
+@@ -314,7 +313,7 @@
  
     @Nullable
     private <T extends ParticleOptions> Particle m_107395_(T p_107396_, double p_107397_, double p_107398_, double p_107399_, double p_107400_, double p_107401_, double p_107402_) {
