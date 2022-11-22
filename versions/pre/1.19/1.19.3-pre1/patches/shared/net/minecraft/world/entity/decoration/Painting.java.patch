@@ -7,5 +7,5 @@
 -         return p_248379_;
 +         return (Holder<PaintingVariant>) p_248379_;
        }).orElseGet(Painting::m_218902_);
-       this.m_218891_(holder);
+       this.m_262362_(holder);
        this.f_31699_ = Direction.m_122407_(p_31927_.m_128445_("facing"));
