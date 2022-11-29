@@ -1,5 +1,23 @@
 --- a/net/minecraft/network/FriendlyByteBuf.java
 +++ b/net/minecraft/network/FriendlyByteBuf.java
+@@ -145,7 +145,7 @@
+             break;
+          case DIRECT:
+             this.m_130130_(0);
+-            p_263358_.accept((T)this, p_263384_.m_203334_());
++            p_263358_.accept(this, p_263384_.m_203334_());
+       }
+ 
+    }
+@@ -159,7 +159,7 @@
+    public <T> Holder<T> m_263187_(IdMap<Holder<T>> p_263401_, FriendlyByteBuf.Reader<T> p_263374_) {
+       int i = this.m_130242_();
+       if (i == 0) {
+-         return Holder.m_205709_(p_263374_.apply((T)this));
++         return Holder.m_205709_(p_263374_.apply(this));
+       } else {
+          Holder<T> holder = p_263401_.m_7942_(i - 1);
+          if (holder == null) {
 @@ -185,7 +185,7 @@
        C c = p_236839_.apply(i);
  
