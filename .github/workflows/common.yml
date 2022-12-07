@@ -100,6 +100,12 @@ jobs:
       run: |
         git add .
         git diff-index --quiet HEAD || git commit -m "Update patches" && git push
+    - name: Verify mappings
+      id: verify
+      uses: gradle/gradle-build-action@v2
+      with:
+        arguments: :${{ fromJson(steps.split_version.outputs.result).version_name }}:verify -Ptype=${{ fromJson(steps.split_version.outputs.result).version_type }}
+        generate-job-summary: false
     - name: Make Zip
       if: ${{ always() }}
       uses: gradle/gradle-build-action@v2
