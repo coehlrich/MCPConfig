@@ -23,9 +23,6 @@ jobs:
       version_name: ${{ fromJson(steps.split_version.outputs.result).version_name }}
       branch: ${{ fromJson(steps.split_version.outputs.result).branch }}
     steps:
-    - name: Get Time
-      id: time
-      run: echo "time=$(date -Isecond -u)" >> $GITHUB_OUTPUT
     - uses: actions/github-script@v6
       id: split_version
       env:
@@ -39,52 +36,42 @@ jobs:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
-    - uses: actions/cache@v3
-      name: Cache ${{ fromJson(steps.split_version.outputs.result).version_name }}
+    - uses: actions/cache/restore@v3
+      name: Restore ${{ fromJson(steps.split_version.outputs.result).version_name }} cache
       with:
         path: |
           build/versions/${{ fromJson(steps.split_version.outputs.result).version_name }}/**
           versions/${{ inputs.version }}/build/download-task/**
-        key: version-v3-${{ fromJson(steps.split_version.outputs.result).version_name }}
-    - uses: actions/cache@v3
-      name: Cache Assets
+        key: version-${{ fromJson(steps.split_version.outputs.result).version_name }}-
+    - uses: actions/cache/restore@v3
+      name: Restore Assets cache
       with:
         path: build/assets/**
-        key: minecraft-assets-v3-${{ steps.time.outputs.time }}
-        restore-keys: |
-          minecraft-assets-v3-
-    - uses: actions/cache@v3
-      name: Cache Libraries
+        key: minecraft-assets-
+    - uses: actions/cache/restore@v3
+      name: Restore Libraries cache
       with:
         path: build/libraries/**
-        key: minecraft-libraries-v3-${{ steps.time.outputs.time }}
-        restore-keys: |
-          minecraft-libraries-v3-
-    - uses: actions/cache@v3
-      name: Cache Version Manifest
+        key: minecraft-libraries-
+    - uses: actions/cache/restore@v3
+      name: Restore Version Manifest cache
       with:
         path: build/versions/version_manifest.json
-        key: minecraft-version-manifest-v3-${{ steps.time.outputs.time }}
-        restore-keys: |
-          minecraft-version-manifest-v3-
-    - uses: actions/cache@v3
-      name: Cache BuildSrc
+        key: minecraft-version-manifest-
+    - uses: actions/cache/restore@v3
+      name: Restore BuildSrc cache
       with:
         path: |
           buildSrc/build/**
           buildSrc/.gradle/**
-        key: buildsrc-build-jdk${{ env.JAVA_VERSION }}-v3-${{ steps.time.outputs.time }}
-        restore-keys: |
-          buildsrc-build-jdk${{ env.JAVA_VERSION }}-v3-
-    - uses: actions/cache@v3
-      name: Cache Other
+        key: buildsrc-build-jdk${{ env.JAVA_VERSION }}-
+    - uses: actions/cache/restore@v3
+      name: Restore Other cache
       with:
         path: |
           build/download-task/**
           .gradle/**
-        key: gradle-other-${{ steps.time.outputs.time }}
-        restore-keys: |
-          gradle-other-  
+        key: gradle-other-
     - run: git checkout ${{ inputs.branch }}
     - run: |
         git config --global user.name github-actions
@@ -133,6 +120,42 @@ jobs:
           const fs = require('fs');
           const config = JSON.parse(fs.readFileSync('versions/' + process.env.VERSION + '/config.json', 'utf8'))
           return config.java_target;
+    - uses: actions/cache/save@v3
+      name: Save ${{ fromJson(steps.split_version.outputs.result).version_name }} cache
+      with:
+        path: |
+          build/versions/${{ fromJson(steps.split_version.outputs.result).version_name }}/**
+          versions/${{ inputs.version }}/build/download-task/**
+        key: version-${{ fromJson(steps.split_version.outputs.result).version_name }}-${{ hashFiles(format('build/versions/{0}/**', fromJson(steps.split_version.outputs.result).version_name), format('versions/{0}/build/download-task/**', inputs.version))}}
+    - uses: actions/cache/save@v3
+      name: Save Assets cache
+      with:
+        path: build/assets/**
+        key: minecraft-assets-${{ hashFiles('build/assets/**' )}}
+    - uses: actions/cache/save@v3
+      name: Save Libraries cache
+      with:
+        path: build/libraries/**
+        key: minecraft-libraries-${{ hashFiles('build/libraries/**')}}
+    - uses: actions/cache/save@v3
+      name: Save Version Manifest cache
+      with:
+        path: build/versions/version_manifest.json
+        key: minecraft-version-manifest-${{ hashFiles('build/versions/version_manifest.json')}}
+    - uses: actions/cache/save@v3
+      name: Save BuildSrc cache
+      with:
+        path: |
+          buildSrc/build/**
+          buildSrc/.gradle/**
+        key: buildsrc-build-jdk${{ env.JAVA_VERSION }}-${{ hashFiles('buildSrc/build/**', 'buildSrc/.gradle/**')}}
+    - uses: actions/cache/save@v3
+      name: Save Other cache
+      with:
+        path: |
+          build/download-task/**
+          .gradle/**
+        key: gradle-other-${{ hashFiles('build/download-task/**', '.gradle/**')}}
   
   testjdks:
     name: Test Jdks on side ${{ matrix.side }} using mappings ${{ matrix.mappings }} using java version ${{ matrix.jdk_version }} 
@@ -160,55 +183,42 @@ jobs:
       with:
         java-version: ${{ env.JAVA_VERSION }}
         distribution: 'temurin'
-    - name: Get Time
-      id: time
-      run: echo "time=$(date -Isecond -u)" >> $GITHUB_OUTPUT
-    - uses: actions/cache@v3
-      name: Cache ${{ needs.common.outputs.version_name }}
+    - uses: actions/cache/restore@v3
+      name: Restore ${{ needs.common.outputs.version_name }} cache
       with:
         path: |
           build/versions/${{ needs.common.outputs.version_name }}/**
           versions/${{ inputs.version }}/build/download-task/**
-        key: version-v3-${{ needs.common.outputs.version_name }}
-    - uses: actions/cache@v3
-      name: Cache Assets
+        key: version-${{ needs.common.outputs.version_name }}-
+    - uses: actions/cache/restore@v3
+      name: Restore Assets cache
       with:
         path: build/assets/**
-        key: minecraft-assets-v3-${{ steps.time.outputs.time }}
-        restore-keys: |
-          minecraft-assets-v3-
-    - uses: actions/cache@v3
-      name: Cache Libraries
+        key: minecraft-assets-
+    - uses: actions/cache/restore@v3
+      name: Restore Libraries cache
       with:
         path: build/libraries/**
-        key: minecraft-libraries-v3-${{ steps.time.outputs.time }}
-        restore-keys: |
-          minecraft-libraries-v3-
-    - uses: actions/cache@v3
-      name: Cache Version Manifest
+        key: minecraft-libraries-
+    - uses: actions/cache/restore@v3
+      name: Restore Version Manifest cache
       with:
         path: build/versions/version_manifest.json
-        key: minecraft-version-manifest-v3-${{ steps.time.outputs.time }}
-        restore-keys: |
-          minecraft-version-manifest-v3-
-    - uses: actions/cache@v3
-      name: Cache BuildSrc
+        key: minecraft-version-manifest-
+    - uses: actions/cache/restore@v3
+      name: Restore BuildSrc cache
       with:
         path: |
           buildSrc/build/**
           buildSrc/.gradle/**
-        key: buildsrc-build-jdk${{ matrix.jdk_version }}-v3-${{ steps.time.outputs.time }}
-        restore-keys: |
-          buildsrc-build-jdk${{ matrix.jdk_version }}-v3-
-    - uses: actions/cache@v3
-      name: Cache Other
+        key: buildsrc-build-jdk${{ matrix.jdk_version }}-
+    - uses: actions/cache/restore@v3
+      name: Restore Other cache
       with:
         path: |
           build/download-task/**
           .gradle/**
-        key: gradle-other-${{ steps.time.outputs.time }}
-        restore-keys: |
-          gradle-other-  
+        key: gradle-other-
     - name: Test jdks
       if: ${{ matrix.jdk_version >= needs.common.outputs.jdk_version}}
       uses: gradle/gradle-build-action@v2
@@ -216,3 +226,10 @@ jobs:
         arguments: :${{ needs.common.outputs.version_name }}:testCompile${{ matrix.side }}${{ matrix.mappings }}${{ matrix.jdk_version }} :${{ needs.common.outputs.version_name }}:testDecompile${{ matrix.side }}${{ matrix.mappings }}${{ matrix.jdk_version }}Compare -Ptype=${{ needs.common.outputs.version_type }}
         generate-job-summary: false
         cache-read-only: true
+    - uses: actions/cache/save@v3
+      name: Save BuildSrc cache
+      with:
+        path: |
+          buildSrc/build/**
+          buildSrc/.gradle/**
+        key: buildsrc-build-jdk${{ matrix.jdk_version }}-${{ hashFiles('buildSrc/build/**', 'buildSrc/.gradle/**')}}
