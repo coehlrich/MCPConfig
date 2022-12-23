@@ -63,14 +63,14 @@ jobs:
       with:
         path: |
           buildSrc/build/**
-          buildSrc/.gradle/**
+          buildSrc/.gradle/**/*.bin
         key: buildsrc-build-jdk${{ env.JAVA_VERSION }}-
     - uses: actions/cache/restore@v3
       name: Restore Other cache
       with:
         path: |
           build/download-task/**
-          .gradle/**
+          .gradle/**/*.bin
         key: gradle-other-
     - run: git checkout ${{ inputs.branch }}
     - run: |
@@ -147,15 +147,15 @@ jobs:
       with:
         path: |
           buildSrc/build/**
-          buildSrc/.gradle/**
-        key: buildsrc-build-jdk${{ env.JAVA_VERSION }}-${{ hashFiles('buildSrc/build/**', 'buildSrc/.gradle/**')}}
+          buildSrc/.gradle/**/*.bin
+        key: buildsrc-build-jdk${{ env.JAVA_VERSION }}-${{ hashFiles('buildSrc/build/**', 'buildSrc/.gradle/**/*.bin')}}
     - uses: actions/cache/save@v3
       name: Save Other cache
       with:
         path: |
           build/download-task/**
-          .gradle/**
-        key: gradle-other-${{ hashFiles('build/download-task/**', '.gradle/**')}}
+          .gradle/**/*.bin
+        key: gradle-other-${{ hashFiles('build/download-task/**', '.gradle/**/*.bin')}}
   
   testjdks:
     name: Test Jdks on side ${{ matrix.side }} using mappings ${{ matrix.mappings }} using java version ${{ matrix.jdk_version }} 
@@ -210,14 +210,14 @@ jobs:
       with:
         path: |
           buildSrc/build/**
-          buildSrc/.gradle/**
+          buildSrc/.gradle/**/*.bin
         key: buildsrc-build-jdk${{ matrix.jdk_version }}-
     - uses: actions/cache/restore@v3
       name: Restore Other cache
       with:
         path: |
           build/download-task/**
-          .gradle/**
+          .gradle/**/*.bin
         key: gradle-other-
     - name: Test jdks
       if: ${{ matrix.jdk_version >= needs.common.outputs.jdk_version}}
@@ -231,5 +231,5 @@ jobs:
       with:
         path: |
           buildSrc/build/**
-          buildSrc/.gradle/**
-        key: buildsrc-build-jdk${{ matrix.jdk_version }}-${{ hashFiles('buildSrc/build/**', 'buildSrc/.gradle/**')}}
+          buildSrc/.gradle/**/*.bin
+        key: buildsrc-build-jdk${{ matrix.jdk_version }}-${{ hashFiles('buildSrc/build/**', 'buildSrc/.gradle/**/*.bin')}}
