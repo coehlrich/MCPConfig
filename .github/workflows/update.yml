@@ -129,14 +129,14 @@ jobs:
       with:
         path: |
           buildSrc/build/**
-          buildSrc/.gradle/**/*.bin
+          buildSrc/.gradle/**
         key: buildsrc-build-jdk${{ env.JAVA_VERSION }}-
     - uses: actions/cache/restore@v3
       name: Restore Other cache
       with:
         path: |
           build/download-task/**
-          .gradle/**/*.bin
+          .gradle/**
         key: gradle-other-
     - run: |
         git remote add upstream https://github.com/MinecraftForge/MCPConfig
@@ -218,15 +218,15 @@ jobs:
       with:
         path: |
           buildSrc/build/**
-          buildSrc/.gradle/**/*.bin
-        key: buildsrc-build-jdk${{ env.JAVA_VERSION }}-${{ hashFiles('buildSrc/build/**', 'buildSrc/.gradle/**/*.bin')}}
+          buildSrc/.gradle/**
+        key: buildsrc-build-jdk${{ env.JAVA_VERSION }}-${{ hashFiles('buildSrc/build/**', 'buildSrc/.gradle/**')}}
     - uses: actions/cache/save@v3
       name: Save Other cache
       with:
         path: |
           build/download-task/**
-          .gradle/**/*.bin
-        key: gradle-other-${{ hashFiles('build/download-task/**', '.gradle/**/*.bin')}}
+          .gradle/**
+        key: gradle-other-${{ hashFiles('build/download-task/**', '.gradle/**')}}
 
   get-diff:
     needs: update
