@@ -6,7 +6,6 @@ import java.util.zip.*
 public abstract class FernflowerTask extends ToolJarExec {
     @InputFile File libraries
     @InputFile File input
-    @OutputFile File log
     @OutputFile File dest
     
     @Override
@@ -16,11 +15,6 @@ public abstract class FernflowerTask extends ToolJarExec {
             '{input}': input,
             '{output}': dest
         ], null)
-    }
-    
-    @Override
-    protected void preExec() {
-        //logFile = log TODO: no log property
     }
     
     @Override

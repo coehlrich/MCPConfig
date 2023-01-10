@@ -11,7 +11,9 @@ abstract class ToolJarExec extends JarExec {
     def config(def cfg) {
         getTool().set(cfg.version)
         getArgs().addAll(cfg.args)
-        //jvmArgs = cfg.jvmargs // TODO: JarExec doesnt allow for jvmArgs currently
+        if (cfg.jvmargs) {
+            getJvmArgs().addAll(cfg.jvmargs)
+        }
     }
 
     ToolJarExec() {
@@ -28,9 +30,14 @@ abstract class ToolJarExec extends JarExec {
 
     @Override
     public final void apply() {
+        workDir.get().getAsFile().mkdirs()
         this.preExec()
         super.apply()
         this.postExec()
+    }
+
+    public void log(File log) {
+        getLogOutput().set(log)
     }
     
     protected void preExec(){}

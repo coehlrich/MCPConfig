@@ -202,6 +202,7 @@ subprojects {
         server filterServer.slim
         version project.version
         dest file(PATH_CACHED_VERSION + 'joined.jar')
+        setHasLog(false)
     }
     
     task makeObfToIntermediate(type: RenameMappings, dependsOn: [downloadClientMappings]) {
@@ -239,7 +240,7 @@ subprojects {
             mappings = makeObfToIntermediate.dest
             libraries = child.libraries.dest
             dest = file(PATH_CACHED_VERSION + s + '.mapped.jar')
-            log = file(PATH_CACHED_VERSION + s + '.mapped.log')
+            log file(PATH_CACHED_VERSION + s + '.mapped.log')
         }
         
         if (MCINJECTOR != null) {
@@ -248,10 +249,9 @@ subprojects {
                 access makeEmptyFile.dest //fixAccessLevels.dest
                 constructors project.file('constructors.txt')
                 exceptions makeEmptyFile.dest //makeExceptions.dest
-                log file(PATH_CACHED_VERSION + s + '.mci.log')
+                log = file(PATH_CACHED_VERSION + s + '.mci.log')
                 input child.rename.dest
                 dest file(PATH_CACHED_VERSION + s + '.mci.jar')
-                setHasLog(false)
             }
         }
     }
@@ -315,7 +315,7 @@ subprojects {
             }
             libraries = child.libraries.dest
             input = MCINJECTOR != null ? child.mcinject.dest : child.rename.dest
-            log = file(PATH_CACHED_VERSION + side + '.decompile.log')
+            log file(PATH_CACHED_VERSION + side + '.decompile.log')
             dest = file(PATH_CACHED_VERSION + side + '.decompile.jar')
             
         }
@@ -484,7 +484,7 @@ subprojects {
                 }
                 libraries = child.libraries.dest
                 input = child.rename.dest
-                log = new File(testPath, side + '.decompile.log')
+                log new File(testPath, side + '.decompile.log')
                 dest = new File(testPath, side + '.decompile.jar')
                 
             }

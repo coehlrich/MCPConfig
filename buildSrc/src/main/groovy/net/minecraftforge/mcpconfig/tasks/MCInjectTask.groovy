@@ -10,6 +10,10 @@ public abstract class MCInjectTask extends ToolJarExec {
     @InputFile File input
     @OutputFile File log
     @OutputFile File dest
+
+    public MCInjectTask() {
+        setHasLog(false)
+    }
     
     @Override
     protected List<String> filterArgs(List<String> args) {
