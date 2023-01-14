@@ -39,9 +39,6 @@ on:
         type: string
         required: true
 
-env:
-  JAVA_VERSION: 17
-
 jobs:
   get-diff:
     name: Get diff
@@ -65,10 +62,10 @@ jobs:
           const newVersion = process.env.NEW_VERSION.split("/");
           var returnValue = {old_version_type: oldVersion[0], old_version_name: oldVersion[oldVersion.length - 1], new_version_type: newVersion[0], new_version_name: newVersion[newVersion.length - 1], old_branch: process.env.OLD_BRANCH.replace(/^[^/]+\//, '')}
           return returnValue;
-    - name: Set up JDK ${{ env.JAVA_VERSION }}
+    - name: Set up JDK ${{ vars.JAVA_VERSION }}
       uses: actions/setup-java@v3
       with:
-        java-version: ${{ env.JAVA_VERSION }}
+        java-version: ${{ vars.JAVA_VERSION }}
         distribution: 'temurin'
     - uses: actions/cache/restore@v3
       name: Restore ${{ fromJson(steps.split_version.outputs.result).new_version_name }} cache
@@ -105,7 +102,7 @@ jobs:
         path: |
           buildSrc/build/**
           buildSrc/.gradle/**
-        key: buildsrc-build-jdk${{ env.JAVA_VERSION }}-
+        key: buildsrc-build-jdk${{ vars.JAVA_VERSION }}-
     - uses: actions/cache/restore@v3
       name: Cache Other
       with:
@@ -174,7 +171,7 @@ jobs:
         path: |
           buildSrc/build/**
           buildSrc/.gradle/**
-        key: buildsrc-build-jdk${{ env.JAVA_VERSION }}-${{ hashFiles('buildSrc/build/**', 'buildSrc/.gradle/**')}}
+        key: buildsrc-build-jdk${{ vars.JAVA_VERSION }}-${{ hashFiles('buildSrc/build/**', 'buildSrc/.gradle/**')}}
     - uses: actions/cache/save@v3
       name: Save Other cache
       with:

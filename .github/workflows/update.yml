@@ -30,10 +30,6 @@ on:
         # Input has to be provided for the workflow to run
         required: true
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
-env:
-  JAVA_VERSION: 17
-
 jobs:
   update:
 
@@ -130,7 +126,7 @@ jobs:
         path: |
           buildSrc/build/**
           buildSrc/.gradle/**
-        key: buildsrc-build-jdk${{ env.JAVA_VERSION }}-
+        key: buildsrc-build-jdk${{ vars.JAVA_VERSION }}-
     - uses: actions/cache/restore@v3
       name: Restore Other cache
       with:
@@ -142,10 +138,10 @@ jobs:
         git remote add upstream https://github.com/MinecraftForge/MCPConfig
         git fetch upstream
         git checkout -B ${{ fromJson(steps.split_version.outputs.result).old_branch }} remotes/${{ github.event.inputs.old_branch }}
-    - name: Set up JDK ${{ env.JAVA_VERSION }}
+    - name: Set up JDK ${{ vars.JAVA_VERSION }}
       uses: actions/setup-java@v3
       with:
-        java-version: '${{ env.JAVA_VERSION }}'
+        java-version: '${{ vars.JAVA_VERSION }}'
         distribution: 'temurin'
     - id: get_versions
       run: |
@@ -219,7 +215,7 @@ jobs:
         path: |
           buildSrc/build/**
           buildSrc/.gradle/**
-        key: buildsrc-build-jdk${{ env.JAVA_VERSION }}-${{ hashFiles('buildSrc/build/**', 'buildSrc/.gradle/**')}}
+        key: buildsrc-build-jdk${{ vars.JAVA_VERSION }}-${{ hashFiles('buildSrc/build/**', 'buildSrc/.gradle/**')}}
     - uses: actions/cache/save@v3
       name: Save Other cache
       with:

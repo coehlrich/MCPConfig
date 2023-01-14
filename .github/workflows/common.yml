@@ -10,10 +10,6 @@ on:
         required: true
         type: string
 
-
-env:
-  JAVA_VERSION: 17
-
 jobs:
   common:
     runs-on: ubuntu-latest
@@ -64,7 +60,7 @@ jobs:
         path: |
           buildSrc/build/**
           buildSrc/.gradle/**
-        key: buildsrc-build-jdk${{ env.JAVA_VERSION }}-
+        key: buildsrc-build-jdk${{ vars.JAVA_VERSION }}-
     - uses: actions/cache/restore@v3
       name: Restore Other cache
       with:
@@ -148,7 +144,7 @@ jobs:
         path: |
           buildSrc/build/**
           buildSrc/.gradle/**
-        key: buildsrc-build-jdk${{ env.JAVA_VERSION }}-${{ hashFiles('buildSrc/build/**', 'buildSrc/.gradle/**')}}
+        key: buildsrc-build-jdk${{ vars.JAVA_VERSION }}-${{ hashFiles('buildSrc/build/**', 'buildSrc/.gradle/**')}}
     - uses: actions/cache/save@v3
       name: Save Other cache
       with:
@@ -173,15 +169,15 @@ jobs:
       with:
         ref: ${{ needs.common.outputs.branch }}
     - name: Set up JDK ${{ matrix.jdk_version }}
-      if: ${{ matrix.jdk_version != env.JAVA_VERSION}}
+      if: ${{ matrix.jdk_version != vars.JAVA_VERSION}}
       uses: actions/setup-java@v3
       with:
         java-version: ${{ matrix.jdk_version }}
         distribution: 'temurin'
-    - name: Set up JDK ${{ env.JAVA_VERSION }}
+    - name: Set up JDK ${{ vars.JAVA_VERSION }}
       uses: actions/setup-java@v3
       with:
-        java-version: ${{ env.JAVA_VERSION }}
+        java-version: ${{ vars.JAVA_VERSION }}
         distribution: 'temurin'
     - uses: actions/cache/restore@v3
       name: Restore ${{ needs.common.outputs.version_name }} cache
