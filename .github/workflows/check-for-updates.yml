@@ -51,7 +51,7 @@ jobs:
             
             function getBranch(release, newVersion) {
               if (release && newVersion) {
-                return process.env.TARGET_VERSION;
+                return process.env.TARGET_VERSION + "-release";
               } else if (release && !newVersion) {
                 return "upstream/master";
               } else {
