@@ -12,6 +12,8 @@ jobs:
       TARGET_VERSION: ${{ vars.TARGET_MC_VERSION }}
     runs-on: ubuntu-latest
     steps:
+      - name: install http-client
+        run: npm install -g @actions/http-client
       - name: Check latest snapshot
         uses: actions/github-script@v1
         with:
