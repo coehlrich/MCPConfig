@@ -72,7 +72,7 @@ jobs:
               return;
             }
             core.info("Found new snapshot: " + latestSnapshot)
-            github.request("PATCH /repos/{owner}/{repo}/actions/variables/{name}", {
+            await github.request("PATCH /repos/{owner}/{repo}/actions/variables/{name}", {
               owner: context.repo.owner,
               repo: context.repo.repo,
               name: "LATEST_MC_VERSION",
