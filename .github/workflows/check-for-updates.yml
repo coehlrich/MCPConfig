@@ -12,18 +12,21 @@ jobs:
       TARGET_VERSION: ${{ vars.TARGET_MC_VERSION }}
     runs-on: ubuntu-latest
     steps:
-      - name: install http-client
-        run: npm install -g @actions/http-client
+      - name: Get Version Manifest
+        id: version_manifest
+        uses: fjogeleit/http-request-action@v1
+        with:
+          url: "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"
       - name: Check latest snapshot
         uses: actions/github-script@v1
+        env:
+          NEW_LATEST_VERSION: ${{ fromJson(steps.version_manifest.outputs.response).latest.snapshot }}
         with:
           script: |
             if (process.env.LATEST_VERSION === process.env.TARGET_VERSION) {
               core.info("Latest version is the same as the target version. Not running");
               return;
             }
-            const httpClient = require("@actions/http-client");
-            const httpC = new httpClient.HttpClient();
             
             function getVersionPrefix(name) {
               var type;
@@ -62,9 +65,7 @@ jobs:
               }
             }
             
-            const response = await httpC.get("https://piston-meta.mojang.com/mc/game/version_manifest_v2.json");
-            const versions = JSON.parse(await response.readBody());
-            const latestSnapshot = versions.latest.snapshot
+            const latestSnapshot = process.env.NEW_LATEST_VERSION
             if (process.env.LATEST_VERSION === latestSnapshot) {
               core.info("No new snapshots have been released since " + process.env.LATEST_VERSION)
               return;
