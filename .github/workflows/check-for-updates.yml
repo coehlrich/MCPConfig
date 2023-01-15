@@ -1,4 +1,4 @@
-name: check_for_updates
+name: Check For New Snapshots
 on: 
   schedule:
     - cron: "*/30 19-23,0-6 * * *"
