@@ -1,0 +1,98 @@
+name: check_for_updates
+on: 
+  schedule:
+    - cron: "*/30 19-23,0-6 * * *"
+  workflow_dispatch:
+permissions: 
+  actions: write
+jobs:
+  check:
+    env:
+      LATEST_VERSION: ${{ vars.LATEST_MC_VERSION }}
+      TARGET_VERSION: ${{ vars.TARGET_MC_VERSION }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check latest snapshot
+        uses: actions/github-script@v1
+        with:
+          script: |
+            if (process.env.LATEST_VERSION === process.env.TARGET_VERSION) {
+              core.info("Latest version is the same as the target version. Not running");
+              return;
+            }
+            const fetch = require("node-fetch");
+            
+            function getVersionPrefix(var name) {
+              var type;
+              var april = false;
+              if (/^\d+\.\d+.\d+$/.test(latestSnapshot)) {
+                type = "release";
+              } else if (/^\d{2}w\d{2}[a-z]$/.test(latestSnapshot)) {
+                type = "snapshot";
+              } else if (/^\d+\.\d+.\d+-pre\d+$/.test(latestSnapshot) || /^\d+\.\d+.\d+-rc\d+$/.test(latestSnapshot)) {
+                type = "pre";
+              } else {
+                // If it doesn't match anything guess that it's an april fools release
+                type = "snapshot";
+                april = true;
+              }
+
+              if (type === "snapshot" || type === "pre") {
+                if (april) {
+                  return "snapshot/april/";
+                } else {
+                  const targetSplit = process.env.TARGET_VERSION.split(".");
+                  return type + "/" + targetSplit[0] + "." + targetSplit[1] + "/";
+                }
+              } else {
+                return type + "/";
+              }
+            }
+            
+            function getBranch(var release, var newVersion) {
+              if (release && newVersion) {
+                return process.env.TARGET_VERSION;
+              } else if (release && !newVersion) {
+                return "upstream/master";
+              } else {
+                return (newVersion ? "" : "origin/") + process.env.TARGET_VERSION;
+              }
+            }
+            
+            const response = await fetch("https://piston-meta.mojang.com/mc/game/version_manifest_v2.json");
+            const versions = await response.json();
+            const latestSnapshot = versions.latest.snapshot
+            if (process.env.LATEST_VERSION === latestSnapshot) {
+              core.info("No new snapshots have been released since " + process.env.LATEST_VERSION)
+              return;
+            }
+            core.info("Found new snapshot: " + latestSnapshot)
+            github.request("PATCH /repos/{owner}/{repo}/actions/variables/{name}", {
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              name: "LATEST_MC_VERSION",
+              value: latestSnapshot
+            })
+            
+            var inputs = {}
+            inputs.old_version = getVersionPrefix(process.env.LATEST_VERSION) + process.env.LATEST_VERSION;
+            inputs.new_version = getVersionPrefix(latestSnapshot) + latestSnapshot;
+            
+            inputs.old_branch = getBranch(inputs.old_version.startsWith("release/"), false);
+            var newBranch = getBranch(inputs.new_version.startsWith("release/"), true);
+            if (inputs.old_branch.split("/")[1] !== newBranch) {
+              inputs.new_branch = newBranch;
+            }
+            
+            core.info("Using inputs:");
+            for (const key in inputs) {
+              core.info(key + ": " + inputs[key]);
+            }
+            
+            github.rest.actions.createWorkflowDispatch({
+              context.repo.owner,
+              context.repo.repo,
+              "update.yml",
+              "master",
+              inputs
+            });
