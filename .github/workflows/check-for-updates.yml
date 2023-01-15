@@ -83,12 +83,6 @@ jobs:
               return;
             }
             core.info("Found new snapshot: " + latestSnapshot)
-            await new Octokit({auth: process.env.VARIABLES_TOKEN}).github.request("PATCH /repos/{owner}/{repo}/actions/variables/{name}", {
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              name: "LATEST_MC_VERSION",
-              value: latestSnapshot
-            })
             
             var inputs = {}
             inputs.old_version = getVersionPrefix(process.env.LATEST_VERSION) + process.env.LATEST_VERSION;
