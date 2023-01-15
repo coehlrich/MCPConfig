@@ -12,6 +12,7 @@ jobs:
       LATEST_VERSION: ${{ vars.LATEST_MC_VERSION }}
       TARGET_VERSION: ${{ vars.TARGET_MC_VERSION }}
     runs-on: ubuntu-latest
+    if: ${{ vars.LATEST_MC_VERSION != vars.TARGET_MC_VERSION }}
     steps:
       - name: Get Version Manifest
         id: version_manifest
@@ -35,11 +36,6 @@ jobs:
           NEW_LATEST_VERSION: ${{ fromJson(steps.version_manifest.outputs.response).latest.snapshot }}
         with:
           script: |
-            if (process.env.LATEST_VERSION === process.env.TARGET_VERSION) {
-              core.info("Latest version is the same as the target version. Not running");
-              return;
-            }
-            
             function getVersionPrefix(name) {
               var type;
               var april = false;
