@@ -3,7 +3,8 @@ on:
   schedule:
     - cron: "*/30 6-19 * * *"
   workflow_dispatch:
-permissions: write-all
+permissions:
+  actions: write
   
 jobs:
   check:
@@ -22,8 +23,11 @@ jobs:
         uses: actions/github-script@v6
         env:
           NEW_LATEST_VERSION: ${{ fromJson(steps.version_manifest.outputs.response).latest.snapshot }}
+          VARIABLES_TOKEN: ${{ secrets.VARIABLES_TOKEN }}
         with:
           script: |
+            const { Octokit } = require("@octokit/rest");
+            
             if (process.env.LATEST_VERSION === process.env.TARGET_VERSION) {
               core.info("Latest version is the same as the target version. Not running");
               return;
@@ -72,7 +76,7 @@ jobs:
               return;
             }
             core.info("Found new snapshot: " + latestSnapshot)
-            await github.request("PATCH /repos/{owner}/{repo}/actions/variables/{name}", {
+            await new Octokit({auth: process.env.VARIABLES_TOKEN}).github.request("PATCH /repos/{owner}/{repo}/actions/variables/{name}", {
               owner: context.repo.owner,
               repo: context.repo.repo,
               name: "LATEST_MC_VERSION",
