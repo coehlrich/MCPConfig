@@ -19,15 +19,22 @@ jobs:
         with:
           url: "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"
           method: "GET"
+      - name: Store Latest Version
+        uses: octokit/request-action@v2
+        with:
+          route: PATCH /repos/{owner}/{repo}/actions/variables/{name}
+          owner: coehlrich
+          repo: MCPConfig
+          name: LATEST_MC_VERSION
+          value: ${{ fromJson(steps.version_manifest.outputs.response).latest.snapshot }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.VARIABLES_TOKEN }}
       - name: Check latest snapshot
         uses: actions/github-script@v6
         env:
           NEW_LATEST_VERSION: ${{ fromJson(steps.version_manifest.outputs.response).latest.snapshot }}
-          VARIABLES_TOKEN: ${{ secrets.VARIABLES_TOKEN }}
         with:
           script: |
-            const { Octokit } = require("@octokit/rest");
-            
             if (process.env.LATEST_VERSION === process.env.TARGET_VERSION) {
               core.info("Latest version is the same as the target version. Not running");
               return;
