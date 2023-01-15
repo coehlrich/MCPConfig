@@ -22,7 +22,7 @@ jobs:
             }
             const fetch = require("node-fetch");
             
-            function getVersionPrefix(var name) {
+            function getVersionPrefix(name) {
               var type;
               var april = false;
               if (/^\d+\.\d+.\d+$/.test(latestSnapshot)) {
@@ -49,7 +49,7 @@ jobs:
               }
             }
             
-            function getBranch(var release, var newVersion) {
+            function getBranch(release, newVersion) {
               if (release && newVersion) {
                 return process.env.TARGET_VERSION;
               } else if (release && !newVersion) {
