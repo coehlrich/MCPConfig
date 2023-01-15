@@ -20,7 +20,7 @@ jobs:
               core.info("Latest version is the same as the target version. Not running");
               return;
             }
-            const httpClient = require("actions/http-client");
+            const httpClient = require("@actions/http-client");
             const httpC = new httpClient.HttpClient();
             
             function getVersionPrefix(name) {
