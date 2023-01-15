@@ -3,8 +3,8 @@ on:
   schedule:
     - cron: "*/30 6-19 * * *"
   workflow_dispatch:
-permissions: 
-  actions: write
+permissions: write-all
+  
 jobs:
   check:
     env:
