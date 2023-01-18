@@ -1,0 +1,11 @@
+--- a/net/minecraft/server/commands/ExecuteCommand.java
++++ b/net/minecraft/server/commands/ExecuteCommand.java
+@@ -519,7 +519,7 @@
+          return Optional.ofNullable(p_264776_.m_20202_());
+       }))).then(Commands.m_82127_("controller").fork(p_265189_, m_264445_((p_264778_) -> {
+          return Optional.ofNullable(p_264778_.m_6688_());
+-      }))).then(Commands.m_82127_("passengers").fork(p_265189_, m_264350_((p_264777_) -> {
++      }))).then((LiteralArgumentBuilder<CommandSourceStack>)Commands.m_82127_("passengers").fork(p_265189_, m_264350_((p_264777_) -> {
+          return p_264777_.m_20197_().stream();
+       })));
+    }
