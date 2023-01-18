@@ -5,7 +5,7 @@
        public void m_264538_(Consumer<Class<? extends Packet<?>>> p_265213_) {
           this.f_129604_.keySet().stream().filter((p_264721_) -> {
 -            return p_264721_ != BundleDelimiterPacket.class;
-+            return p_264721_ != (Class<? extends Packet<T>>)BundleDelimiterPacket.class;
++            return p_264721_ != (Object)BundleDelimiterPacket.class;
           }).forEach(p_265213_);
           this.f_263747_.forEach(p_265213_);
        }
