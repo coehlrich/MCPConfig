@@ -1,11 +1,73 @@
 --- a/net/minecraft/server/commands/ExecuteCommand.java
 +++ b/net/minecraft/server/commands/ExecuteCommand.java
-@@ -519,7 +519,7 @@
-          return Optional.ofNullable(p_264776_.m_20202_());
-       }))).then(Commands.m_82127_("controller").fork(p_265189_, m_264445_((p_264778_) -> {
-          return Optional.ofNullable(p_264778_.m_6688_());
--      }))).then(Commands.m_82127_("passengers").fork(p_265189_, m_264350_((p_264777_) -> {
-+      }))).then((LiteralArgumentBuilder<CommandSourceStack>)Commands.m_82127_("passengers").fork(p_265189_, m_264350_((p_264777_) -> {
-          return p_264777_.m_20197_().stream();
-       })));
+@@ -16,30 +16,12 @@
+ import com.mojang.brigadier.suggestion.SuggestionProvider;
+ import com.mojang.brigadier.tree.CommandNode;
+ import com.mojang.brigadier.tree.LiteralCommandNode;
+-import java.util.Collection;
+-import java.util.Collections;
+-import java.util.List;
+-import java.util.Optional;
+-import java.util.OptionalInt;
+-import java.util.function.BiPredicate;
+-import java.util.function.BinaryOperator;
+-import java.util.function.Function;
+-import java.util.function.IntFunction;
+-import java.util.stream.Stream;
+ import net.minecraft.advancements.critereon.MinMaxBounds;
+ import net.minecraft.commands.CommandBuildContext;
+ import net.minecraft.commands.CommandSourceStack;
+ import net.minecraft.commands.Commands;
+ import net.minecraft.commands.SharedSuggestionProvider;
+-import net.minecraft.commands.arguments.DimensionArgument;
+-import net.minecraft.commands.arguments.EntityAnchorArgument;
+-import net.minecraft.commands.arguments.EntityArgument;
+-import net.minecraft.commands.arguments.NbtPathArgument;
+-import net.minecraft.commands.arguments.ObjectiveArgument;
+-import net.minecraft.commands.arguments.RangeArgument;
+-import net.minecraft.commands.arguments.ResourceLocationArgument;
+-import net.minecraft.commands.arguments.ResourceOrTagArgument;
+-import net.minecraft.commands.arguments.ScoreHolderArgument;
++import net.minecraft.commands.arguments.*;
+ import net.minecraft.commands.arguments.blocks.BlockPredicateArgument;
+ import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
+ import net.minecraft.commands.arguments.coordinates.RotationArgument;
+@@ -48,14 +30,7 @@
+ import net.minecraft.core.BlockPos;
+ import net.minecraft.core.SectionPos;
+ import net.minecraft.core.registries.Registries;
+-import net.minecraft.nbt.ByteTag;
+-import net.minecraft.nbt.CompoundTag;
+-import net.minecraft.nbt.DoubleTag;
+-import net.minecraft.nbt.FloatTag;
+-import net.minecraft.nbt.IntTag;
+-import net.minecraft.nbt.LongTag;
+-import net.minecraft.nbt.ShortTag;
+-import net.minecraft.nbt.Tag;
++import net.minecraft.nbt.*;
+ import net.minecraft.network.chat.Component;
+ import net.minecraft.server.bossevents.CustomBossEvent;
+ import net.minecraft.server.commands.data.DataAccessor;
+@@ -81,6 +56,13 @@
+ import net.minecraft.world.scores.Score;
+ import net.minecraft.world.scores.Scoreboard;
+ 
++import java.util.*;
++import java.util.function.BiPredicate;
++import java.util.function.BinaryOperator;
++import java.util.function.Function;
++import java.util.function.IntFunction;
++import java.util.stream.Stream;
++
+ public class ExecuteCommand {
+    private static final int f_180148_ = 32768;
+    private static final Dynamic2CommandExceptionType f_137030_ = new Dynamic2CommandExceptionType((p_137129_, p_137130_) -> {
+@@ -479,7 +461,7 @@
     }
+ 
+    private static LiteralArgumentBuilder<CommandSourceStack> m_264124_(CommandNode<CommandSourceStack> p_265189_, LiteralArgumentBuilder<CommandSourceStack> p_265783_) {
+-      return p_265783_.then(Commands.m_82127_("owner").fork(p_265189_, m_264445_((p_264792_) -> {
++      return (LiteralArgumentBuilder<CommandSourceStack>)p_265783_.then(Commands.m_82127_("owner").fork(p_265189_, m_264445_((p_264792_) -> {
+          Optional optional;
+          if (p_264792_ instanceof TamableAnimal tamableanimal) {
+             optional = Optional.ofNullable(tamableanimal.m_21826_());
