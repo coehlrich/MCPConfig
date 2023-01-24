@@ -1,6 +1,6 @@
 --- a/net/minecraft/resources/RegistryDataLoader.java
 +++ b/net/minecraft/resources/RegistryDataLoader.java
-@@ -86,7 +86,7 @@
+@@ -88,7 +88,7 @@
        });
        return new RegistryOps.RegistryInfoLookup() {
           public <T> Optional<RegistryOps.RegistryInfo<T>> m_254838_(ResourceKey<? extends Registry<? extends T>> p_256014_) {
