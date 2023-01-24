@@ -539,6 +539,7 @@ subprojects {
                 // JavaCompile task type requires classpath to be specified before the task begins execution
                 // but the data isn't generated yet, so instead - inject the classpath as the first thing done when it begins
                 classpath = files()
+                getOptions().setFork(true)
                 doFirst {
                     classpath = files(java.nio.file.Files.readAllLines(child.libraries.dest.toPath()).collect { file(it.substring(3)) }) // skip "-e="
                 }
