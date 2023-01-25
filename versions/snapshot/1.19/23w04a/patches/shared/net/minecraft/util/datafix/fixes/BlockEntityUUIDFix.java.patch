@@ -1,6 +1,6 @@
 --- a/net/minecraft/util/datafix/fixes/BlockEntityUUIDFix.java
 +++ b/net/minecraft/util/datafix/fixes/BlockEntityUUIDFix.java
-@@ -19,7 +19,7 @@
+@@ -20,7 +20,7 @@
     private Dynamic<?> m_14889_(Dynamic<?> p_14890_) {
        return p_14890_.get("Owner").get().map((p_14894_) -> {
           return m_14590_(p_14894_, "Id", "Id").orElse(p_14894_);

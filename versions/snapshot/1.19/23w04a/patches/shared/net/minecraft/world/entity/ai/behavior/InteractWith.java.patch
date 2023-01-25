@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/entity/ai/behavior/InteractWith.java
 +++ b/net/minecraft/world/entity/ai/behavior/InteractWith.java
-@@ -32,7 +32,7 @@
+@@ -34,7 +34,7 @@
                       return p_258419_.m_20280_(p_258414_) <= (double)i && predicate.test(p_258419_);
                    });
                    optional.ifPresent((p_258432_) -> {

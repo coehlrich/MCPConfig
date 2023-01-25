@@ -13,12 +13,3 @@
  
              return new Point<>((float)p_184242_, p_184243_, (float)p_184244_);
           });
-@@ -33,7 +33,7 @@
-       Codec<CubicSpline.Multipoint<C, I>> codec1 = RecordCodecBuilder.create((p_184267_) -> {
-          return p_184267_.group(p_184263_.fieldOf("coordinate").forGetter(CubicSpline.Multipoint::f_184319_), ExtraCodecs.m_144637_(codec.listOf()).fieldOf("points").forGetter((p_184272_) -> {
-             return IntStream.range(0, p_184272_.f_184320_.length).mapToObj((p_184249_) -> {
--               return new Point<>(p_184272_.f_184320_()[p_184249_], (CubicSpline)p_184272_.f_184321_().get(p_184249_), p_184272_.f_184322_()[p_184249_]);
-+               return new Point<C, I>(p_184272_.f_184320_()[p_184249_], (CubicSpline)p_184272_.f_184321_().get(p_184249_), p_184272_.f_184322_()[p_184249_]);
-             }).toList();
-          })).apply(p_184267_, (p_184258_, p_184259_) -> {
-             float[] afloat = new float[p_184259_.size()];

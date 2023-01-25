@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/commands/ForceLoadCommand.java
 +++ b/net/minecraft/server/commands/ForceLoadCommand.java
-@@ -85,7 +85,7 @@
+@@ -86,7 +86,7 @@
        ServerLevel serverlevel = p_137696_.m_81372_();
        ResourceKey<Level> resourcekey = serverlevel.m_46472_();
        LongSet longset = serverlevel.m_8902_();
