@@ -1,6 +1,6 @@
 --- a/net/minecraft/util/datafix/fixes/OptionsKeyTranslationFix.java
 +++ b/net/minecraft/util/datafix/fixes/OptionsKeyTranslationFix.java
-@@ -29,7 +29,7 @@
+@@ -26,7 +26,7 @@
  
                    return Pair.of(p_145585_.getKey(), p_145585_.getValue());
                 }).collect(Collectors.toMap(Pair::getFirst, Pair::getSecond)));

@@ -1,6 +1,6 @@
 --- a/net/minecraft/util/datafix/fixes/ChunkBedBlockEntityInjecterFix.java
 +++ b/net/minecraft/util/datafix/fixes/ChunkBedBlockEntityInjecterFix.java
-@@ -38,7 +38,7 @@
+@@ -36,7 +36,7 @@
        OpticFinder<?> opticfinder = DSL.fieldFinder("Level", p_184834_);
        OpticFinder<java.util.List<TE>> opticfinder1 = DSL.fieldFinder("TileEntities", p_184835_);
        int i = 416;
@@ -9,7 +9,7 @@
           return (p_184837_) -> {
              return p_184837_;
           };
-@@ -58,7 +58,7 @@
+@@ -56,7 +56,7 @@
              });
              int j1 = 0;
  

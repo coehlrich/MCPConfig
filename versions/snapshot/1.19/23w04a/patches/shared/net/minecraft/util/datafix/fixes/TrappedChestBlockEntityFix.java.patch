@@ -1,6 +1,6 @@
 --- a/net/minecraft/util/datafix/fixes/TrappedChestBlockEntityFix.java
 +++ b/net/minecraft/util/datafix/fixes/TrappedChestBlockEntityFix.java
-@@ -69,7 +69,7 @@
+@@ -68,7 +68,7 @@
                       Dynamic<?> dynamic = p_145746_.get(DSL.remainderFinder());
                       int k = dynamic.get("xPos").asInt(0);
                       int l = dynamic.get("zPos").asInt(0);

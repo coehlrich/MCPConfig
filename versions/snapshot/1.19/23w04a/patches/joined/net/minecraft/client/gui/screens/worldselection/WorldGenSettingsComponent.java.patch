@@ -1,6 +1,6 @@
 --- a/net/minecraft/client/gui/screens/worldselection/WorldGenSettingsComponent.java
 +++ b/net/minecraft/client/gui/screens/worldselection/WorldGenSettingsComponent.java
-@@ -179,7 +179,7 @@
+@@ -178,7 +178,7 @@
     }
  
     private static Component m_233085_(Holder<WorldPreset> p_233086_) {
