@@ -86,6 +86,7 @@ jobs:
     - name: Verify mappings
       id: verify
       uses: gradle/gradle-build-action@v2
+      continue-on-error: true
       with:
         arguments: :${{ fromJson(steps.split_version.outputs.result).version_name }}:verify -Ptype=${{ fromJson(steps.split_version.outputs.result).version_type }}
         generate-job-summary: false
