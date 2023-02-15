@@ -29,6 +29,11 @@ on:
         description: 'New version'
         # Input has to be provided for the workflow to run
         required: true
+      fix-mapping-error:
+        description: 'Fix known error(s) in mapping file'
+        required: false
+        default: true
+        type: boolean
 
 jobs:
   update:
@@ -183,6 +188,8 @@ jobs:
       run: |
         cat versions/${{ github.event.inputs.new_version }}/statistics.md >> $GITHUB_STEP_SUMMARY
         rm -f versions/${{ github.event.inputs.new_version }}/statistics.md
+    - name: Fix known mapping error(s)
+      run: sed -i 's/m_142480_/m_9236_/g' versions/${{ github.event.inputs.new_version }}/joined.tsrg
     - if: ${{ github.event.inputs.patch_src }}
       run: cp versions/${{ github.event.inputs.new_version }}/joined.tsrg ../new_joined.tsrg
     - if: ${{ github.event.inputs.patch_src != github.event.inputs.new_version }}
