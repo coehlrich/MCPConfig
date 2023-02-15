@@ -1,6 +1,6 @@
 --- a/net/minecraft/data/registries/VanillaRegistries.java
 +++ b/net/minecraft/data/registries/VanillaRegistries.java
-@@ -33,7 +33,7 @@
+@@ -34,7 +34,7 @@
  import net.minecraft.world.level.levelgen.presets.WorldPresets;
  
  public class VanillaRegistries {

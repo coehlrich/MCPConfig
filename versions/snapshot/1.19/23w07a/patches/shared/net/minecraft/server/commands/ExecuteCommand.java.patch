@@ -1,6 +1,6 @@
 --- a/net/minecraft/server/commands/ExecuteCommand.java
 +++ b/net/minecraft/server/commands/ExecuteCommand.java
-@@ -486,7 +486,7 @@
+@@ -487,7 +487,7 @@
     }
  
     private static LiteralArgumentBuilder<CommandSourceStack> m_264124_(CommandNode<CommandSourceStack> p_265189_, LiteralArgumentBuilder<CommandSourceStack> p_265783_) {
