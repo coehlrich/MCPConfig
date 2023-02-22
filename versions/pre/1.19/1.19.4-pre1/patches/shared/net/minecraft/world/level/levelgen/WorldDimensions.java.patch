@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/level/levelgen/WorldDimensions.java
 +++ b/net/minecraft/world/level/levelgen/WorldDimensions.java
-@@ -172,18 +172,17 @@
+@@ -173,18 +173,17 @@
     }
  
     public WorldDimensions.Complete m_245300_(Registry<LevelStem> p_248787_) {

@@ -1,6 +1,6 @@
 --- a/net/minecraft/tags/TagKey.java
 +++ b/net/minecraft/tags/TagKey.java
-@@ -29,7 +29,7 @@
+@@ -31,7 +31,7 @@
     }
  
     public static <T> TagKey<T> m_203882_(ResourceKey<? extends Registry<T>> p_203883_, ResourceLocation p_203884_) {
@@ -9,7 +9,7 @@
     }
  
     public boolean m_207645_(ResourceKey<? extends Registry<?>> p_207646_) {
-@@ -37,7 +37,7 @@
+@@ -39,7 +39,7 @@
     }
  
     public <E> Optional<TagKey<E>> m_207647_(ResourceKey<? extends Registry<E>> p_207648_) {
