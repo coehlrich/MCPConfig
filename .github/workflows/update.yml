@@ -189,7 +189,10 @@ jobs:
         cat versions/${{ github.event.inputs.new_version }}/statistics.md >> $GITHUB_STEP_SUMMARY
         rm -f versions/${{ github.event.inputs.new_version }}/statistics.md
     - name: Fix known mapping error(s)
-      run: sed -i 's/m_142480_/m_9236_/g' versions/${{ github.event.inputs.new_version }}/joined.tsrg
+      run: |
+        sed -i 's/m_142480_/m_9236_/g' versions/${{ github.event.inputs.new_version }}/joined.tsrg
+        sed -i 's/m_21370_/m_5448_/g' versions/${{ github.event.inputs.new_version }}/joined.tsrg
+        sed -i 's/m_5449_/m_5448_/g' versions/${{ github.event.inputs.new_version }}/joined.tsrg
     - if: ${{ github.event.inputs.patch_src }}
       run: cp versions/${{ github.event.inputs.new_version }}/joined.tsrg ../new_joined.tsrg
     - if: ${{ github.event.inputs.patch_src != github.event.inputs.new_version }}
