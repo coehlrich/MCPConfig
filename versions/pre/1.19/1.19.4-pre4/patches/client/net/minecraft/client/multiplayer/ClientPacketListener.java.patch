@@ -1,6 +1,6 @@
 --- a/net/minecraft/client/multiplayer/ClientPacketListener.java
 +++ b/net/minecraft/client/multiplayer/ClientPacketListener.java
-@@ -579,7 +579,7 @@
+@@ -578,7 +578,7 @@
  
     public void m_182047_(ClientboundRemoveEntitiesPacket p_182633_) {
        PacketUtils.m_131363_(p_182633_, this, this.f_104888_);
