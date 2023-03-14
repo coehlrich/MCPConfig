@@ -17,17 +17,15 @@ jobs:
       jdk_version: ${{ steps.java_version.outputs.result }}
       version_type: ${{ fromJson(steps.split_version.outputs.result).version_type }}
       version_name: ${{ fromJson(steps.split_version.outputs.result).version_name }}
-      branch: ${{ fromJson(steps.split_version.outputs.result).branch }}
     steps:
     - uses: actions/github-script@v6
       id: split_version
       env:
         VERSION: ${{ inputs.version }}
-        BRANCH: ${{ inputs.branch }}
       with:
         script: |
           const version = process.env.VERSION.split("/");
-          var returnValue = {version_name: version[version.length - 1], version_type: version[0], branch: process.env.BRANCH.replace(/^[^/]+\//, '')}
+          var returnValue = {version_name: version[version.length - 1], version_type: version[0])}
           return returnValue;
     - uses: actions/checkout@v3
       with:
@@ -168,7 +166,7 @@ jobs:
     steps: 
     - uses: actions/checkout@v3
       with:
-        ref: ${{ needs.common.outputs.branch }}
+        ref: ${{ inputs.branch }}
     - name: Set up JDK ${{ matrix.jdk_version }}
       if: ${{ matrix.jdk_version != vars.JAVA_VERSION}}
       uses: actions/setup-java@v3
