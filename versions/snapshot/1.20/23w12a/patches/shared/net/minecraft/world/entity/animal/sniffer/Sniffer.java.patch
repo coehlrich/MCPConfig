@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/entity/animal/sniffer/Sniffer.java
 +++ b/net/minecraft/world/entity/animal/sniffer/Sniffer.java
-@@ -369,7 +369,7 @@
+@@ -380,7 +380,7 @@
     }
  
     public Brain<Sniffer> m_6274_() {
