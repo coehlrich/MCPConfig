@@ -159,7 +159,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        jdk_version: [17, 18, 19]
+        jdk_version: [17, 18, 19, 20]
         mappings: [Official, HotSpot]
         side: [Client, Joined, Server]
     
