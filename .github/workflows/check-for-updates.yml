@@ -91,10 +91,6 @@ jobs:
             }
             core.info("Found new snapshot: " + latestSnapshot)
             
-            if (!newVersionInfo.april) {
-              github.rest.
-            }
-            
             var inputs = {}
             inputs.old_version = getVersionPrefix(oldVersionInfo) + oldVersion;
             inputs.new_version = getVersionPrefix(newVersionInfo) + latestSnapshot;
