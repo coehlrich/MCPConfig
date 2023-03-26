@@ -123,6 +123,6 @@ jobs:
           owner: coehlrich
           repo: MCPConfig
           name: LATEST_MAINLINE_VERSION
-          value: ${{ fromJson(steps.version_manifest.outputs.response).new_version.version }}
+          value: ${{ fromJson(steps.check.outputs.result).new_version.version }}
         env:
           GITHUB_TOKEN: ${{ secrets.VARIABLES_TOKEN }}
