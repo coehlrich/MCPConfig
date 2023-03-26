@@ -10,6 +10,7 @@ jobs:
   check:
     env:
       LATEST_VERSION: ${{ vars.LATEST_MC_VERSION }}
+      LATEST_MAINLINE: ${{ vars.LATEST_MAINLINE_VERSION }}
       TARGET_VERSION: ${{ vars.TARGET_MC_VERSION }}
     runs-on: ubuntu-latest
     if: ${{ vars.LATEST_MC_VERSION != vars.TARGET_MC_VERSION }}
@@ -31,15 +32,16 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.VARIABLES_TOKEN }}
       - name: Check latest snapshot
+        id: check
         uses: actions/github-script@v6
         env:
           NEW_LATEST_VERSION: ${{ fromJson(steps.version_manifest.outputs.response).latest.snapshot }}
         with:
           script: |
-            function getVersionPrefix(name) {
-              var type;
+            function getInfo(name) {
+              var type = "";
               var april = false;
-              if (/^\d+\.\d+.\d+$/.test(name)) {
+              if (/^\d+\.\d+(\.\d+)?$/.test(name)) {
                 type = "release";
               } else if (/^\d{2}w\d{2}[a-z]$/.test(name)) {
                 type = "snapshot";
@@ -50,16 +52,19 @@ jobs:
                 type = "snapshot";
                 april = true;
               }
-
-              if (type === "snapshot" || type === "pre") {
-                if (april) {
+              return {type: type, april: april, version: name}
+            }
+            
+            function getVersionPrefix(info) {
+              if (info.type === "snapshot" || info.type === "pre") {
+                if (info.april) {
                   return "snapshot/april/";
                 } else {
                   const targetSplit = process.env.TARGET_VERSION.split(".");
-                  return type + "/" + targetSplit[0] + "." + targetSplit[1] + "/";
+                  return info.type + "/" + targetSplit[0] + "." + targetSplit[1] + "/";
                 }
               } else {
-                return type + "/";
+                return info.type + "/";
               }
             }
             
@@ -74,18 +79,26 @@ jobs:
             }
             
             const latestSnapshot = process.env.NEW_LATEST_VERSION
+            
+            const oldVersionInfo = getInfo(process.env.LATEST_MAINLINE);
+            const newVersionInfo = getInfo(latestSnapshot);
+            
             if (process.env.LATEST_VERSION === latestSnapshot) {
               core.info("No new snapshots have been released since " + process.env.LATEST_VERSION)
-              return;
+              return {old_version: oldVersionInfo, new_version: newVersionInfo, is_new: false};
             }
             core.info("Found new snapshot: " + latestSnapshot)
             
-            var inputs = {}
-            inputs.old_version = getVersionPrefix(process.env.LATEST_VERSION) + process.env.LATEST_VERSION;
-            inputs.new_version = getVersionPrefix(latestSnapshot) + latestSnapshot;
+            if (!newVersionInfo.april) {
+              github.rest.
+            }
             
-            inputs.old_branch = getBranch(inputs.old_version.startsWith("release/"), false);
-            var newBranch = getBranch(inputs.new_version.startsWith("release/"), true);
+            var inputs = {}
+            inputs.old_version = getVersionPrefix(oldVersionInfo) + process.env.LATEST_MAINLINE;
+            inputs.new_version = getVersionPrefix(newVersionInfo) + latestSnapshot;
+            
+            inputs.old_branch = getBranch(oldVersionInfo.type === "release", false);
+            var newBranch = getBranch(newVersionInfo.type === "release", true);
             if (inputs.old_branch.split("/")[1] !== newBranch) {
               inputs.new_branch = newBranch;
             }
@@ -95,10 +108,23 @@ jobs:
               core.info(key + ": " + inputs[key]);
             }
             
-            github.rest.actions.createWorkflowDispatch({
+            /*github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: "update.yml",
               ref: "master",
               inputs: inputs
-            });
+            });*/
+            
+            return {old_version: oldVersionInfo, new_version: newVersionInfo, is_new: true};
+      - name: Store Latest Version
+        if: ${{ fromJson(steps.check.outputs.result).is_new && !fromJson(steps.check.outputs.result).new_version.april }}
+        uses: octokit/request-action@v2.1.7
+        with:
+          route: PATCH /repos/{owner}/{repo}/actions/variables/{name}
+          owner: coehlrich
+          repo: MCPConfig
+          name: LATEST_MAINLINE_VERSION
+          value: ${{ fromJson(steps.version_manifest.outputs.response).new_version.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.VARIABLES_TOKEN }}
