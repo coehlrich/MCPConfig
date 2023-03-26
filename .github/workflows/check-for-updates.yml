@@ -36,6 +36,7 @@ jobs:
         uses: actions/github-script@v6
         env:
           NEW_LATEST_VERSION: ${{ fromJson(steps.version_manifest.outputs.response).latest.snapshot }}
+          LATEST_RELEASE: ${{ fromJson(steps.version_manifest.outputs.response).latest.release }}
         with:
           script: |
             function getInfo(name) {
@@ -80,8 +81,9 @@ jobs:
             
             const latestSnapshot = process.env.NEW_LATEST_VERSION
             
-            const oldVersionInfo = getInfo(process.env.LATEST_MAINLINE);
             const newVersionInfo = getInfo(latestSnapshot);
+            const oldVersion = newVersionInfo.april ? process.env.LATEST_RELEASE : process.env.LATEST_MAINLINE;
+            const oldVersionInfo = getInfo(oldVersion);
             
             if (process.env.LATEST_VERSION === latestSnapshot) {
               core.info("No new snapshots have been released since " + process.env.LATEST_VERSION)
@@ -94,7 +96,7 @@ jobs:
             }
             
             var inputs = {}
-            inputs.old_version = getVersionPrefix(oldVersionInfo) + process.env.LATEST_MAINLINE;
+            inputs.old_version = getVersionPrefix(oldVersionInfo) + oldVersion;
             inputs.new_version = getVersionPrefix(newVersionInfo) + latestSnapshot;
             
             inputs.old_branch = getBranch(oldVersionInfo.type === "release", false);
