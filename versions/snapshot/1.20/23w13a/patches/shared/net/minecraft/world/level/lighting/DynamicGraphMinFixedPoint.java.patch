@@ -1,6 +1,6 @@
 --- a/net/minecraft/world/level/lighting/DynamicGraphMinFixedPoint.java
 +++ b/net/minecraft/world/level/lighting/DynamicGraphMinFixedPoint.java
-@@ -85,13 +85,13 @@
+@@ -45,13 +45,13 @@
  
     public void m_75581_(LongPredicate p_75582_) {
        LongList longlist = new LongArrayList();
