@@ -5,13 +5,14 @@ on:
   workflow_dispatch:
 permissions:
   actions: write
+env:
+  TARGET_VERSION: ${{ vars.TARGET_MC_VERSION }}
   
 jobs:
   check:
     env:
       LATEST_VERSION: ${{ vars.LATEST_MC_VERSION }}
       LATEST_MAINLINE: ${{ vars.LATEST_MAINLINE_VERSION }}
-      TARGET_VERSION: ${{ vars.TARGET_MC_VERSION }}
     runs-on: ubuntu-latest
     if: ${{ vars.LATEST_MC_VERSION != vars.TARGET_MC_VERSION }}
     outputs:
@@ -92,7 +93,7 @@ jobs:
     needs:
       - check
       - check-srgutils
-    if: ${{ always() && !cancelled() && !failure() && needs.check.outputs.is_new }}
+    if: ${{ always() && !cancelled() && !failure() && needs.check.result == 'success' && needs.check.outputs.is_new }}
     steps:
       - name: Run update workflow
         id: update
@@ -108,7 +109,7 @@ jobs:
               if (info.april) {
                 return "snapshot/april";
               } else if (info.type === "snapshot" || info.type === "pre") {
-                const targetSplit = newVersionInfo.version.split(".");
+                const targetSplit = process.env.TARGET_VERSION
                 return info.type + "/" + targetSplit[0] + "." + targetSplit[1] + "/";
               } else {
                 return info.type + "/";
