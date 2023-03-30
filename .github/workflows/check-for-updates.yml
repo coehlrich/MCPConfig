@@ -14,6 +14,10 @@ jobs:
       TARGET_VERSION: ${{ vars.TARGET_MC_VERSION }}
     runs-on: ubuntu-latest
     if: ${{ vars.LATEST_MC_VERSION != vars.TARGET_MC_VERSION }}
+    outputs:
+      is_new: ${{ fromJson(steps.check.outputs.result).is_new }}
+      old_version: ${{ fromJson(steps.check.outputs.result).old_version }}
+      new_version: ${{ fromJson(steps.check.outputs.result).new_version }}
     steps:
       - name: Get Version Manifest
         id: version_manifest
@@ -59,10 +63,6 @@ jobs:
 
             core.info("Found new snapshot: " + latestSnapshot)
             return {old_version: oldVersionInfo, new_version: newVersionInfo, is_new: true};
-    outputs:
-      is_new: ${{ fromJson(steps.check.outputs.result).is_new }}
-      old_version: ${{ fromJson(steps.check.outputs.result).old_version }}
-      new_version: ${{ fromJson(steps.check.outputs.result).new_version }}
   check-srgutils:
     runs-on: ubuntu-latest
     needs: check
