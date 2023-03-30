@@ -5,8 +5,6 @@ on:
   workflow_dispatch:
 permissions:
   actions: write
-env:
-  TARGET_VERSION: ${{ vars.TARGET_MC_VERSION }}
   
 jobs:
   check:
@@ -94,6 +92,8 @@ jobs:
       - check
       - check-srgutils
     if: ${{ always() && !cancelled() && !failure() && needs.check.result == 'success' && needs.check.outputs.is_new }}
+    env:
+      TARGET_VERSION: ${{ vars.TARGET_MC_VERSION }}
     steps:
       - name: Run update workflow
         id: update
