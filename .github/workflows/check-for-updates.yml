@@ -92,7 +92,7 @@ jobs:
     needs:
       - check
       - check-srgutils
-    if: ${{ needs.check.outputs.is_new }}
+    if: ${{ always() && !cancelled() && !failure() && needs.check.outputs.is_new }}
     steps:
       - name: Store Latest Version
         uses: octokit/request-action@v2.1.7
