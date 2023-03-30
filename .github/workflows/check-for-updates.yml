@@ -126,8 +126,8 @@ jobs:
             }
 
             var inputs = {}
-            inputs.old_version = getVersionPrefix(oldVersionInfo) + oldVersion;
-            inputs.new_version = getVersionPrefix(newVersionInfo) + latestSnapshot;
+            inputs.old_version = getVersionPrefix(oldVersionInfo) + oldVersionInfo.version;
+            inputs.new_version = getVersionPrefix(newVersionInfo) + newVersionInfo.version;
             
             inputs.old_branch = getBranch(oldVersionInfo.type === "release", false);
             var newBranch = getBranch(newVersionInfo.type === "release", true);
