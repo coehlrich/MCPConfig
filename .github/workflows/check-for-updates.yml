@@ -16,8 +16,8 @@ jobs:
     if: ${{ vars.LATEST_MC_VERSION != vars.TARGET_MC_VERSION }}
     outputs:
       is_new: ${{ fromJson(steps.check.outputs.result).is_new }}
-      old_version: ${{ fromJson(steps.check.outputs.result).old_version }}
-      new_version: ${{ fromJson(steps.check.outputs.result).new_version }}
+      old_version: ${{ toJson(fromJson(steps.check.outputs.result).old_version) }}
+      new_version: ${{ toJson(fromJson(steps.check.outputs.result).new_version) }}
     steps:
       - name: Get Version Manifest
         id: version_manifest
