@@ -21,16 +21,6 @@ jobs:
         with:
           url: "https://piston-meta.mojang.com/mc/game/version_manifest_v2.json"
           method: "GET"
-      - name: Store Latest Version
-        uses: octokit/request-action@v2.1.7
-        with:
-          route: PATCH /repos/{owner}/{repo}/actions/variables/{name}
-          owner: coehlrich
-          repo: MCPConfig
-          name: LATEST_MC_VERSION
-          value: ${{ fromJson(steps.version_manifest.outputs.response).latest.snapshot }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.VARIABLES_TOKEN }}
       - name: Check latest snapshot
         id: check
         uses: actions/github-script@v6
@@ -56,29 +46,6 @@ jobs:
               return {type: type, april: april, version: name}
             }
             
-            function getVersionPrefix(info) {
-              if (info.type === "snapshot" || info.type === "pre") {
-                if (info.april) {
-                  return "snapshot/april/";
-                } else {
-                  const targetSplit = process.env.TARGET_VERSION.split(".");
-                  return info.type + "/" + targetSplit[0] + "." + targetSplit[1] + "/";
-                }
-              } else {
-                return info.type + "/";
-              }
-            }
-            
-            function getBranch(release, newVersion) {
-              if (release && newVersion) {
-                return process.env.TARGET_VERSION + "-release";
-              } else if (release && !newVersion) {
-                return "upstream/master";
-              } else {
-                return (newVersion ? "" : "origin/") + process.env.TARGET_VERSION;
-              }
-            }
-            
             const latestSnapshot = process.env.NEW_LATEST_VERSION
             
             const newVersionInfo = getInfo(latestSnapshot);
@@ -89,8 +56,96 @@ jobs:
               core.info("No new snapshots have been released since " + process.env.LATEST_VERSION)
               return {old_version: oldVersionInfo, new_version: newVersionInfo, is_new: false};
             }
+
             core.info("Found new snapshot: " + latestSnapshot)
+            return {old_version: oldVersionInfo, new_version: newVersionInfo, is_new: true};
+    outputs:
+      is_new: ${{ fromJson(steps.check.outputs.result).is_new }}
+      old_version: ${{ fromJson(steps.check.outputs.result).old_version }}
+      new_version: ${{ fromJson(steps.check.outputs.result).new_version }}
+  check-srgutils:
+    runs-on: ubuntu-latest
+    needs: check
+    if: ${{ needs.check.outputs.is_new && fromJson(needs.check.outputs.new_version).april }}
+    steps:
+      - name: Setup Java
+        uses: actions/setup-java@v3
+        with: 
+          distribution: temurin
+          java-version: ${{ vars.JAVA_VERSION }}
+      - name: Download maven-metadata.xml
+        run: wget ${{ vars.SRGUTILS_BASE_URL }}/maven-metadata-xml
+      - name: Get latest version of srgutils
+        id: srgutils_version
+        uses: mavrosxristoforos/get-xml-info@1.1.1
+        with:
+          xml-file: maven-metadata.xml
+          xpath: //metadata/versioning/latest
+      - name: Download srgutils
+        run: wget ${{ vars.SRGUTILS_BASE_URL }}/${{ steps.srgutils_version.outputs.info }}/srgutils-${{ steps.srgutils_version.outputs.info }}.jar -O srgutils.jar
+      - name: Download parser
+        run: wget ${{ vars.PARSE_VERSION_JAVA }}
+      - name: Run parser
+        run: java -cp srgutils.jar Main.java ${{ fromJson(needs.check.outputs.new_version).version }}
+  run-update:
+    runs-on: ubuntu-latest
+    needs:
+      - check
+      - check-srgutils
+    if: ${{ needs.check.outputs.is_new }}
+    steps:
+      - name: Store Latest Version
+        uses: octokit/request-action@v2.1.7
+        with:
+          route: PATCH /repos/{owner}/{repo}/actions/variables/{name}
+          owner: coehlrich
+          repo: MCPConfig
+          name: LATEST_MC_VERSION
+          value: ${{ fromJson(needs.check.outputs.new_version).version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.VARIABLES_TOKEN }}
+      - name: Store Latest Version
+        if: ${{ !fromJson(needs.check.outputs.new_version).april }}
+        uses: octokit/request-action@v2.1.7
+        with:
+          route: PATCH /repos/{owner}/{repo}/actions/variables/{name}
+          owner: coehlrich
+          repo: MCPConfig
+          name: LATEST_MAINLINE_VERSION
+          value: ${{ fromJson(needs.check.outputs.new_version).version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.VARIABLES_TOKEN }}
+      - name: Run update workflow
+        id: update
+        uses: actions/github-script@v6
+        env:
+          OLD_VERSION_INFO: ${{ needs.check.outputs.old_version }}
+          NEW_VERSION_INFO: ${{ needs.check.outputs.new_version }}
+        with:
+          script: |
+            const oldVersionInfo = JSON.parse(process.env.OLD_VERSION_INFO);
+            const newVersionInfo = JSON.parse(process.env.OLD_VERSION_INFO);
+            function getVersionPrefix(info) {
+              if (info.april) {
+                return "snapshot/april";
+              } else if (info.type === "snapshot" || info.type === "pre") {
+                const targetSplit = process.env.TARGET_VERSION.split(".");
+                return info.type + "/" + targetSplit[0] + "." + targetSplit[1] + "/";
+              } else {
+                return info.type + "/";
+              }
+            }
             
+            function getBranch(release, newVersion) {
+              if (release && newVersion) {
+                return newVersionInfo.version + "-release";
+              } else if (release && !newVersion) {
+                return "upstream/master";
+              } else {
+                return (newVersion ? "" : "origin/") + newVersionInfo.version;
+              }
+            }
+
             var inputs = {}
             inputs.old_version = getVersionPrefix(oldVersionInfo) + oldVersion;
             inputs.new_version = getVersionPrefix(newVersionInfo) + latestSnapshot;
@@ -106,23 +161,10 @@ jobs:
               core.info(key + ": " + inputs[key]);
             }
             
-            github.rest.actions.createWorkflowDispatch({
+            /*github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: "update.yml",
               ref: "master",
               inputs: inputs
-            });
-            
-            return {old_version: oldVersionInfo, new_version: newVersionInfo, is_new: true};
-      - name: Store Latest Version
-        if: ${{ fromJson(steps.check.outputs.result).is_new && !fromJson(steps.check.outputs.result).new_version.april }}
-        uses: octokit/request-action@v2.1.7
-        with:
-          route: PATCH /repos/{owner}/{repo}/actions/variables/{name}
-          owner: coehlrich
-          repo: MCPConfig
-          name: LATEST_MAINLINE_VERSION
-          value: ${{ fromJson(steps.check.outputs.result).new_version.version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.VARIABLES_TOKEN }}
+            }*/
