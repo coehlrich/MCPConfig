@@ -108,7 +108,7 @@ jobs:
               if (info.april) {
                 return "snapshot/april";
               } else if (info.type === "snapshot" || info.type === "pre") {
-                const targetSplit = newVersionInfo.split(".");
+                const targetSplit = newVersionInfo.version.split(".");
                 return info.type + "/" + targetSplit[0] + "." + targetSplit[1] + "/";
               } else {
                 return info.type + "/";
