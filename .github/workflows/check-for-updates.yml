@@ -104,7 +104,7 @@ jobs:
         with:
           script: |
             const oldVersionInfo = JSON.parse(process.env.OLD_VERSION_INFO);
-            const newVersionInfo = JSON.parse(process.env.OLD_VERSION_INFO);
+            const newVersionInfo = JSON.parse(process.env.NEW_VERSION_INFO);
             function getVersionPrefix(info) {
               if (info.april) {
                 return "snapshot/april";
