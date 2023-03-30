@@ -94,27 +94,6 @@ jobs:
       - check-srgutils
     if: ${{ always() && !cancelled() && !failure() && needs.check.outputs.is_new }}
     steps:
-      - name: Store Latest Version
-        uses: octokit/request-action@v2.1.7
-        with:
-          route: PATCH /repos/{owner}/{repo}/actions/variables/{name}
-          owner: coehlrich
-          repo: MCPConfig
-          name: LATEST_MC_VERSION
-          value: ${{ fromJson(needs.check.outputs.new_version).version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.VARIABLES_TOKEN }}
-      - name: Store Latest Version
-        if: ${{ !fromJson(needs.check.outputs.new_version).april }}
-        uses: octokit/request-action@v2.1.7
-        with:
-          route: PATCH /repos/{owner}/{repo}/actions/variables/{name}
-          owner: coehlrich
-          repo: MCPConfig
-          name: LATEST_MAINLINE_VERSION
-          value: ${{ fromJson(needs.check.outputs.new_version).version }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.VARIABLES_TOKEN }}
       - name: Run update workflow
         id: update
         uses: actions/github-script@v6
@@ -129,7 +108,7 @@ jobs:
               if (info.april) {
                 return "snapshot/april";
               } else if (info.type === "snapshot" || info.type === "pre") {
-                const targetSplit = process.env.TARGET_VERSION.split(".");
+                const targetSplit = newVersionInfo.split(".");
                 return info.type + "/" + targetSplit[0] + "." + targetSplit[1] + "/";
               } else {
                 return info.type + "/";
@@ -168,3 +147,25 @@ jobs:
               ref: "master",
               inputs: inputs
             }*/
+            
+      - name: Store Latest Version
+        uses: octokit/request-action@v2.1.7
+        with:
+          route: PATCH /repos/{owner}/{repo}/actions/variables/{name}
+          owner: coehlrich
+          repo: MCPConfig
+          name: LATEST_MC_VERSION
+          value: ${{ fromJson(needs.check.outputs.new_version).version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.VARIABLES_TOKEN }}
+      - name: Store Latest Version
+        if: ${{ !fromJson(needs.check.outputs.new_version).april }}
+        uses: octokit/request-action@v2.1.7
+        with:
+          route: PATCH /repos/{owner}/{repo}/actions/variables/{name}
+          owner: coehlrich
+          repo: MCPConfig
+          name: LATEST_MAINLINE_VERSION
+          value: ${{ fromJson(needs.check.outputs.new_version).version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.VARIABLES_TOKEN }}
