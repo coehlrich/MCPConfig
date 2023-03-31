@@ -65,7 +65,7 @@ jobs:
   check-srgutils:
     runs-on: ubuntu-latest
     needs: check
-    if: ${{ needs.check.outputs.is_new }}
+    if: ${{ needs.check.outputs.is_new == 'true' && fromJson(needs.check.outputs.new_version).april }}
     steps:
       - name: Setup Java
         uses: actions/setup-java@v3
@@ -91,7 +91,7 @@ jobs:
     needs:
       - check
       - check-srgutils
-    if: ${{ always() && !cancelled() && !failure() && needs.check.result == 'success' && needs.check.outputs.is_new }}
+    if: ${{ always() && !cancelled() && !failure() && needs.check.result == 'success' && needs.check.outputs.is_new == 'true' }}
     env:
       TARGET_VERSION: ${{ vars.TARGET_MC_VERSION }}
     steps:
