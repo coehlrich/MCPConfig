@@ -105,6 +105,16 @@ jobs:
           if (failed > 0) {
             core.setFailed(failed + " errors detected in arguments. Check logs for more details")
           }
+    - name: Download maven-metadata.xml
+      run: wget ${{ vars.SRGUTILS_BASE_URL }}/maven-metadata.xml
+    - name: Get latest version of srgutils
+      id: srgutils_version
+      uses: mavrosxristoforos/get-xml-info@1.1.1
+      with:
+        xml-file: maven-metadata.xml
+        xpath: //metadata/versioning/latest
+    - name: Remove maven-metadata.xml
+      run: rm maven-metadata.xml
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
@@ -172,6 +182,12 @@ jobs:
                 await exec.exec('wget ' + versionJson.downloads.client.url + ' -O ' + file + '.jar')
             }
           }
+    - name: Update SrgUtils
+      uses: mingjun97/file-regex-replace@v1
+      with:
+        regex: "SRGUTILS_VERSION = '\\d+\\.\\d+\\.\\d+'"
+        replacement: "SRGUTILS_VERSION = '${{ steps.srgutils_version.outputs.info }}'"
+        include: ^build\.gradle
     - if: ${{ github.event.inputs.patch_src && github.event.inputs.patch_src != github.event.inputs.new_version }}
       uses: gradle/gradle-build-action@v2
       with:
