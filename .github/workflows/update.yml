@@ -188,6 +188,12 @@ jobs:
         find: "SRGUTILS_VERSION = '\\d+\\.\\d+\\.\\d+'"
         replace: "SRGUTILS_VERSION = '${{ steps.srgutils_version.outputs.info }}'"
         include: build.gradle
+    - name: Update buidSrc SrgUtils
+      uses: jacobtomlinson/gha-find-replace@v3
+      with:
+        find: "net.minecraftforge:srgutils:\\d+\\.\\d+\\.\\d+"
+        replace: "net.minecraftforge:srgutils:${{ steps.srgutils_version.outputs.info }}"
+        include: buildSrc/build.gradle
     - if: ${{ github.event.inputs.patch_src && github.event.inputs.patch_src != github.event.inputs.new_version }}
       uses: gradle/gradle-build-action@v2
       with:
