@@ -188,6 +188,11 @@ jobs:
         find: "SRGUTILS_VERSION = '\\d+\\.\\d+\\.\\d+'"
         replace: "SRGUTILS_VERSION = '${{ steps.srgutils_version.outputs.info }}'"
         include: build.gradle
+    - name: Upload build.gradle
+      uses: actions/upload-artifact@v3
+      with:
+        name: build.gradle
+        path: build.gradle
     - if: ${{ github.event.inputs.patch_src && github.event.inputs.patch_src != github.event.inputs.new_version }}
       uses: gradle/gradle-build-action@v2
       with:
