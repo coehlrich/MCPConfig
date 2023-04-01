@@ -122,7 +122,7 @@ jobs:
                 return newVersionInfo.version + "-release";
               } else if (release && !newVersion) {
                 return "upstream/master";
-              } else of (info.april) {
+              } else if (info.april) {
                 return info.version;
               } else {
                 return (newVersion ? "" : "origin/") + process.env.TARGET_VERSION;
