@@ -183,11 +183,11 @@ jobs:
             }
           }
     - name: Update SrgUtils
-      uses: mingjun97/file-regex-replace@v1
+      uses: jacobtomlinson/gha-find-replace@v3
       with:
-        regex: "SRGUTILS_VERSION = '\\d+\\.\\d+\\.\\d+'"
-        replacement: "SRGUTILS_VERSION = '${{ steps.srgutils_version.outputs.info }}'"
-        include: ^build\.gradle
+        find: "SRGUTILS_VERSION = '\\d+\\.\\d+\\.\\d+'"
+        replace: "SRGUTILS_VERSION = '${{ steps.srgutils_version.outputs.info }}'"
+        include: build.gradle
     - if: ${{ github.event.inputs.patch_src && github.event.inputs.patch_src != github.event.inputs.new_version }}
       uses: gradle/gradle-build-action@v2
       with:
