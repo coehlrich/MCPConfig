@@ -117,7 +117,7 @@ jobs:
             }
              
             function getBranch(info, newVersion) {
-              var release = info.type === "release"
+              var release = info.type === "release";
               if (release && newVersion) {
                 return newVersionInfo.version + "-release";
               } else if (release && !newVersion) {
