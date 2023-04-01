@@ -52,7 +52,7 @@ jobs:
             const latestSnapshot = process.env.NEW_LATEST_VERSION
             
             const newVersionInfo = getInfo(latestSnapshot);
-            const oldVersion = newVersionInfo.april ? process.env.LATEST_RELEASE : process.env.LATEST_MAINLINE;
+            const oldVersion = process.env.LATEST_MAINLINE;
             const oldVersionInfo = getInfo(oldVersion);
             
             if (process.env.LATEST_VERSION === latestSnapshot) {
