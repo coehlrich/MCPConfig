@@ -115,12 +115,15 @@ jobs:
                 return info.type + "/";
               }
             }
-            
-            function getBranch(release, newVersion) {
+             
+            function getBranch(info, newVersion) {
+              var release = info.type === "release"
               if (release && newVersion) {
                 return newVersionInfo.version + "-release";
               } else if (release && !newVersion) {
                 return "upstream/master";
+              } else of (info.april) {
+                return info.version;
               } else {
                 return (newVersion ? "" : "origin/") + process.env.TARGET_VERSION;
               }
@@ -130,8 +133,8 @@ jobs:
             inputs.old_version = getVersionPrefix(oldVersionInfo) + oldVersionInfo.version;
             inputs.new_version = getVersionPrefix(newVersionInfo) + newVersionInfo.version;
             
-            inputs.old_branch = getBranch(oldVersionInfo.type === "release", false);
-            var newBranch = getBranch(newVersionInfo.type === "release", true);
+            inputs.old_branch = getBranch(oldVersionInfo, false);
+            var newBranch = getBranch(newVersionInfo, true);
             if (inputs.old_branch.split("/")[1] !== newBranch) {
               inputs.new_branch = newBranch;
             }
