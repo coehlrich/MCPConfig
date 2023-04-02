@@ -214,7 +214,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: mapping-metadata
-        path: build/update/data/**/*.json
+        path: build/update/data/**/joined_a_meta.json
     - if: ${{ github.event.inputs.patch_src }}
       run: cp versions/${{ github.event.inputs.new_version }}/joined.tsrg ../new_joined.tsrg
     - if: ${{ github.event.inputs.patch_src != github.event.inputs.new_version }}
