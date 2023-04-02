@@ -34,6 +34,11 @@ on:
         required: false
         default: true
         type: boolean
+      copy-extras:
+        description: 'Copy extras'
+        required: false
+        default: true
+        type: boolean
 
 jobs:
   update:
@@ -215,13 +220,13 @@ jobs:
       with:
         name: mapping-metadata
         path: build/update/data/**/joined_a_meta.json
-    - if: ${{ github.event.inputs.patch_src }}
+    - if: ${{ github.event.inputs.patch_src && inputs.copy-extras }}
       run: cp versions/${{ github.event.inputs.new_version }}/joined.tsrg ../new_joined.tsrg
-    - if: ${{ github.event.inputs.patch_src != github.event.inputs.new_version }}
+    - if: ${{ github.event.inputs.patch_src != github.event.inputs.new_version && inputs.copy-extras }}
       run: |
         rm -rf versions/${{ github.event.inputs.new_version}}/patches
         cp -r versions/${{ github.event.inputs.patch_src || github.event.inputs.old_version }}/patches versions/${{ github.event.inputs.new_version}}/patches
-    - if: ${{ github.event.inputs.patch_src }}
+    - if: ${{ github.event.inputs.patch_src && inputs.copy-extras }}
       run: |
         cd ..
         wget https://github.com/coehlrich/remap-patches/releases/download/1.0.6/remap-patches-all.jar
@@ -229,7 +234,7 @@ jobs:
         cd MCPConfig
     - run: git add .
     - name: Store other updated files
-      if: ${{ github.event.inputs.new_branch }}
+      if: ${{ github.event.inputs.new_branch && inputs.copy-extras }}
       run: |
         mkdir ../tmp
         for ITEM in buildSrc gradle templates .gitattributes .gitignore LICENSE Mojang.md README.md build.gradle gradlew gradlew.bat settings.gradle update.gradle
@@ -242,11 +247,20 @@ jobs:
         git stash
         git checkout ${{ github.event.inputs.new_branch }} || git checkout -B ${{ github.event.inputs.new_branch }} remotes/upstream/master
         git push -u origin ${{ github.event.inputs.new_branch }}
-        rm -rf versions/${{ github.event.inputs.new_version }}
+    - if: ${{ inputs.new_branch && inputs.copy-extras }}
+      run: rm -rf versions/${{ github.event.inputs.new_version }}
+    - if: ${{ inputs.new_branch && !inputs.copy-extras }}
+      run: |
+        rm -f versions/${{ github.event.inputs.new_version }}/joined.tsrg
+        rm -f versions/${{ github.event.inputs.new_version }}/config.json
+        rm -rf versions/${{ github.event.inputs.new_version }}/inject
+    - if: ${{ inputs.new_branch }}
+      run: |
         git add .
         git stash apply
+    
     - name: Restore other updated files
-      if: ${{ github.event.inputs.new_branch }}
+      if: ${{ github.event.inputs.new_branch && inputs.copy-extras }}
       run: |
         cp -rvT ../tmp .
         git add .
