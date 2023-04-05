@@ -10,3 +10,4 @@
 +         dyeableleatheritem = (DyeableLeatherItem) item;
           itemstack = p_41119_.m_255036_(1);
           if (dyeableleatheritem.m_41113_(p_41119_)) {
+             int k = dyeableleatheritem.m_41121_(itemstack);
