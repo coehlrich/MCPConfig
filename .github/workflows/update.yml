@@ -120,7 +120,7 @@ jobs:
         # $1 is name
         # $2 is maven-metadata.xml url
         get_version() {
-          echo "$1=$(wget -O - $2 | fxparser -c | jq .metadata.versioning.latest -r)"
+          echo "$1=$(wget -O - $2 | fxparser -c | jq .metadata.versioning.latest -r)" >> $GITHUB_OUTPUT
         }
 
         get_version srgutils $SRGUTILS_URL
