@@ -115,7 +115,7 @@ jobs:
     - name: Get library versions
       id: lib-versions
       env:
-        SRG_UTILS_URL: ${{ vars.SRGUTILS_METADATA_URL }}
+        SRGUTILS_URL: ${{ vars.SRGUTILS_METADATA_URL }}
       run: |
         # $1 is name
         # $2 is maven-metadata.xml url
@@ -123,7 +123,7 @@ jobs:
           echo "$1=$(wget -O - $2 | fxparser | jq .metadata.versioning.latest)" >> $GITHUB_OUTPUT
         }
 
-        get_version srgutils $SRG_UTILS_URL
+        get_version srgutils $SRGUTILS_URL
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
