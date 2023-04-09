@@ -114,8 +114,6 @@ jobs:
       run: sudo npm install -g fast-xml-parser
     - name: Get library versions
       id: lib-versions
-      env:
-        SRGUTILS_URL: ${{ vars.SRGUTILS_METADATA_URL }}
       run: |
         # $1 is name
         # $2 is maven-metadata.xml url
@@ -123,7 +121,12 @@ jobs:
           echo "$1=$(wget -O - $2 | fxparser -c | jq .metadata.versioning.latest -r)" >> $GITHUB_OUTPUT
         }
 
-        get_version srgutils $SRGUTILS_URL
+        get_version srgutils https://maven.minecraftforge.net/net/minecraftforge/srgutils/maven-metadata.xml
+        get_version forgeautorenamingtool https://maven.minecraftforge.net/net/minecraftforge/ForgeAutoRenamingTool/maven-metadata.xml
+        get_version forgeflower https://maven.minecraftforge.net/net/minecraftforge/forgeflower/maven-metadata.xml
+        get_version installertools https://maven.minecraftforge.net/net/minecraftforge/installertools/maven-metadata.xml
+        get_version mergetool https://maven.minecraftforge.net/net/minecraftforge/mergetool/maven-metadata.xml
+        get_version jetbrains_annotations https://repo1.maven.org/maven2/org/jetbrains/annotations/maven-metadata.xml
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0
@@ -192,12 +195,14 @@ jobs:
             }
           }
     - name: Update SrgUtils
+      if: ${{ vars.SRGUTILS_UPDATE == 'true' }}
       uses: jacobtomlinson/gha-find-replace@v3
       with:
         find: "SRGUTILS_VERSION = '\\d+\\.\\d+\\.\\d+'"
         replace: "SRGUTILS_VERSION = '${{ steps.lib-versions.outputs.srgutils }}'"
         include: build.gradle
     - name: Update buidSrc SrgUtils
+      if: ${{ vars.SRGUTILS_UPDATE == 'true' }}
       uses: jacobtomlinson/gha-find-replace@v3
       with:
         find: "net.minecraftforge:srgutils:\\d+\\.\\d+\\.\\d+"
@@ -273,6 +278,43 @@ jobs:
         git config --global user.email 41898282+github-actions[bot]@users.noreply.github.com
         git commit -m "Start ${{ github.event.inputs.new_version }}"
         git push
+    - name: Update forgeflower
+      if: ${{ vars.FORGEFLOWER_UPDATE == 'true' }}
+      uses: jacobtomlinson/gha-find-replace@v3
+      with:
+        find: "net.minecraftforge:forgeflower:\\d+(\\.\\d+)*"
+        replace: "net.minecraftforge:forgeflower:${{ steps.lib-versions.outputs.forgeflower }}"
+        include: versions/${{ inputs.new_version }}/config.json
+    - name: Update ForgeAutoRenamingTool
+      if: ${{ vars.FORGEAUTORENAMINGTOOL_UPDATE == 'true' }}
+      uses: jacobtomlinson/gha-find-replace@v3
+      with:
+        find: "net.minecraftforge:ForgeAutoRenamingTool:\\d+(\\.\\d+)*"
+        replace: "net.minecraftforge:ForgeAutoRenamingTool:${{ steps.lib-versions.outputs.forgeautorenamingtool }}"
+        include: versions/${{ inputs.new_version }}/config.json
+    - name: Update installertools
+      if: ${{ vars.INSTALLERTOOLS_UPDATE == 'true' }}
+      uses: jacobtomlinson/gha-find-replace@v3
+      with:
+        find: "net.minecraftforge:installertools:\\d+(\\.\\d+)*"
+        replace: "net.minecraftforge:installertools:${{ steps.lib-versions.outputs.installertools }}"
+        include: versions/${{ inputs.new_version }}/config.json
+    - name: Update Jetbrains Annotations
+      if: ${{ vars.JETBRAINS_ANNOTATIONS_UPDATE == 'true' }}
+      uses: jacobtomlinson/gha-find-replace@v3
+      with:
+        find: "org.jetbrains:annotations:\\d+(\\.\\d+)*"
+        replace: "org.jetbrains:annotations:${{ steps.lib-versions.outputs.jetbrains_annotations }}"
+        include: versions/${{ inputs.new_version }}/config.json
+    - name: Update Mergetool
+      if: ${{ vars.MERGETOOL_UPDATE == 'true' }}
+      uses: jacobtomlinson/gha-find-replace@v3
+      with:
+        find: "net.minecraftforge:mergetool:\\d+(\\.\\d+)*"
+        replace: "net.minecraftforge:mergetool:${{ steps.lib-versions.outputs.mergetool }}"
+        include: versions/${{ inputs.new_version }}/config.json
+    - name: Push library changes
+      run: git commit -m "Update libraries" && git push || true
     - uses: actions/cache/save@v3
       name: Save BuildSrc cache
       with:
