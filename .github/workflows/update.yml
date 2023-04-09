@@ -314,7 +314,9 @@ jobs:
         replace: "net.minecraftforge:mergetool:${{ steps.lib-versions.outputs.mergetool }}"
         include: versions/${{ inputs.new_version }}/config.json
     - name: Push library changes
-      run: git commit -m "Update libraries" && git push || true
+      run: |
+        git add .
+        git commit -m "Update libraries" && git push || true
     - uses: actions/cache/save@v3
       name: Save BuildSrc cache
       with:
