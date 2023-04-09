@@ -276,8 +276,7 @@ jobs:
     - run: |
         git config --global user.name github-actions
         git config --global user.email 41898282+github-actions[bot]@users.noreply.github.com
-        git commit -m "Start ${{ github.event.inputs.new_version }}"
-        git push
+        git commit -m "Start ${{ github.event.inputs.new_version }}" && git push || true
     - name: Update forgeflower
       if: ${{ vars.FORGEFLOWER_UPDATE == 'true' }}
       uses: jacobtomlinson/gha-find-replace@v3
