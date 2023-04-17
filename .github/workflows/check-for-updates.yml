@@ -73,7 +73,7 @@ jobs:
           distribution: temurin
           java-version: ${{ vars.JAVA_VERSION }}
       - name: Download maven-metadata.xml
-        run: wget ${{ vars.SRGUTILS_BASE_URL }}/maven-metadata.xml
+        run: wget https://maven.minecraftforge.net/net/minecraftforge/srgutils/maven-metadata.xml
       - name: Get latest version of srgutils
         id: srgutils_version
         uses: mavrosxristoforos/get-xml-info@1.1.1
@@ -81,7 +81,7 @@ jobs:
           xml-file: maven-metadata.xml
           xpath: //metadata/versioning/latest
       - name: Download srgutils
-        run: wget ${{ vars.SRGUTILS_BASE_URL }}/${{ steps.srgutils_version.outputs.info }}/srgutils-${{ steps.srgutils_version.outputs.info }}.jar -O srgutils.jar
+        run: wget https://maven.minecraftforge.net/net/minecraftforge/srgutils/${{ steps.srgutils_version.outputs.info }}/srgutils-${{ steps.srgutils_version.outputs.info }}.jar -O srgutils.jar
       - name: Download parser
         run: wget ${{ vars.PARSE_VERSION_JAVA }}
       - name: Run parser
@@ -118,14 +118,16 @@ jobs:
              
             function getBranch(info, newVersion) {
               var release = info.type === "release";
-              if (release && newVersion) {
-                return newVersionInfo.version + "-release";
-              } else if (release && !newVersion) {
+              if (release && !newVersion) {
                 return "upstream/master";
-              } else if (info.april) {
-                return info.version;
               } else {
-                return (newVersion ? "" : "origin/") + process.env.TARGET_VERSION;
+                var branch = (newVersion ? "" : "origin/");
+                if (info.april) {
+                  branch += info.version;
+                } else {
+                  branch += process.env.TARGET_VERSION + "-" + info.type;
+                }
+                return branch;
               }
             }
 
