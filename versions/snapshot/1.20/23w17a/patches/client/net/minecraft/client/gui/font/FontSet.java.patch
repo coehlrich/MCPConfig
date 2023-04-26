@@ -1,6 +1,6 @@
 --- a/net/minecraft/client/gui/font/FontSet.java
 +++ b/net/minecraft/client/gui/font/FontSet.java
-@@ -53,7 +53,7 @@
+@@ -61,7 +61,7 @@
        }
  
        Set<GlyphProvider> set = Sets.newHashSet();

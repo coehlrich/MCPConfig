@@ -1,6 +1,6 @@
 --- a/net/minecraft/tags/TagLoader.java
 +++ b/net/minecraft/tags/TagLoader.java
-@@ -116,7 +116,7 @@
+@@ -86,7 +86,7 @@
        TagEntry.Lookup<T> lookup = new TagEntry.Lookup<T>() {
           @Nullable
           public T m_213619_(ResourceLocation p_216039_) {
