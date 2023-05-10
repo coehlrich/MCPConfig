@@ -39,7 +39,7 @@ jobs:
                 type = "release";
               } else if (/^\d{2}w\d{2}[a-z]$/.test(name)) {
                 type = "snapshot";
-              } else if (/^\d+\.\d+.\d+-pre\d+$/.test(name) || /^\d+\.\d+.\d+-rc\d+$/.test(name)) {
+              } else if (/^\d+\.\d+(.\d+)?-(pre|rc)\d+$/.test(name) || /^\d+\.\d+.\d+-rc\d+$/.test(name)) {
                 type = "pre";
               } else {
                 // If it doesn't match anything guess that it's an april fools release
