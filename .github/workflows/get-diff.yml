@@ -62,11 +62,6 @@ jobs:
           const newVersion = process.env.NEW_VERSION.split("/");
           var returnValue = {old_version_type: oldVersion[0], old_version_name: oldVersion[oldVersion.length - 1], new_version_type: newVersion[0], new_version_name: newVersion[newVersion.length - 1], old_branch: process.env.OLD_BRANCH.replace(/^[^/]+\//, '')}
           return returnValue;
-    - name: Set up JDK ${{ vars.JAVA_VERSION }}
-      uses: actions/setup-java@v3
-      with:
-        java-version: ${{ vars.JAVA_VERSION }}
-        distribution: 'temurin'
     - uses: actions/cache/restore@v3
       name: Restore ${{ fromJson(steps.split_version.outputs.result).new_version_name }} cache
       with:
