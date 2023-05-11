@@ -102,16 +102,14 @@ jobs:
         path: |
           buildSrc/build/**
           buildSrc/.gradle/**
-        key: buildsrc-build-jdk${{ vars.JAVA_VERSION }}-
+        key: buildsrc-build-
     - uses: actions/cache/restore@v3
       name: Cache Other
       with:
         path: |
           build/download-task/**
           .gradle/**
-        key: gradle-other-${{ steps.time.outputs.time }}
-        restore-keys: |
-          gradle-other-  
+        key: gradle-other-
     - run: |
         git remote add upstream https://github.com/MinecraftForge/MCPConfig
         git fetch upstream
@@ -171,7 +169,7 @@ jobs:
         path: |
           buildSrc/build/**
           buildSrc/.gradle/**
-        key: buildsrc-build-jdk${{ vars.JAVA_VERSION }}-${{ hashFiles('buildSrc/build/**', 'buildSrc/.gradle/**')}}
+        key: buildsrc-build-${{ hashFiles('buildSrc/build/**', 'buildSrc/.gradle/**')}}
     - uses: actions/cache/save@v3
       name: Save Other cache
       with:
