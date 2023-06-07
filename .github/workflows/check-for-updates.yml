@@ -163,7 +163,7 @@ jobs:
           owner: coehlrich
           repo: MCPConfig
           name: LATEST_MC_VERSION
-          value: ${{ fromJson(needs.check.outputs.new_version).version }}
+          value: "${{ fromJson(needs.check.outputs.new_version).version }}"
         env:
           GITHUB_TOKEN: ${{ secrets.VARIABLES_TOKEN }}
       - name: Store Latest Version
@@ -174,6 +174,6 @@ jobs:
           owner: coehlrich
           repo: MCPConfig
           name: LATEST_MAINLINE_VERSION
-          value: ${{ fromJson(needs.check.outputs.new_version).version }}
+          value: "${{ fromJson(needs.check.outputs.new_version).version }}"
         env:
           GITHUB_TOKEN: ${{ secrets.VARIABLES_TOKEN }}
