@@ -157,9 +157,8 @@ jobs:
       - name: Store Latest Version
         uses: octokit/request-action@v2.1.7
         with:
-          route: PATCH /repos/{owner}/{repo}/actions/variables/{name}
-          owner: coehlrich
-          repo: MCPConfig
+          route: PATCH /repos/{repo}/actions/variables/{name}
+          repo: ${{ github.repository }}
           name: LATEST_MC_VERSION
           value: "\"${{ fromJson(needs.check.outputs.new_version).version }}\""
         env:
@@ -168,9 +167,8 @@ jobs:
         if: ${{ !fromJson(needs.check.outputs.new_version).april }}
         uses: octokit/request-action@v2.1.7
         with:
-          route: PATCH /repos/{owner}/{repo}/actions/variables/{name}
-          owner: coehlrich
-          repo: MCPConfig
+          route: PATCH /repos/{repo}/actions/variables/{name}
+          repo: ${{ github.repository }}
           name: LATEST_MAINLINE_VERSION
           value: "\"${{ fromJson(needs.check.outputs.new_version).version }}\""
         env:
