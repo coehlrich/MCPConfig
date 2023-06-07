@@ -146,7 +146,7 @@ jobs:
               core.info(key + ": " + inputs[key]);
             }
             
-            core.info(newVersionInfo);
+            core.info(JSON.stringify(newVersionInfo));
             
             /*github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
